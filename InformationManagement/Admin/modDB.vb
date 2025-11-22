@@ -39,6 +39,17 @@ Module modDB
         End Try
     End Sub
 
+    ' ✔ Close connection (ADDED)
+    Public Sub closeConn()
+        Try
+            If conn IsNot Nothing AndAlso conn.State = ConnectionState.Open Then
+                conn.Close()
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message, MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
     ' ✔ Read Query
     Public Sub readQuery(ByVal sql As String)
         Try
@@ -58,6 +69,7 @@ Module modDB
             dt.Load(cmdRead)
             dgv.DataSource = dt
             dgv.Refresh()
+            closeConn() ' ← Added here for cleanup
             Return dgv.Rows.Count
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.Critical)
@@ -108,6 +120,7 @@ Module modDB
         Try
             readQuery($"INSERT INTO logs(dt, user_accounts_id, event, transactions)
                        VALUES (NOW(), {CurrentLoggedUser.id}, '{events}', '{transaction}')")
+            closeConn() ' ← added to prevent open connection lock
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
