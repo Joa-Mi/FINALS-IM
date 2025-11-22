@@ -186,7 +186,7 @@ Public Class AdminDashboard
         HighlightButton(Feedback) ' ← Correct button to highlight
 
         ' Load Feedback form inside Panel1
-        Dim feedbackForm As New Customer() ' If this is really your Feedback form
+        Dim feedbackForm As New Feedback() ' If this is really your Feedback form
 
         With feedbackForm
             .TopLevel = False
