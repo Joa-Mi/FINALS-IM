@@ -308,4 +308,7 @@ Partial Class Feedback
     Friend WithEvents btnViewRejected As Button
     Friend WithEvents btnViewAll As Button
     Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents lblTotalReviews As Label
+    Friend WithEvents btnExport As Button
 End Class
