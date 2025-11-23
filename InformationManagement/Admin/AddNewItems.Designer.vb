@@ -24,10 +24,6 @@ Partial Class AddNewItems
     Private Sub InitializeComponent()
         Me.AddItem = New System.Windows.Forms.Button()
         Me.Cancel = New System.Windows.Forms.Button()
-        Me.NumericUpDown2 = New System.Windows.Forms.NumericUpDown()
-        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -36,8 +32,6 @@ Partial Class AddNewItems
         Me.Quantity = New InformationManagement.RoundedTextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Category = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.txtFullName = New InformationManagement.RoundedTextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -46,8 +40,14 @@ Partial Class AddNewItems
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Restockby = New InformationManagement.RoundedTextBox()
-        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
+        Me.NumericUpDown2 = New System.Windows.Forms.NumericUpDown()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Category = New System.Windows.Forms.ComboBox()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'AddItem
@@ -73,52 +73,6 @@ Partial Class AddNewItems
         Me.Cancel.TabIndex = 60
         Me.Cancel.Text = "Cancel"
         Me.Cancel.UseVisualStyleBackColor = False
-        '
-        'NumericUpDown2
-        '
-        Me.NumericUpDown2.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.NumericUpDown2.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.NumericUpDown2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NumericUpDown2.Location = New System.Drawing.Point(394, 360)
-        Me.NumericUpDown2.Margin = New System.Windows.Forms.Padding(4)
-        Me.NumericUpDown2.Name = "NumericUpDown2"
-        Me.NumericUpDown2.Size = New System.Drawing.Size(240, 26)
-        Me.NumericUpDown2.TabIndex = 58
-        Me.NumericUpDown2.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'NumericUpDown1
-        '
-        Me.NumericUpDown1.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.NumericUpDown1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.NumericUpDown1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NumericUpDown1.Location = New System.Drawing.Point(18, 360)
-        Me.NumericUpDown1.Margin = New System.Windows.Forms.Padding(4)
-        Me.NumericUpDown1.Name = "NumericUpDown1"
-        Me.NumericUpDown1.Size = New System.Drawing.Size(240, 26)
-        Me.NumericUpDown1.TabIndex = 57
-        Me.NumericUpDown1.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
-        Me.Label10.Location = New System.Drawing.Point(389, 331)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(185, 25)
-        Me.Label10.TabIndex = 56
-        Me.Label10.Text = "Max Stock Level :"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
-        Me.Label9.Location = New System.Drawing.Point(13, 331)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(179, 25)
-        Me.Label9.TabIndex = 55
-        Me.Label9.Text = "Min Stock Level :"
         '
         'DateTimePicker1
         '
@@ -215,26 +169,6 @@ Partial Class AddNewItems
         Me.Label5.Size = New System.Drawing.Size(63, 25)
         Me.Label5.TabIndex = 49
         Me.Label5.Text = "Unit :"
-        '
-        'Category
-        '
-        Me.Category.FormattingEnabled = True
-        Me.Category.Items.AddRange(New Object() {"Meat & Poultry", "Vegetables", "Dairy", "Dry Goods", "Oils & Condiments", "Herbs & Spices", "Beverages", "Seafood"})
-        Me.Category.Location = New System.Drawing.Point(394, 162)
-        Me.Category.Name = "Category"
-        Me.Category.Size = New System.Drawing.Size(250, 24)
-        Me.Category.TabIndex = 47
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
-        Me.Label4.Location = New System.Drawing.Point(389, 133)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(120, 25)
-        Me.Label4.TabIndex = 44
-        Me.Label4.Text = "Catergory :"
         '
         'txtFullName
         '
@@ -334,6 +268,72 @@ Partial Class AddNewItems
         Me.Restockby.TextColor = System.Drawing.Color.Black
         Me.Restockby.TextFont = New System.Drawing.Font("Segoe UI", 10.0!)
         '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Label9.Location = New System.Drawing.Point(13, 331)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(179, 25)
+        Me.Label9.TabIndex = 55
+        Me.Label9.Text = "Min Stock Level :"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Label10.Location = New System.Drawing.Point(389, 331)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(185, 25)
+        Me.Label10.TabIndex = 56
+        Me.Label10.Text = "Max Stock Level :"
+        '
+        'NumericUpDown1
+        '
+        Me.NumericUpDown1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.NumericUpDown1.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.NumericUpDown1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NumericUpDown1.Location = New System.Drawing.Point(18, 360)
+        Me.NumericUpDown1.Margin = New System.Windows.Forms.Padding(4)
+        Me.NumericUpDown1.Name = "NumericUpDown1"
+        Me.NumericUpDown1.Size = New System.Drawing.Size(240, 26)
+        Me.NumericUpDown1.TabIndex = 57
+        Me.NumericUpDown1.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'NumericUpDown2
+        '
+        Me.NumericUpDown2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.NumericUpDown2.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.NumericUpDown2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NumericUpDown2.Location = New System.Drawing.Point(394, 360)
+        Me.NumericUpDown2.Margin = New System.Windows.Forms.Padding(4)
+        Me.NumericUpDown2.Name = "NumericUpDown2"
+        Me.NumericUpDown2.Size = New System.Drawing.Size(240, 26)
+        Me.NumericUpDown2.TabIndex = 58
+        Me.NumericUpDown2.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Label4.Location = New System.Drawing.Point(389, 133)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(120, 25)
+        Me.Label4.TabIndex = 44
+        Me.Label4.Text = "Catergory :"
+        '
+        'Category
+        '
+        Me.Category.FormattingEnabled = True
+        Me.Category.Items.AddRange(New Object() {"Meat & Poultry", "Vegetables", "Dairy", "Dry Goods", "Oils & Condiments", "Herbs & Spices", "Beverages", "Seafood"})
+        Me.Category.Location = New System.Drawing.Point(394, 162)
+        Me.Category.Name = "Category"
+        Me.Category.Size = New System.Drawing.Size(250, 24)
+        Me.Category.TabIndex = 47
+        '
         'AddNewItems
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -367,8 +367,8 @@ Partial Class AddNewItems
         Me.ForeColor = System.Drawing.SystemColors.ControlLightLight
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "AddNewItems"
-        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -376,10 +376,6 @@ Partial Class AddNewItems
 
     Friend WithEvents AddItem As Button
     Friend WithEvents Cancel As Button
-    Friend WithEvents NumericUpDown2 As NumericUpDown
-    Friend WithEvents NumericUpDown1 As NumericUpDown
-    Friend WithEvents Label10 As Label
-    Friend WithEvents Label9 As Label
     Friend WithEvents DateTimePicker1 As DateTimePicker
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
@@ -388,8 +384,6 @@ Partial Class AddNewItems
     Friend WithEvents Quantity As RoundedTextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
-    Friend WithEvents Category As ComboBox
-    Friend WithEvents Label4 As Label
     Friend WithEvents txtFullName As RoundedTextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
@@ -398,4 +392,10 @@ Partial Class AddNewItems
     Friend WithEvents Label11 As Label
     Friend WithEvents Label12 As Label
     Friend WithEvents Restockby As RoundedTextBox
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label10 As Label
+    Friend WithEvents NumericUpDown1 As NumericUpDown
+    Friend WithEvents NumericUpDown2 As NumericUpDown
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Category As ComboBox
 End Class

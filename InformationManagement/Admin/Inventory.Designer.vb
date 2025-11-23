@@ -34,7 +34,7 @@ Partial Class Inventory
         Me.Label11 = New System.Windows.Forms.Label()
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
         Me.RoundedPane22 = New InformationManagement.RoundedPane2()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.InventoryGrid = New System.Windows.Forms.DataGridView()
         Me.ItemName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.InventoryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -58,7 +58,7 @@ Partial Class Inventory
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.RoundedPane22.SuspendLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.InventoryGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label3
@@ -175,14 +175,14 @@ Partial Class Inventory
         Me.RoundedPane22.Size = New System.Drawing.Size(447, 170)
         Me.RoundedPane22.TabIndex = 36
         '
-        'DataGridView1
+        'InventoryGrid
         '
-        Me.DataGridView1.AllowUserToResizeColumns = False
-        Me.DataGridView1.AllowUserToResizeRows = False
-        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
-        Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.DataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
-        Me.DataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
+        Me.InventoryGrid.AllowUserToResizeColumns = False
+        Me.InventoryGrid.AllowUserToResizeRows = False
+        Me.InventoryGrid.BackgroundColor = System.Drawing.Color.White
+        Me.InventoryGrid.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.InventoryGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
+        Me.InventoryGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(50, Byte), Integer))
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -190,15 +190,15 @@ Partial Class Inventory
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridView1.ColumnHeadersHeight = 40
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ItemName, Me.InventoryID, Me.ProductID, Me.Quantity, Me.Status, Me.CostUnit, Me.TotalValue, Me.LostStock, Me.Type, Me.ExpirationDate, Me.Actions})
-        Me.DataGridView1.EnableHeadersVisualStyles = False
-        Me.DataGridView1.Location = New System.Drawing.Point(47, 502)
-        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(4)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
+        Me.InventoryGrid.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.InventoryGrid.ColumnHeadersHeight = 40
+        Me.InventoryGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ItemName, Me.InventoryID, Me.ProductID, Me.Quantity, Me.Status, Me.CostUnit, Me.TotalValue, Me.LostStock, Me.Type, Me.ExpirationDate, Me.Actions})
+        Me.InventoryGrid.EnableHeadersVisualStyles = False
+        Me.InventoryGrid.Location = New System.Drawing.Point(47, 502)
+        Me.InventoryGrid.Margin = New System.Windows.Forms.Padding(4)
+        Me.InventoryGrid.Name = "InventoryGrid"
+        Me.InventoryGrid.ReadOnly = True
+        Me.InventoryGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -206,11 +206,11 @@ Partial Class Inventory
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.RowHeadersVisible = False
-        Me.DataGridView1.RowHeadersWidth = 51
-        Me.DataGridView1.Size = New System.Drawing.Size(1516, 181)
-        Me.DataGridView1.TabIndex = 40
+        Me.InventoryGrid.RowHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.InventoryGrid.RowHeadersVisible = False
+        Me.InventoryGrid.RowHeadersWidth = 51
+        Me.InventoryGrid.Size = New System.Drawing.Size(1516, 181)
+        Me.InventoryGrid.TabIndex = 40
         '
         'ItemName
         '
@@ -408,7 +408,7 @@ Partial Class Inventory
         Me.ClientSize = New System.Drawing.Size(1478, 931)
         Me.Controls.Add(Me.RoundedPane21)
         Me.Controls.Add(Me.RoundedPane22)
-        Me.Controls.Add(Me.DataGridView1)
+        Me.Controls.Add(Me.InventoryGrid)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TextBox1)
@@ -425,7 +425,7 @@ Partial Class Inventory
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
         Me.RoundedPane22.ResumeLayout(False)
         Me.RoundedPane22.PerformLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.InventoryGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -440,7 +440,7 @@ Partial Class Inventory
     Friend WithEvents Label11 As Label
     Friend WithEvents PictureBox8 As PictureBox
     Friend WithEvents RoundedPane22 As RoundedPane2
-    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents InventoryGrid As DataGridView
     Friend WithEvents Label7 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents TextBox1 As TextBox
