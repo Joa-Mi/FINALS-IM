@@ -4,7 +4,7 @@ Public Class BatchManagement
     Private _ingredientID As Integer
     Private _ingredientName As String
 
-    ' Constructor to receive ingredient info
+    ' Constructor
     Public Sub New(ingredientID As Integer, ingredientName As String)
         InitializeComponent()
         _ingredientID = ingredientID
@@ -12,9 +12,20 @@ Public Class BatchManagement
     End Sub
 
     Private Sub BatchManagement_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Text = "Batch Management - " & _ingredientName
-        lblIngredientName.Text = _ingredientName
-        LoadBatchData()
+        Try
+            Me.Text = "Batch Management - " & _ingredientName
+
+            If Me.Controls.Contains(lblIngredientName) Then
+                lblIngredientName.Text = _ingredientName
+            End If
+
+            LoadBatchData()
+        Catch ex As Exception
+            MessageBox.Show("Error loading form: " & ex.Message,
+                          "Load Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
+        End Try
     End Sub
 
     ' Load all batches for this ingredient
@@ -30,10 +41,13 @@ Public Class BatchManagement
                     OriginalQuantity AS 'Original Qty',
                     UnitType AS 'Unit',
                     CostPerUnit AS 'Cost/Unit',
-                    TotalCost AS 'Total Cost',
+                    (StockQuantity * CostPerUnit) AS 'Total Cost',
                     PurchaseDate AS 'Purchase Date',
                     ExpirationDate AS 'Expiration',
-                    DATEDIFF(ExpirationDate, CURDATE()) AS 'Days Left',
+                    CASE 
+                        WHEN ExpirationDate IS NULL THEN NULL
+                        ELSE DATEDIFF(ExpirationDate, CURDATE())
+                    END AS 'Days Left',
                     CASE 
                         WHEN BatchStatus = 'Expired' THEN 'EXPIRED'
                         WHEN BatchStatus = 'Depleted' THEN 'Depleted'
@@ -46,7 +60,8 @@ Public Class BatchManagement
                     END AS 'Alert',
                     BatchStatus AS 'Status',
                     MarketSource AS 'Source',
-                    ROUND((StockQuantity / OriginalQuantity) * 100, 1) AS 'Remaining %'
+                    ROUND((StockQuantity / OriginalQuantity) * 100, 1) AS 'Remaining %',
+                    Notes
                 FROM inventory_batches
                 WHERE IngredientID = @ingredientID
                 ORDER BY 
@@ -69,7 +84,10 @@ Public Class BatchManagement
             da.Fill(dt)
 
             ' Setup DataGridView
+            dgvBatches.DataSource = Nothing
+            dgvBatches.Columns.Clear()
             dgvBatches.DataSource = dt
+
             FormatBatchGrid()
             ColorCodeBatches()
 
@@ -77,7 +95,10 @@ Public Class BatchManagement
             LoadBatchStatistics()
 
         Catch ex As Exception
-            MessageBox.Show("Error loading batches: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error loading batches: " & ex.Message,
+                          "Database Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try
@@ -92,28 +113,40 @@ Public Class BatchManagement
                 .DefaultCellStyle.Font = New Font("Segoe UI", 9)
                 .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
                 .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250)
+                .ReadOnly = False
+                .AllowUserToAddRows = False
+                .AllowUserToDeleteRows = False
+                .SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
-                ' Hide Batch ID
+                ' Hide Batch ID and Notes
                 If .Columns.Contains("Batch ID") Then
                     .Columns("Batch ID").Visible = False
+                End If
+
+                If .Columns.Contains("Notes") Then
+                    .Columns("Notes").Visible = False
                 End If
 
                 ' Format currency columns
                 If .Columns.Contains("Cost/Unit") Then
                     .Columns("Cost/Unit").DefaultCellStyle.Format = "₱#,##0.00"
+                    .Columns("Cost/Unit").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Total Cost") Then
                     .Columns("Total Cost").DefaultCellStyle.Format = "₱#,##0.00"
+                    .Columns("Total Cost").ReadOnly = True
                 End If
 
                 ' Format date columns
                 If .Columns.Contains("Purchase Date") Then
                     .Columns("Purchase Date").DefaultCellStyle.Format = "MMM dd, yyyy"
+                    .Columns("Purchase Date").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Expiration") Then
                     .Columns("Expiration").DefaultCellStyle.Format = "MMM dd, yyyy"
+                    .Columns("Expiration").ReadOnly = True
                 End If
 
                 ' Center alignment
@@ -121,6 +154,7 @@ Public Class BatchManagement
                 For Each colName In centerColumns
                     If .Columns.Contains(colName) Then
                         .Columns(colName).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                        .Columns(colName).ReadOnly = True
                     End If
                 Next
 
@@ -128,9 +162,22 @@ Public Class BatchManagement
                 If .Columns.Contains("Alert") Then
                     .Columns("Alert").DefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
                 End If
+
+                If .Columns.Contains("Status") Then
+                    .Columns("Status").DefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
+                End If
+
+                ' Set column widths
+                If .Columns.Contains("Batch Number") Then
+                    .Columns("Batch Number").Width = 150
+                End If
+
+                If .Columns.Contains("Current Stock") Then
+                    .Columns("Current Stock").Width = 100
+                End If
             End With
 
-            ' Add action buttons
+            ' Add action button
             If Not dgvBatches.Columns.Contains("btnDiscard") Then
                 Dim btnDiscard As New DataGridViewButtonColumn()
                 btnDiscard.Name = "btnDiscard"
@@ -138,6 +185,7 @@ Public Class BatchManagement
                 btnDiscard.Text = "Discard"
                 btnDiscard.UseColumnTextForButtonValue = True
                 btnDiscard.Width = 100
+                btnDiscard.FlatStyle = FlatStyle.Flat
                 dgvBatches.Columns.Add(btnDiscard)
             End If
 
@@ -156,15 +204,26 @@ Public Class BatchManagement
                         Dim alert As String = row.Cells("Alert").Value.ToString()
 
                         Select Case alert
-                            Case "EXPIRED", "CRITICAL"
+                            Case "EXPIRED"
+                                row.Cells("Alert").Style.BackColor = Color.FromArgb(139, 0, 0)
+                                row.Cells("Alert").Style.ForeColor = Color.White
+                                If row.Cells("Expiration").Value IsNot Nothing Then
+                                    row.Cells("Expiration").Style.BackColor = Color.FromArgb(139, 0, 0)
+                                    row.Cells("Expiration").Style.ForeColor = Color.White
+                                End If
+                            Case "CRITICAL"
                                 row.Cells("Alert").Style.BackColor = Color.FromArgb(220, 53, 69)
                                 row.Cells("Alert").Style.ForeColor = Color.White
-                                row.Cells("Expiration").Style.BackColor = Color.FromArgb(220, 53, 69)
-                                row.Cells("Expiration").Style.ForeColor = Color.White
+                                If row.Cells("Expiration").Value IsNot Nothing Then
+                                    row.Cells("Expiration").Style.BackColor = Color.FromArgb(220, 53, 69)
+                                    row.Cells("Expiration").Style.ForeColor = Color.White
+                                End If
                             Case "WARNING"
                                 row.Cells("Alert").Style.BackColor = Color.FromArgb(255, 193, 7)
                                 row.Cells("Alert").Style.ForeColor = Color.Black
-                                row.Cells("Expiration").Style.BackColor = Color.FromArgb(255, 193, 7)
+                                If row.Cells("Expiration").Value IsNot Nothing Then
+                                    row.Cells("Expiration").Style.BackColor = Color.FromArgb(255, 193, 7)
+                                End If
                             Case "Monitor"
                                 row.Cells("Alert").Style.BackColor = Color.FromArgb(255, 235, 59)
                                 row.Cells("Alert").Style.ForeColor = Color.Black
@@ -188,11 +247,15 @@ Public Class BatchManagement
                             Case "Expired"
                                 row.Cells("Status").Style.BackColor = Color.FromArgb(220, 53, 69)
                                 row.Cells("Status").Style.ForeColor = Color.White
+                            Case "Discarded"
+                                row.Cells("Status").Style.BackColor = Color.DarkGray
+                                row.Cells("Status").Style.ForeColor = Color.White
                         End Select
                     End If
 
                     ' Color code Remaining %
-                    If row.Cells("Remaining %").Value IsNot Nothing Then
+                    If row.Cells("Remaining %").Value IsNot Nothing AndAlso
+                       Not IsDBNull(row.Cells("Remaining %").Value) Then
                         Dim remaining As Decimal = Convert.ToDecimal(row.Cells("Remaining %").Value)
 
                         If remaining <= 20 Then
@@ -223,7 +286,10 @@ Public Class BatchManagement
             Dim cmdTotal As New MySqlCommand(sqlTotal, conn)
             cmdTotal.Parameters.AddWithValue("@id", _ingredientID)
             Dim totalStock As Decimal = Convert.ToDecimal(cmdTotal.ExecuteScalar())
-            lblTotalStock.Text = totalStock.ToString("#,##0.00")
+
+            If Me.Controls.Contains(lblTotalStock) Then
+                lblTotalStock.Text = totalStock.ToString("#,##0.00")
+            End If
 
             ' Active Batches
             Dim sqlActive As String = "
@@ -234,7 +300,10 @@ Public Class BatchManagement
             Dim cmdActive As New MySqlCommand(sqlActive, conn)
             cmdActive.Parameters.AddWithValue("@id", _ingredientID)
             Dim activeBatches As Integer = Convert.ToInt32(cmdActive.ExecuteScalar())
-            lblActiveBatches.Text = activeBatches.ToString()
+
+            If Me.Controls.Contains(lblActiveBatches) Then
+                lblActiveBatches.Text = activeBatches.ToString()
+            End If
 
             ' Total Value
             Dim sqlValue As String = "
@@ -245,7 +314,10 @@ Public Class BatchManagement
             Dim cmdValue As New MySqlCommand(sqlValue, conn)
             cmdValue.Parameters.AddWithValue("@id", _ingredientID)
             Dim totalValue As Decimal = Convert.ToDecimal(cmdValue.ExecuteScalar())
-            lblTotalValue.Text = "₱" & totalValue.ToString("#,##0.00")
+
+            If Me.Controls.Contains(lblTotalValue) Then
+                lblTotalValue.Text = "₱" & totalValue.ToString("#,##0.00")
+            End If
 
             ' Expiring Soon Count
             Dim sqlExpiring As String = "
@@ -259,12 +331,15 @@ Public Class BatchManagement
             Dim cmdExpiring As New MySqlCommand(sqlExpiring, conn)
             cmdExpiring.Parameters.AddWithValue("@id", _ingredientID)
             Dim expiringCount As Integer = Convert.ToInt32(cmdExpiring.ExecuteScalar())
-            lblExpiringCount.Text = expiringCount.ToString()
 
-            If expiringCount > 0 Then
-                lblExpiringCount.ForeColor = Color.Red
-            Else
-                lblExpiringCount.ForeColor = Color.Green
+            If Me.Controls.Contains(lblExpiringCount) Then
+                lblExpiringCount.Text = expiringCount.ToString()
+
+                If expiringCount > 0 Then
+                    lblExpiringCount.ForeColor = Color.Red
+                Else
+                    lblExpiringCount.ForeColor = Color.Green
+                End If
             End If
 
         Catch ex As Exception
@@ -281,6 +356,16 @@ Public Class BatchManagement
                 Dim batchID As Integer = Convert.ToInt32(dgvBatches.Rows(e.RowIndex).Cells("Batch ID").Value)
                 Dim batchNumber As String = dgvBatches.Rows(e.RowIndex).Cells("Batch Number").Value.ToString()
                 Dim currentStock As Decimal = Convert.ToDecimal(dgvBatches.Rows(e.RowIndex).Cells("Current Stock").Value)
+                Dim batchStatus As String = dgvBatches.Rows(e.RowIndex).Cells("Status").Value.ToString()
+
+                ' Check if already discarded or depleted
+                If batchStatus = "Discarded" OrElse batchStatus = "Depleted" Then
+                    MessageBox.Show("This batch is already " & batchStatus & " and cannot be discarded again.",
+                                  "Cannot Discard",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Warning)
+                    Return
+                End If
 
                 ' Confirm discard
                 Dim result As DialogResult = MessageBox.Show(
@@ -296,7 +381,10 @@ Public Class BatchManagement
                 End If
             End If
         Catch ex As Exception
-            MessageBox.Show("Error processing action: " & ex.Message)
+            MessageBox.Show("Error processing action: " & ex.Message,
+                          "Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -333,12 +421,15 @@ Public Class BatchManagement
                 cmdLog.Parameters.AddWithValue("@batch", batchID)
                 cmdLog.Parameters.AddWithValue("@qty", -currentStock)
                 cmdLog.Parameters.AddWithValue("@before", currentStock)
-                cmdLog.Parameters.AddWithValue("@notes", "Batch " & batchNumber & " discarded by user")
+                cmdLog.Parameters.AddWithValue("@notes", "Batch " & batchNumber & " discarded by user on " & DateTime.Now.ToString())
                 cmdLog.ExecuteNonQuery()
 
                 transaction.Commit()
 
-                MessageBox.Show("Batch discarded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("Batch discarded successfully!",
+                              "Success",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Information)
 
                 ' Refresh data
                 LoadBatchData()
@@ -349,18 +440,20 @@ Public Class BatchManagement
             End Try
 
         Catch ex As Exception
-            MessageBox.Show("Error discarding batch: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error discarding batch: " & ex.Message,
+                          "Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Add new batch for this ingredient
+    ' Add new batch
     Private Sub btnAddBatch_Click(sender As Object, e As EventArgs) Handles btnAddBatch.Click
         Try
-            ' Open AddNewItems form with pre-filled ingredient info
             Dim addForm As New AddNewItems()
-            ' You could pre-fill the ingredient name if you modify AddNewItems to accept it
+            addForm.StartPosition = FormStartPosition.CenterScreen
 
             If addForm.ShowDialog() = DialogResult.OK Then
                 LoadBatchData()
@@ -377,19 +470,20 @@ Public Class BatchManagement
 
             Dim sql As String = "
                 SELECT 
-                    bt.TransactionDate AS 'Date',
+                    bt.TransactionDate AS 'Date/Time',
                     bt.TransactionType AS 'Type',
                     ib.BatchNumber AS 'Batch #',
                     bt.QuantityChanged AS 'Qty Change',
                     bt.StockBefore AS 'Before',
                     bt.StockAfter AS 'After',
                     bt.ReferenceID AS 'Reference',
+                    bt.PerformedBy AS 'Performed By',
                     bt.Notes
                 FROM batch_transactions bt
                 JOIN inventory_batches ib ON bt.BatchID = ib.BatchID
                 WHERE ib.IngredientID = @id
                 ORDER BY bt.TransactionDate DESC
-                LIMIT 50
+                LIMIT 100
             "
 
             Dim cmd As New MySqlCommand(sql, conn)
@@ -399,16 +493,35 @@ Public Class BatchManagement
             Dim dt As New DataTable()
             da.Fill(dt)
 
-            ' Show in a message box or new form (simplified version)
             If dt.Rows.Count > 0 Then
-                MessageBox.Show("Transaction history loaded: " & dt.Rows.Count & " records", "History", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                ' You could create a new form to display this properly
+                ' Create a simple form to show the history
+                Dim historyForm As New Form()
+                historyForm.Text = "Transaction History - " & _ingredientName
+                historyForm.Size = New Size(1000, 600)
+                historyForm.StartPosition = FormStartPosition.CenterParent
+
+                Dim dgv As New DataGridView()
+                dgv.Dock = DockStyle.Fill
+                dgv.DataSource = dt
+                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                dgv.ReadOnly = True
+                dgv.AllowUserToAddRows = False
+                dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+
+                historyForm.Controls.Add(dgv)
+                historyForm.ShowDialog()
             Else
-                MessageBox.Show("No transaction history found.", "History", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("No transaction history found.",
+                              "History",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Information)
             End If
 
         Catch ex As Exception
-            MessageBox.Show("Error loading history: " & ex.Message)
+            MessageBox.Show("Error loading history: " & ex.Message,
+                          "Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try

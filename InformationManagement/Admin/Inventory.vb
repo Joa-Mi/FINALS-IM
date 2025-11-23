@@ -3,15 +3,57 @@
 Public Class Inventory
 
     Private Sub Inventory_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Set form to maximized
-        Me.WindowState = FormWindowState.Maximized
+        Try
 
-        ' Apply responsive layout
-        ApplyResponsiveLayout()
 
-        ' Load data
-        LoadInventorySummary()
-        LoadInventoryStatistics()
+            ' Set form to maximized
+            Me.WindowState = FormWindowState.Maximized
+
+            ' Apply responsive layout
+            ApplyResponsiveLayout()
+
+            ' Load categories dropdown
+            LoadCategories()
+
+            ' Load data
+            LoadInventorySummary()
+            LoadInventoryStatistics()
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading form: " & ex.Message,
+                          "Load Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' Load categories into dropdown
+    Private Sub LoadCategories()
+        Try
+            openConn()
+
+            Dim sql As String = "SELECT CategoryName FROM ingredient_categories ORDER BY CategoryName"
+            Dim cmd As New MySqlCommand(sql, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            Category.Items.Clear()
+            Category.Items.Add("All Categories")
+
+            While reader.Read()
+                Category.Items.Add(reader("CategoryName").ToString())
+            End While
+
+            reader.Close()
+            Category.SelectedIndex = 0
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading categories: " & ex.Message,
+                          "Database Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
+        Finally
+            closeConn()
+        End Try
     End Sub
 
     ' Handle form resize
@@ -30,68 +72,83 @@ Public Class Inventory
             Dim topMargin As Integer = 120
             Dim spacing As Integer = CInt(formWidth * 0.015) ' 1.5% spacing
 
-            ' Position and size for header section (Splitter1)
-            Splitter1.Height = 105
+            ' Position and size for header section
+            If Me.Controls.Contains(Splitter1) Then
+                Splitter1.Height = 105
+            End If
 
             ' Position summary cards
             Dim cardWidth As Integer = CInt((formWidth - (leftMargin * 2) - spacing) / 2)
             Dim cardHeight As Integer = 170
 
-            ' Total Items card (RoundedPane21)
-            RoundedPane21.Location = New Point(leftMargin, topMargin)
-            RoundedPane21.Size = New Size(cardWidth, cardHeight)
+            ' Total Items card
+            If Me.Controls.Contains(RoundedPane21) Then
+                RoundedPane21.Location = New Point(leftMargin, topMargin)
+                RoundedPane21.Size = New Size(cardWidth, cardHeight)
+            End If
 
-            ' Total Value card (RoundedPane22)
-            RoundedPane22.Location = New Point(leftMargin + cardWidth + spacing, topMargin)
-            RoundedPane22.Size = New Size(cardWidth, cardHeight)
+            ' Total Value card
+            If Me.Controls.Contains(RoundedPane22) Then
+                RoundedPane22.Location = New Point(leftMargin + cardWidth + spacing, topMargin)
+                RoundedPane22.Size = New Size(cardWidth, cardHeight)
+            End If
 
             ' Search and filter section
             Dim searchTop As Integer = topMargin + cardHeight + 40
 
             ' Search label
-            Label6.Location = New Point(leftMargin, searchTop)
+            If Me.Controls.Contains(Label6) Then
+                Label6.Location = New Point(leftMargin, searchTop)
+            End If
 
             ' Search textbox - takes 60% width
             Dim searchWidth As Integer = CInt((formWidth - (leftMargin * 2) - spacing) * 0.6)
-            TextBox1.Location = New Point(leftMargin, searchTop + 25)
-            TextBox1.Size = New Size(searchWidth, 22)
+            If Me.Controls.Contains(TextBox1) Then
+                TextBox1.Location = New Point(leftMargin, searchTop + 25)
+                TextBox1.Size = New Size(searchWidth, 22)
+            End If
 
             ' Category label
-            Label7.Location = New Point(leftMargin + searchWidth + spacing, searchTop)
+            If Me.Controls.Contains(Label7) Then
+                Label7.Location = New Point(leftMargin + searchWidth + spacing, searchTop)
+            End If
 
-            ' Category dropdown - takes remaining width
+            ' Category dropdown
             Dim categoryWidth As Integer = formWidth - (leftMargin * 2) - searchWidth - spacing
-            Category.Location = New Point(leftMargin + searchWidth + spacing, searchTop + 25)
-            Category.Size = New Size(categoryWidth, 24)
+            If Me.Controls.Contains(Category) Then
+                Category.Location = New Point(leftMargin + searchWidth + spacing, searchTop + 25)
+                Category.Size = New Size(categoryWidth, 24)
+            End If
 
-            ' Add Item button - positioned at top right
-            AddItem.Location = New Point(formWidth - leftMargin - 165, 27)
-            AddItem.Size = New Size(165, 56)
+            ' Add Item button
+            If Me.Controls.Contains(AddItem) Then
+                AddItem.Location = New Point(formWidth - leftMargin - 165, 27)
+                AddItem.Size = New Size(165, 56)
+            End If
 
-            ' DataGrid - takes full width and remaining height
+            ' DataGrid
             Dim gridTop As Integer = searchTop + 60
             Dim gridHeight As Integer = formHeight - gridTop - 30
 
             InventoryGrid.Location = New Point(leftMargin, gridTop)
             InventoryGrid.Size = New Size(formWidth - (leftMargin * 2), gridHeight)
 
-            ' Adjust DataGrid column widths proportionally
+            ' Adjust DataGrid columns
             AdjustGridColumns()
 
         Catch ex As Exception
-            ' Silent fail to prevent errors during initialization
+            ' Silent fail during resize
         End Try
     End Sub
 
-    ' Adjust DataGrid column widths based on available space
+    ' Adjust DataGrid column widths
     Private Sub AdjustGridColumns()
         Try
             If InventoryGrid.Columns.Count > 0 AndAlso InventoryGrid.Width > 0 Then
-                Dim totalWidth As Integer = InventoryGrid.Width - 20 ' Account for scrollbar
+                Dim totalWidth As Integer = InventoryGrid.Width - 40
 
-                ' Set proportional widths
                 If InventoryGrid.Columns.Contains("Item Name") Then
-                    InventoryGrid.Columns("Item Name").Width = CInt(totalWidth * 0.15)
+                    InventoryGrid.Columns("Item Name").Width = CInt(totalWidth * 0.18)
                 End If
 
                 If InventoryGrid.Columns.Contains("Category") Then
@@ -122,17 +179,8 @@ Public Class Inventory
                     InventoryGrid.Columns("Total Value").Width = CInt(totalWidth * 0.12)
                 End If
 
-                If InventoryGrid.Columns.Contains("Min Level") Then
-                    InventoryGrid.Columns("Min Level").Width = CInt(totalWidth * 0.08)
-                End If
-
-                If InventoryGrid.Columns.Contains("Max Level") Then
-                    InventoryGrid.Columns("Max Level").Width = CInt(totalWidth * 0.08)
-                End If
-
                 If InventoryGrid.Columns.Contains("ViewBatches") Then
                     InventoryGrid.Columns("ViewBatches").Width = 120
-                    InventoryGrid.Columns("ViewBatches").AutoSizeMode = DataGridViewAutoSizeColumnMode.None
                 End If
             End If
         Catch ex As Exception
@@ -140,7 +188,7 @@ Public Class Inventory
         End Try
     End Sub
 
-    ' Load main inventory grid with summary data
+    ' Load main inventory grid
     Private Sub LoadInventorySummary()
         Try
             openConn()
@@ -149,7 +197,7 @@ Public Class Inventory
                 SELECT 
                     i.IngredientID AS 'Ingredient ID',
                     i.IngredientName AS 'Item Name',
-                    ic.CategoryName AS 'Category',
+                    COALESCE(ic.CategoryName, 'Uncategorized') AS 'Category',
                     COALESCE(SUM(ib.StockQuantity), 0) AS 'Total Quantity',
                     i.UnitType AS 'Unit',
                     CASE 
@@ -176,33 +224,33 @@ Public Class Inventory
             Dim cmd As New MySqlCommand(sql, conn)
             Dim da As New MySqlDataAdapter(cmd)
             Dim dt As New DataTable()
-
             da.Fill(dt)
 
-            ' Clear existing columns and set up new ones
+            ' Set datasource
             InventoryGrid.DataSource = Nothing
             InventoryGrid.Columns.Clear()
             InventoryGrid.DataSource = dt
 
-            ' Hide Ingredient ID column
+            ' Hide ID column
             If InventoryGrid.Columns.Contains("Ingredient ID") Then
                 InventoryGrid.Columns("Ingredient ID").Visible = False
             End If
 
-            ' Format columns
+            ' Format grid
             FormatInventoryGrid()
-
-            ' Color code status
             ColorCodeStatusColumn()
 
         Catch ex As Exception
-            MessageBox.Show("Error loading inventory: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error loading inventory: " & ex.Message,
+                          "Database Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Format the inventory grid columns
+    ' Format the grid
     Private Sub FormatInventoryGrid()
         Try
             With InventoryGrid
@@ -211,44 +259,60 @@ Public Class Inventory
                 .DefaultCellStyle.Font = New Font("Segoe UI", 9)
                 .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 10, FontStyle.Bold)
                 .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250)
+                .ReadOnly = False
+                .AllowUserToAddRows = False
+                .AllowUserToDeleteRows = False
+                .SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
-                ' Format specific columns if they exist
+                ' Format columns
                 If .Columns.Contains("Total Value") Then
                     .Columns("Total Value").DefaultCellStyle.Format = "₱#,##0.00"
                     .Columns("Total Value").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                    .Columns("Total Value").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Total Quantity") Then
                     .Columns("Total Quantity").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    .Columns("Total Quantity").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Active Batches") Then
                     .Columns("Active Batches").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    .Columns("Active Batches").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Next Expiration") Then
                     .Columns("Next Expiration").DefaultCellStyle.Format = "MMM dd, yyyy"
                     .Columns("Next Expiration").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    .Columns("Next Expiration").ReadOnly = True
                 End If
 
                 If .Columns.Contains("Status") Then
                     .Columns("Status").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     .Columns("Status").DefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
+                    .Columns("Status").ReadOnly = True
                 End If
+
+                ' Make other columns read-only
+                For Each col As DataGridViewColumn In .Columns
+                    If col.Name <> "ViewBatches" Then
+                        col.ReadOnly = True
+                    End If
+                Next
             End With
 
-            ' Add View Batches button column
+            ' Add View Batches button
             If Not InventoryGrid.Columns.Contains("ViewBatches") Then
-                Dim btnViewBatches As New DataGridViewButtonColumn()
-                btnViewBatches.Name = "ViewBatches"
-                btnViewBatches.HeaderText = "Actions"
-                btnViewBatches.Text = "View Batches"
-                btnViewBatches.UseColumnTextForButtonValue = True
-                btnViewBatches.Width = 120
-                InventoryGrid.Columns.Add(btnViewBatches)
+                Dim btnView As New DataGridViewButtonColumn()
+                btnView.Name = "ViewBatches"
+                btnView.HeaderText = "Actions"
+                btnView.Text = "View Batches"
+                btnView.UseColumnTextForButtonValue = True
+                btnView.Width = 120
+                btnView.FlatStyle = FlatStyle.Flat
+                InventoryGrid.Columns.Add(btnView)
             End If
 
-            ' Apply responsive column widths
             AdjustGridColumns()
 
         Catch ex As Exception
@@ -256,7 +320,7 @@ Public Class Inventory
         End Try
     End Sub
 
-    ' Color code the status column
+    ' Color code status
     Private Sub ColorCodeStatusColumn()
         Try
             For Each row As DataGridViewRow In InventoryGrid.Rows
@@ -281,16 +345,24 @@ Public Class Inventory
                     ' Highlight expiring items
                     If row.Cells("Next Expiration").Value IsNot Nothing AndAlso
                        Not IsDBNull(row.Cells("Next Expiration").Value) Then
-                        Dim expiryDate As Date = Convert.ToDateTime(row.Cells("Next Expiration").Value)
-                        Dim daysLeft As Integer = (expiryDate - Date.Now).Days
+                        Try
+                            Dim expiryDate As Date = Convert.ToDateTime(row.Cells("Next Expiration").Value)
+                            Dim daysLeft As Integer = (expiryDate - Date.Now).Days
 
-                        If daysLeft <= 3 Then
-                            row.Cells("Next Expiration").Style.BackColor = Color.FromArgb(220, 53, 69)
-                            row.Cells("Next Expiration").Style.ForeColor = Color.White
-                        ElseIf daysLeft <= 7 Then
-                            row.Cells("Next Expiration").Style.BackColor = Color.FromArgb(255, 193, 7)
-                            row.Cells("Next Expiration").Style.ForeColor = Color.Black
-                        End If
+                            If daysLeft <= 0 Then
+                                row.Cells("Next Expiration").Style.BackColor = Color.FromArgb(139, 0, 0)
+                                row.Cells("Next Expiration").Style.ForeColor = Color.White
+                                row.Cells("Next Expiration").Style.Font = New Font("Segoe UI", 9, FontStyle.Bold)
+                            ElseIf daysLeft <= 3 Then
+                                row.Cells("Next Expiration").Style.BackColor = Color.FromArgb(220, 53, 69)
+                                row.Cells("Next Expiration").Style.ForeColor = Color.White
+                            ElseIf daysLeft <= 7 Then
+                                row.Cells("Next Expiration").Style.BackColor = Color.FromArgb(255, 193, 7)
+                                row.Cells("Next Expiration").Style.ForeColor = Color.Black
+                            End If
+                        Catch
+                            ' Skip if date conversion fails
+                        End Try
                     End If
                 End If
             Next
@@ -299,43 +371,53 @@ Public Class Inventory
         End Try
     End Sub
 
-    ' Load statistics in the top panels
+    ' Load statistics
     Private Sub LoadInventoryStatistics()
         Try
             openConn()
 
             ' Total Items
-            Dim sqlTotalItems As String = "
+            Dim sqlTotal As String = "
                 SELECT COUNT(DISTINCT i.IngredientID) 
                 FROM ingredients i
                 WHERE i.IsActive = 1
             "
-            Dim cmdTotal As New MySqlCommand(sqlTotalItems, conn)
+            Dim cmdTotal As New MySqlCommand(sqlTotal, conn)
             Dim totalItems As Integer = Convert.ToInt32(cmdTotal.ExecuteScalar())
-            Label5.Text = totalItems.ToString()
+
+            If Me.Controls.Contains(Label5) Then
+                Label5.Text = totalItems.ToString("#,##0")
+            End If
 
             ' Total Value
-            Dim sqlTotalValue As String = "
+            Dim sqlValue As String = "
                 SELECT COALESCE(SUM(ib.StockQuantity * ib.CostPerUnit), 0)
                 FROM inventory_batches ib
                 WHERE ib.BatchStatus = 'Active'
             "
-            Dim cmdValue As New MySqlCommand(sqlTotalValue, conn)
+            Dim cmdValue As New MySqlCommand(sqlValue, conn)
             Dim totalValue As Decimal = Convert.ToDecimal(cmdValue.ExecuteScalar())
-            Label11.Text = "₱" & totalValue.ToString("#,##0.00")
+
+            If Me.Controls.Contains(Label11) Then
+                Label11.Text = "₱" & totalValue.ToString("#,##0.00")
+            End If
 
         Catch ex As Exception
-            MessageBox.Show("Error loading statistics: " & ex.Message)
+            MessageBox.Show("Error loading statistics: " & ex.Message,
+                          "Statistics Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Handle cell click events (View Batches button)
+    ' Handle View Batches button click
     Private Sub InventoryGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InventoryGrid.CellContentClick
         Try
-            ' Check if it's the button column and not header
-            If e.RowIndex >= 0 AndAlso e.ColumnIndex = InventoryGrid.Columns("ViewBatches").Index Then
+            If e.RowIndex >= 0 AndAlso e.ColumnIndex >= 0 AndAlso
+               InventoryGrid.Columns(e.ColumnIndex).Name = "ViewBatches" Then
+
                 Dim ingredientID As Integer = Convert.ToInt32(InventoryGrid.Rows(e.RowIndex).Cells("Ingredient ID").Value)
                 Dim ingredientName As String = InventoryGrid.Rows(e.RowIndex).Cells("Item Name").Value.ToString()
 
@@ -344,12 +426,15 @@ Public Class Inventory
                 batchForm.StartPosition = FormStartPosition.CenterScreen
                 batchForm.ShowDialog()
 
-                ' Refresh after closing batch form
+                ' Refresh after closing
                 LoadInventorySummary()
                 LoadInventoryStatistics()
             End If
         Catch ex As Exception
-            MessageBox.Show("Error opening batch details: " & ex.Message)
+            MessageBox.Show("Error opening batch details: " & ex.Message,
+                          "Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -367,9 +452,11 @@ Public Class Inventory
                         "[Item Name] LIKE '%{0}%' OR [Category] LIKE '%{0}%'",
                         searchText.Replace("'", "''"))
                 End If
+
+                ColorCodeStatusColumn()
             End If
         Catch ex As Exception
-            MessageBox.Show("Error searching: " & ex.Message)
+            ' Silent fail for search
         End Try
     End Sub
 
@@ -387,29 +474,33 @@ Public Class Inventory
                         "[Category] = '{0}'",
                         selectedCategory.Replace("'", "''"))
                 End If
+
+                ColorCodeStatusColumn()
             End If
         Catch ex As Exception
-            MessageBox.Show("Error filtering: " & ex.Message)
+            ' Silent fail for filter
         End Try
     End Sub
 
-    ' Opens the Add New Items Form (Add New Batch)
+    ' Add new batch
     Private Sub AddItem_Click(sender As Object, e As EventArgs) Handles AddItem.Click
         Try
             Dim addForm As New AddNewItems()
             addForm.StartPosition = FormStartPosition.CenterScreen
 
             If addForm.ShowDialog() = DialogResult.OK Then
-                ' Refresh inventory after adding
                 LoadInventorySummary()
                 LoadInventoryStatistics()
             End If
         Catch ex As Exception
-            MessageBox.Show("Error opening add form: " & ex.Message)
+            MessageBox.Show("Error opening add form: " & ex.Message,
+                          "Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error)
         End Try
     End Sub
 
-    ' Refresh button
+    ' Public refresh method
     Public Sub RefreshInventory()
         LoadInventorySummary()
         LoadInventoryStatistics()
