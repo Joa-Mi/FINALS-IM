@@ -1,9 +1,8 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Reservations
     Inherits System.Windows.Forms.Form
 
-    'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -14,277 +13,288 @@ Partial Class Reservations
         End Try
     End Sub
 
-    'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reservations))
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.btnAddNewReservation = New System.Windows.Forms.Button()
-        Me.ReservationID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CustomerID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AssignedStaffID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ReservationType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EventType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EventTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.NumberOfGuests = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProductSelection = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SpecialRequests = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ReservationStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ReservationDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Address = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ServiceType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DeliveryOption = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ContactNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Actions = New System.Windows.Forms.DataGridViewButtonColumn()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblTitle = New System.Windows.Forms.Label()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btnDelete = New System.Windows.Forms.Button()
+        Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.txtSearch = New System.Windows.Forms.TextBox()
+        Me.lblSearch = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.btnViewAll = New System.Windows.Forms.Button()
+        Me.btnViewCancelled = New System.Windows.Forms.Button()
+        Me.btnViewConfirmed = New System.Windows.Forms.Button()
+        Me.btnViewPending = New System.Windows.Forms.Button()
+        Me.lblFilter = New System.Windows.Forms.Label()
+        Me.Reservation = New System.Windows.Forms.DataGridView()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.lblTotalReservations = New System.Windows.Forms.Label()
+        Me.Panel1.SuspendLayout()
+        Me.Panel2.SuspendLayout()
+        Me.Panel3.SuspendLayout()
+        CType(Me.Reservation, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel4.SuspendLayout()
         Me.SuspendLayout()
         '
-        'Label1
+        'Panel1
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(254, Byte))
-        Me.Label1.Location = New System.Drawing.Point(29, 30)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(361, 31)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Reservations Management"
+        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(50, Byte), Integer))
+        Me.Panel1.Controls.Add(Me.lblTitle)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1371, 64)
+        Me.Panel1.TabIndex = 0
         '
-        'DataGridView1
+        'lblTitle
         '
-        Me.DataGridView1.AllowDrop = True
-        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
-        Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.DataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
-        Me.DataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridView1.ColumnHeadersHeight = 40
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ReservationID, Me.CustomerID, Me.AssignedStaffID, Me.ReservationType, Me.EventType, Me.EventTime, Me.NumberOfGuests, Me.ProductSelection, Me.SpecialRequests, Me.ReservationStatus, Me.ReservationDate, Me.Address, Me.ServiceType, Me.DeliveryOption, Me.ContactNumber, Me.Actions})
+        Me.lblTitle.AutoSize = True
+        Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTitle.ForeColor = System.Drawing.Color.White
+        Me.lblTitle.Location = New System.Drawing.Point(14, 13)
+        Me.lblTitle.Name = "lblTitle"
+        Me.lblTitle.Size = New System.Drawing.Size(392, 41)
+        Me.lblTitle.TabIndex = 0
+        Me.lblTitle.Text = "Reservations Management"
+        '
+        'Panel2
+        '
+        Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.btnDelete)
+        Me.Panel2.Controls.Add(Me.btnRefresh)
+        Me.Panel2.Controls.Add(Me.txtSearch)
+        Me.Panel2.Controls.Add(Me.lblSearch)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 64)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Padding = New System.Windows.Forms.Padding(11, 11, 11, 11)
+        Me.Panel2.Size = New System.Drawing.Size(1371, 64)
+        Me.Panel2.TabIndex = 1
+        '
+        'btnDelete
+        '
+        Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDelete.BackColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDelete.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnDelete.ForeColor = System.Drawing.Color.White
+        Me.btnDelete.Location = New System.Drawing.Point(932, 17)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(114, 32)
+        Me.btnDelete.TabIndex = 4
+        Me.btnDelete.Text = "Delete"
+        Me.btnDelete.UseVisualStyleBackColor = False
+        '
+        'btnRefresh
+        '
+        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefresh.BackColor = System.Drawing.Color.FromArgb(CType(CType(108, Byte), Integer), CType(CType(117, Byte), Integer), CType(CType(125, Byte), Integer))
+        Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnRefresh.ForeColor = System.Drawing.Color.White
+        Me.btnRefresh.Location = New System.Drawing.Point(800, 16)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(114, 32)
+        Me.btnRefresh.TabIndex = 2
+        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.UseVisualStyleBackColor = False
+        '
+        'txtSearch
+        '
+        Me.txtSearch.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtSearch.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.txtSearch.Location = New System.Drawing.Point(91, 18)
+        Me.txtSearch.Name = "txtSearch"
+        Me.txtSearch.Size = New System.Drawing.Size(685, 30)
+        Me.txtSearch.TabIndex = 1
+        '
+        'lblSearch
+        '
+        Me.lblSearch.AutoSize = True
+        Me.lblSearch.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSearch.Location = New System.Drawing.Point(15, 21)
+        Me.lblSearch.Name = "lblSearch"
+        Me.lblSearch.Size = New System.Drawing.Size(68, 23)
+        Me.lblSearch.TabIndex = 0
+        Me.lblSearch.Text = "Search:"
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.White
+        Me.Panel3.Controls.Add(Me.btnViewAll)
+        Me.Panel3.Controls.Add(Me.btnViewCancelled)
+        Me.Panel3.Controls.Add(Me.btnViewConfirmed)
+        Me.Panel3.Controls.Add(Me.btnViewPending)
+        Me.Panel3.Controls.Add(Me.lblFilter)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel3.Location = New System.Drawing.Point(0, 128)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Padding = New System.Windows.Forms.Padding(11, 11, 11, 11)
+        Me.Panel3.Size = New System.Drawing.Size(1371, 53)
+        Me.Panel3.TabIndex = 2
+        '
+        'btnViewAll
+        '
+        Me.btnViewAll.BackColor = System.Drawing.Color.FromArgb(CType(CType(108, Byte), Integer), CType(CType(117, Byte), Integer), CType(CType(125, Byte), Integer))
+        Me.btnViewAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnViewAll.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnViewAll.ForeColor = System.Drawing.Color.White
+        Me.btnViewAll.Location = New System.Drawing.Point(514, 11)
+        Me.btnViewAll.Name = "btnViewAll"
+        Me.btnViewAll.Size = New System.Drawing.Size(114, 32)
+        Me.btnViewAll.TabIndex = 4
+        Me.btnViewAll.Text = "All"
+        Me.btnViewAll.UseVisualStyleBackColor = False
+        '
+        'btnViewCancelled
+        '
+        Me.btnViewCancelled.BackColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.btnViewCancelled.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnViewCancelled.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnViewCancelled.ForeColor = System.Drawing.Color.White
+        Me.btnViewCancelled.Location = New System.Drawing.Point(389, 11)
+        Me.btnViewCancelled.Name = "btnViewCancelled"
+        Me.btnViewCancelled.Size = New System.Drawing.Size(114, 32)
+        Me.btnViewCancelled.TabIndex = 3
+        Me.btnViewCancelled.Text = "Cancelled"
+        Me.btnViewCancelled.UseVisualStyleBackColor = False
+        '
+        'btnViewConfirmed
+        '
+        Me.btnViewConfirmed.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.btnViewConfirmed.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnViewConfirmed.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnViewConfirmed.ForeColor = System.Drawing.Color.White
+        Me.btnViewConfirmed.Location = New System.Drawing.Point(263, 11)
+        Me.btnViewConfirmed.Name = "btnViewConfirmed"
+        Me.btnViewConfirmed.Size = New System.Drawing.Size(114, 32)
+        Me.btnViewConfirmed.TabIndex = 2
+        Me.btnViewConfirmed.Text = "Confirmed"
+        Me.btnViewConfirmed.UseVisualStyleBackColor = False
+        '
+        'btnViewPending
+        '
+        Me.btnViewPending.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(193, Byte), Integer), CType(CType(7, Byte), Integer))
+        Me.btnViewPending.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnViewPending.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.btnViewPending.ForeColor = System.Drawing.Color.Black
+        Me.btnViewPending.Location = New System.Drawing.Point(137, 11)
+        Me.btnViewPending.Name = "btnViewPending"
+        Me.btnViewPending.Size = New System.Drawing.Size(114, 32)
+        Me.btnViewPending.TabIndex = 1
+        Me.btnViewPending.Text = "Pending"
+        Me.btnViewPending.UseVisualStyleBackColor = False
+        '
+        'lblFilter
+        '
+        Me.lblFilter.AutoSize = True
+        Me.lblFilter.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblFilter.Location = New System.Drawing.Point(15, 16)
+        Me.lblFilter.Name = "lblFilter"
+        Me.lblFilter.Size = New System.Drawing.Size(112, 23)
+        Me.lblFilter.TabIndex = 0
+        Me.lblFilter.Text = "Filter Status:"
+        '
+        'Reservation
+        '
+        Me.Reservation.AllowUserToAddRows = False
+        Me.Reservation.AllowUserToDeleteRows = False
+        Me.Reservation.AllowUserToResizeRows = False
+        Me.Reservation.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
+        Me.Reservation.BackgroundColor = System.Drawing.Color.White
+        Me.Reservation.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.Reservation.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.Reservation.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.EnableHeadersVisualStyles = False
-        Me.DataGridView1.Location = New System.Drawing.Point(35, 79)
-        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
-        Me.DataGridView1.Name = "DataGridView1"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.DataGridView1.RowHeadersVisible = False
-        Me.DataGridView1.RowHeadersWidth = 51
-        DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
-        Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle4
-        Me.DataGridView1.Size = New System.Drawing.Size(1150, 116)
-        Me.DataGridView1.TabIndex = 5
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Reservation.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.Reservation.ColumnHeadersHeight = 40
+        Me.Reservation.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.Reservation.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Reservation.EnableHeadersVisualStyles = False
+        Me.Reservation.Location = New System.Drawing.Point(0, 181)
+        Me.Reservation.Name = "Reservation"
+        Me.Reservation.ReadOnly = True
+        Me.Reservation.RowHeadersVisible = False
+        Me.Reservation.RowHeadersWidth = 51
+        Me.Reservation.RowTemplate.Height = 35
+        Me.Reservation.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.Reservation.Size = New System.Drawing.Size(1371, 491)
+        Me.Reservation.TabIndex = 3
         '
-        'btnAddNewReservation
+        'Panel4
         '
-        Me.btnAddNewReservation.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(50, Byte), Integer))
-        Me.btnAddNewReservation.FlatAppearance.BorderSize = 0
-        Me.btnAddNewReservation.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnAddNewReservation.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAddNewReservation.ForeColor = System.Drawing.Color.White
-        Me.btnAddNewReservation.Image = CType(resources.GetObject("btnAddNewReservation.Image"), System.Drawing.Image)
-        Me.btnAddNewReservation.Location = New System.Drawing.Point(953, 27)
-        Me.btnAddNewReservation.Name = "btnAddNewReservation"
-        Me.btnAddNewReservation.Size = New System.Drawing.Size(224, 44)
-        Me.btnAddNewReservation.TabIndex = 6
-        Me.btnAddNewReservation.Text = "   Add New Reservation"
-        Me.btnAddNewReservation.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnAddNewReservation.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnAddNewReservation.UseVisualStyleBackColor = False
+        Me.Panel4.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel4.Controls.Add(Me.lblTotalReservations)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel4.Location = New System.Drawing.Point(0, 672)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(1371, 32)
+        Me.Panel4.TabIndex = 4
         '
-        'ReservationID
+        'lblTotalReservations
         '
-        Me.ReservationID.DataPropertyName = "colReservationID"
-        Me.ReservationID.HeaderText = "Reservation ID"
-        Me.ReservationID.MinimumWidth = 6
-        Me.ReservationID.Name = "ReservationID"
-        Me.ReservationID.Width = 75
-        '
-        'CustomerID
-        '
-        Me.CustomerID.DataPropertyName = "colCustomerID"
-        Me.CustomerID.HeaderText = "CustomerID"
-        Me.CustomerID.MinimumWidth = 6
-        Me.CustomerID.Name = "CustomerID"
-        Me.CustomerID.Width = 150
-        '
-        'AssignedStaffID
-        '
-        Me.AssignedStaffID.DataPropertyName = "colAssignedStaffID"
-        Me.AssignedStaffID.HeaderText = "Assigned Staff ID"
-        Me.AssignedStaffID.MinimumWidth = 6
-        Me.AssignedStaffID.Name = "AssignedStaffID"
-        Me.AssignedStaffID.Width = 150
-        '
-        'ReservationType
-        '
-        Me.ReservationType.DataPropertyName = "colReservationType"
-        Me.ReservationType.HeaderText = "Reservation Type"
-        Me.ReservationType.MinimumWidth = 6
-        Me.ReservationType.Name = "ReservationType"
-        Me.ReservationType.Width = 120
-        '
-        'EventType
-        '
-        Me.EventType.DataPropertyName = "colEventType"
-        Me.EventType.HeaderText = "Event Type"
-        Me.EventType.MinimumWidth = 6
-        Me.EventType.Name = "EventType"
-        Me.EventType.Width = 120
-        '
-        'EventTime
-        '
-        Me.EventTime.DataPropertyName = "colEventTime"
-        Me.EventTime.HeaderText = "Event Time"
-        Me.EventTime.MinimumWidth = 6
-        Me.EventTime.Name = "EventTime"
-        Me.EventTime.Width = 120
-        '
-        'NumberOfGuests
-        '
-        Me.NumberOfGuests.DataPropertyName = "colNumberOfGuests"
-        Me.NumberOfGuests.HeaderText = "Number Of Guests"
-        Me.NumberOfGuests.MinimumWidth = 6
-        Me.NumberOfGuests.Name = "NumberOfGuests"
-        Me.NumberOfGuests.Width = 120
-        '
-        'ProductSelection
-        '
-        Me.ProductSelection.DataPropertyName = "colProductSelection"
-        Me.ProductSelection.HeaderText = "Product Selection"
-        Me.ProductSelection.MinimumWidth = 6
-        Me.ProductSelection.Name = "ProductSelection"
-        Me.ProductSelection.Width = 125
-        '
-        'SpecialRequests
-        '
-        Me.SpecialRequests.DataPropertyName = "colSpecialRequests"
-        Me.SpecialRequests.HeaderText = "Special Requests"
-        Me.SpecialRequests.MinimumWidth = 6
-        Me.SpecialRequests.Name = "SpecialRequests"
-        Me.SpecialRequests.Width = 125
-        '
-        'ReservationStatus
-        '
-        Me.ReservationStatus.DataPropertyName = "colReservationStatus"
-        Me.ReservationStatus.HeaderText = "Reservation Status"
-        Me.ReservationStatus.MinimumWidth = 6
-        Me.ReservationStatus.Name = "ReservationStatus"
-        Me.ReservationStatus.Width = 125
-        '
-        'ReservationDate
-        '
-        Me.ReservationDate.DataPropertyName = "colReservationDate"
-        Me.ReservationDate.HeaderText = "Reservation Date"
-        Me.ReservationDate.MinimumWidth = 6
-        Me.ReservationDate.Name = "ReservationDate"
-        Me.ReservationDate.Width = 125
-        '
-        'Address
-        '
-        Me.Address.DataPropertyName = "colAddress"
-        Me.Address.HeaderText = "Address"
-        Me.Address.MinimumWidth = 6
-        Me.Address.Name = "Address"
-        Me.Address.Width = 125
-        '
-        'ServiceType
-        '
-        Me.ServiceType.DataPropertyName = "colServiceType"
-        Me.ServiceType.HeaderText = "Service Type"
-        Me.ServiceType.MinimumWidth = 6
-        Me.ServiceType.Name = "ServiceType"
-        Me.ServiceType.Width = 125
-        '
-        'DeliveryOption
-        '
-        Me.DeliveryOption.DataPropertyName = "colDeliveryOption"
-        Me.DeliveryOption.HeaderText = "Delivery Option"
-        Me.DeliveryOption.MinimumWidth = 6
-        Me.DeliveryOption.Name = "DeliveryOption"
-        Me.DeliveryOption.Width = 125
-        '
-        'ContactNumber
-        '
-        Me.ContactNumber.DataPropertyName = "colContactNumber"
-        Me.ContactNumber.HeaderText = "Contact Number"
-        Me.ContactNumber.MinimumWidth = 6
-        Me.ContactNumber.Name = "ContactNumber"
-        Me.ContactNumber.Width = 125
-        '
-        'Actions
-        '
-        Me.Actions.HeaderText = "Actions"
-        Me.Actions.MinimumWidth = 6
-        Me.Actions.Name = "Actions"
-        Me.Actions.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Actions.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.Actions.Width = 150
+        Me.lblTotalReservations.AutoSize = True
+        Me.lblTotalReservations.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTotalReservations.Location = New System.Drawing.Point(14, 7)
+        Me.lblTotalReservations.Name = "lblTotalReservations"
+        Me.lblTotalReservations.Size = New System.Drawing.Size(156, 20)
+        Me.lblTotalReservations.TabIndex = 0
+        Me.lblTotalReservations.Text = "Total Reservations: 0"
         '
         'Reservations
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.GhostWhite
-        Me.ClientSize = New System.Drawing.Size(1189, 830)
-        Me.Controls.Add(Me.btnAddNewReservation)
-        Me.Controls.Add(Me.DataGridView1)
-        Me.Controls.Add(Me.Label1)
-        Me.DoubleBuffered = True
-        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ClientSize = New System.Drawing.Size(1371, 704)
+        Me.Controls.Add(Me.Reservation)
+        Me.Controls.Add(Me.Panel4)
+        Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.Panel2)
+        Me.Controls.Add(Me.Panel1)
+        Me.MinimumSize = New System.Drawing.Size(912, 637)
         Me.Name = "Reservations"
-        Me.Text = "Reservations"
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Reservations Management - Tabeya"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout()
+        CType(Me.Reservation, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents Label1 As Label
-    Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents btnAddNewReservation As Button
-    Friend WithEvents ReservationID As DataGridViewTextBoxColumn
-    Friend WithEvents CustomerID As DataGridViewTextBoxColumn
-    Friend WithEvents AssignedStaffID As DataGridViewTextBoxColumn
-    Friend WithEvents ReservationType As DataGridViewTextBoxColumn
-    Friend WithEvents EventType As DataGridViewTextBoxColumn
-    Friend WithEvents EventTime As DataGridViewTextBoxColumn
-    Friend WithEvents NumberOfGuests As DataGridViewTextBoxColumn
-    Friend WithEvents ProductSelection As DataGridViewTextBoxColumn
-    Friend WithEvents SpecialRequests As DataGridViewTextBoxColumn
-    Friend WithEvents ReservationStatus As DataGridViewTextBoxColumn
-    Friend WithEvents ReservationDate As DataGridViewTextBoxColumn
-    Friend WithEvents Address As DataGridViewTextBoxColumn
-    Friend WithEvents ServiceType As DataGridViewTextBoxColumn
-    Friend WithEvents DeliveryOption As DataGridViewTextBoxColumn
-    Friend WithEvents ContactNumber As DataGridViewTextBoxColumn
-    Friend WithEvents Actions As DataGridViewButtonColumn
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents lblTitle As Label
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents txtSearch As TextBox
+    Friend WithEvents lblSearch As Label
+    Friend WithEvents btnRefresh As Button
+    Friend WithEvents btnDelete As Button
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents lblFilter As Label
+    Friend WithEvents btnViewPending As Button
+    Friend WithEvents btnViewConfirmed As Button
+    Friend WithEvents btnViewCancelled As Button
+    Friend WithEvents btnViewAll As Button
+    Friend WithEvents Reservation As DataGridView
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents lblTotalReservations As Label
 End Class
