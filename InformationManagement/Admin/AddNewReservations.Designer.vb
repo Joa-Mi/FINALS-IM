@@ -235,6 +235,7 @@ Partial Class PanelCreateReservation
         Me.txtNote.Name = "txtNote"
         Me.txtNote.NormalBorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.txtNote.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtNote.ReadOnly = False
         Me.txtNote.Size = New System.Drawing.Size(438, 91)
         Me.txtNote.TabIndex = 25
         Me.txtNote.TextBoxBackColor = System.Drawing.Color.WhiteSmoke
@@ -252,6 +253,7 @@ Partial Class PanelCreateReservation
         Me.txtPhone.Name = "txtPhone"
         Me.txtPhone.NormalBorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.txtPhone.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtPhone.ReadOnly = False
         Me.txtPhone.Size = New System.Drawing.Size(438, 40)
         Me.txtPhone.TabIndex = 24
         Me.txtPhone.TextBoxBackColor = System.Drawing.Color.WhiteSmoke
@@ -269,6 +271,7 @@ Partial Class PanelCreateReservation
         Me.txtEmail.Name = "txtEmail"
         Me.txtEmail.NormalBorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.txtEmail.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtEmail.ReadOnly = False
         Me.txtEmail.Size = New System.Drawing.Size(438, 40)
         Me.txtEmail.TabIndex = 23
         Me.txtEmail.TextBoxBackColor = System.Drawing.Color.WhiteSmoke
@@ -286,6 +289,7 @@ Partial Class PanelCreateReservation
         Me.txtFullName.Name = "txtFullName"
         Me.txtFullName.NormalBorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.txtFullName.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtFullName.ReadOnly = False
         Me.txtFullName.Size = New System.Drawing.Size(438, 40)
         Me.txtFullName.TabIndex = 22
         Me.txtFullName.TextBoxBackColor = System.Drawing.Color.WhiteSmoke

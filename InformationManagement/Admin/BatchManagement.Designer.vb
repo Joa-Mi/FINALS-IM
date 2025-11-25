@@ -19,8 +19,8 @@
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblIngredientName = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -57,7 +57,7 @@
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1400, 80)
+        Me.Panel1.Size = New System.Drawing.Size(1370, 80)
         Me.Panel1.TabIndex = 0
         '
         'lblIngredientName
@@ -67,7 +67,7 @@
         Me.lblIngredientName.ForeColor = System.Drawing.Color.White
         Me.lblIngredientName.Location = New System.Drawing.Point(20, 28)
         Me.lblIngredientName.Name = "lblIngredientName"
-        Me.lblIngredientName.Size = New System.Drawing.Size(220, 32)
+        Me.lblIngredientName.Size = New System.Drawing.Size(208, 32)
         Me.lblIngredientName.TabIndex = 1
         Me.lblIngredientName.Text = "Ingredient Name"
         '
@@ -78,7 +78,7 @@
         Me.Label1.ForeColor = System.Drawing.Color.LightGray
         Me.Label1.Location = New System.Drawing.Point(23, 9)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(125, 15)
+        Me.Label1.Size = New System.Drawing.Size(129, 15)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Batch Management for"
         '
@@ -99,7 +99,7 @@
         Me.lblTotalStock.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTotalStock.Location = New System.Drawing.Point(15, 45)
         Me.lblTotalStock.Name = "lblTotalStock"
-        Me.lblTotalStock.Size = New System.Drawing.Size(59, 37)
+        Me.lblTotalStock.Size = New System.Drawing.Size(56, 37)
         Me.lblTotalStock.TabIndex = 1
         Me.lblTotalStock.Text = "0.0"
         '
@@ -110,7 +110,7 @@
         Me.Label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.Label3.Location = New System.Drawing.Point(18, 15)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(80, 19)
+        Me.Label3.Size = New System.Drawing.Size(79, 19)
         Me.Label3.TabIndex = 0
         Me.Label3.Text = "Total Stock"
         '
@@ -142,7 +142,7 @@
         Me.Label5.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.Label5.Location = New System.Drawing.Point(18, 15)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(104, 19)
+        Me.Label5.Size = New System.Drawing.Size(100, 19)
         Me.Label5.TabIndex = 0
         Me.Label5.Text = "Active Batches"
         '
@@ -163,7 +163,7 @@
         Me.lblTotalValue.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTotalValue.Location = New System.Drawing.Point(15, 48)
         Me.lblTotalValue.Name = "lblTotalValue"
-        Me.lblTotalValue.Size = New System.Drawing.Size(91, 32)
+        Me.lblTotalValue.Size = New System.Drawing.Size(78, 32)
         Me.lblTotalValue.TabIndex = 1
         Me.lblTotalValue.Text = "₱0.00"
         '
@@ -174,7 +174,7 @@
         Me.Label7.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.Label7.Location = New System.Drawing.Point(18, 15)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(81, 19)
+        Me.Label7.Size = New System.Drawing.Size(78, 19)
         Me.Label7.TabIndex = 0
         Me.Label7.Text = "Total Value"
         '
@@ -207,7 +207,7 @@
         Me.Label9.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.Label9.Location = New System.Drawing.Point(18, 15)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(149, 19)
+        Me.Label9.Size = New System.Drawing.Size(150, 19)
         Me.Label9.TabIndex = 0
         Me.Label9.Text = "Expiring Soon (7 days)"
         '
@@ -218,22 +218,22 @@
         Me.dgvBatches.BackgroundColor = System.Drawing.Color.White
         Me.dgvBatches.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvBatches.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(50, Byte), Integer))
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvBatches.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(50, Byte), Integer))
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvBatches.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvBatches.ColumnHeadersHeight = 40
         Me.dgvBatches.EnableHeadersVisualStyles = False
         Me.dgvBatches.Location = New System.Drawing.Point(25, 265)
         Me.dgvBatches.Name = "dgvBatches"
         Me.dgvBatches.ReadOnly = True
         Me.dgvBatches.RowHeadersVisible = False
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dgvBatches.RowsDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dgvBatches.RowsDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvBatches.Size = New System.Drawing.Size(1350, 380)
         Me.dgvBatches.TabIndex = 5
         '
@@ -243,7 +243,7 @@
         Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(25, 230)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(122, 21)
+        Me.Label2.Size = New System.Drawing.Size(126, 21)
         Me.Label2.TabIndex = 6
         Me.Label2.Text = "Batch Inventory"
         '
@@ -291,7 +291,7 @@
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ClientSize = New System.Drawing.Size(1400, 720)
+        Me.ClientSize = New System.Drawing.Size(1370, 720)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnViewHistory)
         Me.Controls.Add(Me.btnAddBatch)

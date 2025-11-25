@@ -109,4 +109,8 @@ Public Class PanelCreateReservation
     Private Sub FormAddNewReservations_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.Close()
     End Sub
+
+    Private Sub cmbEventType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEventType.SelectedIndexChanged
+
+    End Sub
 End Class
