@@ -7,12 +7,9 @@ Public Class Adminlogin
         ' Optional
     End Sub
 
-    Private Sub Back1_Click(sender As Object, e As EventArgs) Handles Back1.Click
-        Login.WindowState = Me.WindowState
-        Login.Size = Me.Size
-        Login.Location = Me.Location
-        Login.Show()
-        Me.Hide()
+    Private Sub Back1_Click(sender As Object, e As EventArgs)
+        ' Close the application when Back is clicked
+        Application.Exit()
     End Sub
 
     Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
@@ -20,9 +17,7 @@ Public Class Adminlogin
     End Sub
 
     Private Sub Adminlogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.WindowState = Login.WindowState
-        Me.Size = Login.Size
-        Me.Location = Login.Location
+        ' Form is now the startup form - no need to sync with Login
     End Sub
 
 
@@ -90,4 +85,7 @@ Public Class Adminlogin
 
     End Sub
 
+    Private Sub PictureBox1_Click(sender As Object, e As EventArgs)
+
+    End Sub
 End Class
