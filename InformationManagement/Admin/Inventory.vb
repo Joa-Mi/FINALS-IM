@@ -4,8 +4,6 @@ Public Class Inventory
 
     Private Sub Inventory_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-
-
             ' Set form to maximized
             Me.WindowState = FormWindowState.Maximized
 
@@ -207,14 +205,13 @@ Public Class Inventory
                         ELSE 'In Stock'
                     END AS 'Status',
                     COUNT(CASE WHEN ib.BatchStatus = 'Active' THEN 1 END) AS 'Active Batches',
-                    MIN(ib.ExpirationDate) AS 'Next Expiration',
-                    COALESCE(SUM(ib.StockQuantity * ib.CostPerUnit), 0) AS 'Total Value',
+                    MIN(CASE WHEN ib.BatchStatus = 'Active' THEN ib.ExpirationDate END) AS 'Next Expiration',
+                    COALESCE(SUM(CASE WHEN ib.BatchStatus = 'Active' THEN ib.StockQuantity * ib.CostPerUnit END), 0) AS 'Total Value',
                     i.MinStockLevel AS 'Min Level',
                     i.MaxStockLevel AS 'Max Level'
                 FROM ingredients i
                 LEFT JOIN ingredient_categories ic ON i.CategoryID = ic.CategoryID
-                LEFT JOIN inventory_batches ib ON i.IngredientID = ib.IngredientID 
-                    AND ib.BatchStatus = 'Active'
+                LEFT JOIN inventory_batches ib ON i.IngredientID = ib.IngredientID
                 WHERE i.IsActive = 1
                 GROUP BY i.IngredientID, i.IngredientName, ic.CategoryName, 
                          i.UnitType, i.MinStockLevel, i.MaxStockLevel
@@ -231,9 +228,15 @@ Public Class Inventory
             InventoryGrid.Columns.Clear()
             InventoryGrid.DataSource = dt
 
-            ' Hide ID column
+            ' Hide ID and level columns
             If InventoryGrid.Columns.Contains("Ingredient ID") Then
                 InventoryGrid.Columns("Ingredient ID").Visible = False
+            End If
+            If InventoryGrid.Columns.Contains("Min Level") Then
+                InventoryGrid.Columns("Min Level").Visible = False
+            End If
+            If InventoryGrid.Columns.Contains("Max Level") Then
+                InventoryGrid.Columns("Max Level").Visible = False
             End If
 
             ' Format grid
@@ -293,7 +296,7 @@ Public Class Inventory
                     .Columns("Status").ReadOnly = True
                 End If
 
-                ' Make other columns read-only
+                ' Make all columns read-only except view batches button
                 For Each col As DataGridViewColumn In .Columns
                     If col.Name <> "ViewBatches" Then
                         col.ReadOnly = True
@@ -376,7 +379,7 @@ Public Class Inventory
         Try
             openConn()
 
-            ' Total Items
+            ' Total Items (Active Ingredients)
             Dim sqlTotal As String = "
                 SELECT COUNT(DISTINCT i.IngredientID) 
                 FROM ingredients i
@@ -389,7 +392,7 @@ Public Class Inventory
                 Label5.Text = totalItems.ToString("#,##0")
             End If
 
-            ' Total Value
+            ' Total Value (Active Batches Only)
             Dim sqlValue As String = "
                 SELECT COALESCE(SUM(ib.StockQuantity * ib.CostPerUnit), 0)
                 FROM inventory_batches ib
