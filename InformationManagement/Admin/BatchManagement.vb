@@ -58,6 +58,7 @@ Public Class BatchManagement
                     Notes
                 FROM inventory_batches
                 WHERE IngredientID = @ingredientID
+                  AND BatchStatus <> 'Deleted'
                 ORDER BY 
                     CASE BatchStatus
                         WHEN 'Active' THEN 1
@@ -109,7 +110,6 @@ Public Class BatchManagement
 
                 ' Hide columns
                 If .Columns.Contains("Batch ID") Then .Columns("Batch ID").Visible = False
-                If .Columns.Contains("Notes") Then .Columns("Notes").Visible = False
 
                 ' Format currency
                 If .Columns.Contains("Cost/Unit") Then
@@ -161,7 +161,34 @@ Public Class BatchManagement
                 btnDiscard.UseColumnTextForButtonValue = True
                 btnDiscard.Width = 100
                 btnDiscard.FlatStyle = FlatStyle.Flat
+                btnDiscard.ReadOnly = True
                 dgvBatches.Columns.Add(btnDiscard)
+            End If
+
+            ' Add edit button
+            If Not dgvBatches.Columns.Contains("btnEdit") Then
+                Dim btnEdit As New DataGridViewButtonColumn()
+                btnEdit.Name = "btnEdit"
+                btnEdit.HeaderText = "Edit"
+                btnEdit.Text = "Edit"
+                btnEdit.UseColumnTextForButtonValue = True
+                btnEdit.Width = 90
+                btnEdit.FlatStyle = FlatStyle.Flat
+                btnEdit.ReadOnly = True
+                dgvBatches.Columns.Add(btnEdit)
+            End If
+
+            ' Add delete button
+            If Not dgvBatches.Columns.Contains("btnDelete") Then
+                Dim btnDelete As New DataGridViewButtonColumn()
+                btnDelete.Name = "btnDelete"
+                btnDelete.HeaderText = "Delete"
+                btnDelete.Text = "Delete"
+                btnDelete.UseColumnTextForButtonValue = True
+                btnDelete.Width = 90
+                btnDelete.FlatStyle = FlatStyle.Flat
+                btnDelete.ReadOnly = True
+                dgvBatches.Columns.Add(btnDelete)
             End If
 
         Catch ex As Exception
@@ -297,28 +324,80 @@ Public Class BatchManagement
     ' Handle button clicks
     Private Sub dgvBatches_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvBatches.CellContentClick
         Try
-            If e.RowIndex >= 0 AndAlso e.ColumnIndex = dgvBatches.Columns("btnDiscard").Index Then
-                Dim batchID As Integer = Convert.ToInt32(dgvBatches.Rows(e.RowIndex).Cells("Batch ID").Value)
-                Dim batchNumber As String = dgvBatches.Rows(e.RowIndex).Cells("Batch Number").Value.ToString()
-                Dim currentStock As Decimal = Convert.ToDecimal(dgvBatches.Rows(e.RowIndex).Cells("Current Stock").Value)
-                Dim batchStatus As String = dgvBatches.Rows(e.RowIndex).Cells("Status").Value.ToString()
-
-                If batchStatus = "Discarded" OrElse batchStatus = "Depleted" Then
-                    MessageBox.Show("This batch is already " & batchStatus & " and cannot be discarded again.",
-                                  "Cannot Discard", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    Return
-                End If
-
-                Dim result As DialogResult = MessageBox.Show(
-                    "Are you sure you want to discard batch " & batchNumber & "?" & vbCrLf &
-                    "Current stock: " & currentStock & vbCrLf & vbCrLf &
-                    "This will mark the batch as discarded and remove it from active inventory.",
-                    "Confirm Discard", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-
-                If result = DialogResult.Yes Then
-                    DiscardBatch(batchID, batchNumber, currentStock)
-                End If
+            If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
+                Return
             End If
+
+            Dim columnName As String = dgvBatches.Columns(e.ColumnIndex).Name
+            Dim row As DataGridViewRow = dgvBatches.Rows(e.RowIndex)
+
+            If row Is Nothing OrElse row.IsNewRow Then
+                Return
+            End If
+
+            Dim batchID As Integer = Convert.ToInt32(row.Cells("Batch ID").Value)
+            Dim batchNumberCell = row.Cells("Batch Number").Value
+            Dim batchNumber As String = If(batchNumberCell IsNot Nothing AndAlso Not IsDBNull(batchNumberCell), batchNumberCell.ToString(), "")
+
+            Dim statusCell = row.Cells("Status").Value
+            Dim batchStatus As String = If(statusCell IsNot Nothing AndAlso Not IsDBNull(statusCell), statusCell.ToString(), "")
+
+            Dim stockCell = row.Cells("Current Stock").Value
+            Dim currentStock As Decimal = 0D
+            If stockCell IsNot Nothing AndAlso Not IsDBNull(stockCell) Then
+                currentStock = Convert.ToDecimal(stockCell)
+            End If
+
+            Select Case columnName
+                Case "btnDiscard"
+                    If batchStatus = "Discarded" OrElse batchStatus = "Depleted" Then
+                        MessageBox.Show("This batch is already " & batchStatus & " and cannot be discarded again.",
+                                        "Cannot Discard", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
+                    End If
+
+                    Dim discardResult As DialogResult = MessageBox.Show(
+                        "Are you sure you want to discard batch " & batchNumber & "?" & vbCrLf &
+                        "Current stock: " & currentStock & vbCrLf & vbCrLf &
+                        "This will mark the batch as discarded and remove it from active inventory.",
+                        "Confirm Discard", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+
+                    If discardResult = DialogResult.Yes Then
+                        DiscardBatch(batchID, batchNumber, currentStock)
+                    End If
+
+                Case "btnEdit"
+                    If batchStatus = "Discarded" OrElse batchStatus = "Deleted" Then
+                        MessageBox.Show("This batch is already " & batchStatus & " and cannot be edited again.",
+                                        "Cannot Edit", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
+                    End If
+
+                    Dim editForm As New EditBatch(batchID, _ingredientName)
+                    editForm.StartPosition = FormStartPosition.CenterParent
+
+                    If editForm.ShowDialog() = DialogResult.OK Then
+                        LoadBatchData()
+                    End If
+
+                Case "btnDelete"
+                    If batchStatus = "Deleted" Then
+                        MessageBox.Show("This batch has already been deleted.", "Cannot Delete",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
+                    End If
+
+                    Dim deleteResult As DialogResult = MessageBox.Show(
+                        "Are you sure you want to delete batch " & batchNumber & "?" & vbCrLf &
+                        "Current stock: " & currentStock & vbCrLf & vbCrLf &
+                        "This will mark the batch as deleted and remove it from active inventory.",
+                        "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+
+                    If deleteResult = DialogResult.Yes Then
+                        DeleteBatch(batchID, batchNumber, currentStock)
+                    End If
+            End Select
+
         Catch ex As Exception
             MessageBox.Show("Error processing action: " & ex.Message, "Error",
                           MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -368,6 +447,78 @@ Public Class BatchManagement
                           MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             closeConn()
+        End Try
+    End Sub
+
+    ' Delete batch
+    Private Sub DeleteBatch(batchID As Integer, batchNumber As String, currentStock As Decimal)
+        Try
+            openConn()
+            Dim transaction As MySqlTransaction = conn.BeginTransaction()
+
+            Try
+                If currentStock > 0 Then
+                    Dim cmd As New MySqlCommand("UpdateBatchStock", conn, transaction)
+                    cmd.CommandType = CommandType.StoredProcedure
+
+                    cmd.Parameters.AddWithValue("@p_batch_id", batchID)
+                    cmd.Parameters.AddWithValue("@p_quantity_change", -currentStock)
+                    cmd.Parameters.AddWithValue("@p_transaction_type", "Delete")
+                    cmd.Parameters.AddWithValue("@p_reference_id", Nothing)
+                    cmd.Parameters.AddWithValue("@p_performed_by", "System User")
+                    cmd.Parameters.AddWithValue("@p_reason", "Manual Delete")
+                    cmd.Parameters.AddWithValue("@p_notes", "Batch " & batchNumber & " deleted on " & DateTime.Now.ToString())
+
+                    cmd.ExecuteNonQuery()
+                End If
+
+                Dim sqlUpdate As String = "
+                UPDATE inventory_batches
+                SET BatchStatus = 'Deleted',
+                    StockQuantity = 0,
+                    TotalCost = 0
+                WHERE BatchID = @id
+            "
+                Dim cmdUpdate As New MySqlCommand(sqlUpdate, conn, transaction)
+                cmdUpdate.Parameters.AddWithValue("@id", batchID)
+                cmdUpdate.ExecuteNonQuery()
+
+                transaction.Commit()
+
+                MessageBox.Show("Batch deleted successfully!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                ' ❌ RemoveBatchRowFromGrid(batchID) — REMOVE THIS
+                ' ✅ Instead, reload the grid fully
+                LoadBatchData()
+
+            Catch ex As Exception
+                transaction.Rollback()
+                Throw
+            End Try
+
+        Catch ex As Exception
+            MessageBox.Show("Error deleting batch: " & ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            closeConn()
+        End Try
+    End Sub
+
+    ' Remove the deleted batch row from the current grid view
+    Private Sub RemoveBatchRowFromGrid(batchID As Integer)
+        Try
+            Dim dataTable As DataTable = TryCast(dgvBatches.DataSource, DataTable)
+            If dataTable Is Nothing Then
+                Return
+            End If
+
+            Dim rows() As DataRow = dataTable.Select("[Batch ID] = " & batchID)
+            For Each row As DataRow In rows
+                dataTable.Rows.Remove(row)
+            Next
+        Catch ex As Exception
+            ' Ignore failures to keep deletion flow silent
         End Try
     End Sub
 
