@@ -3,6 +3,7 @@
 Public Class BatchManagement
     Private _ingredientID As Integer
     Private _ingredientName As String
+    Private buttonsAdded As Boolean = False
 
     ' Constructor
     Public Sub New(ingredientID As Integer, ingredientName As String)
@@ -11,18 +12,40 @@ Public Class BatchManagement
         _ingredientName = ingredientName
     End Sub
 
+    ' Form Load
     Private Sub BatchManagement_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Try
-            Me.Text = "Batch Management - " & _ingredientName
-            lblIngredientName.Text = _ingredientName
-            LoadBatchData()
-        Catch ex As Exception
-            MessageBox.Show("Error loading form: " & ex.Message,
-                          "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        Me.Text = "Batch Management - " & _ingredientName
+        lblIngredientName.Text = _ingredientName
+
+        ' Add action buttons ONCE only
+        If Not buttonsAdded Then
+            AddActionButtons()
+            buttonsAdded = True
+        End If
+
+        LoadBatchData()
     End Sub
 
-    ' Load all batches for this ingredient
+    ' Add Edit + Discard buttons only (Delete button removed)
+    Private Sub AddActionButtons()
+        ' (1) Edit Button
+        Dim btnEdit As New DataGridViewButtonColumn()
+        btnEdit.Name = "btnEdit"
+        btnEdit.HeaderText = "Edit"
+        btnEdit.Text = "Edit"
+        btnEdit.UseColumnTextForButtonValue = True
+        dgvBatches.Columns.Add(btnEdit)
+
+        ' (2) Discard Button
+        Dim btnDiscard As New DataGridViewButtonColumn()
+        btnDiscard.Name = "btnDiscard"
+        btnDiscard.HeaderText = "Discard"
+        btnDiscard.Text = "Discard"
+        btnDiscard.UseColumnTextForButtonValue = True
+        dgvBatches.Columns.Add(btnDiscard)
+    End Sub
+
+    ' Load batches
     Private Sub LoadBatchData()
         Try
             openConn()
@@ -58,17 +81,8 @@ Public Class BatchManagement
                     Notes
                 FROM inventory_batches
                 WHERE IngredientID = @ingredientID
-                  AND BatchStatus <> 'Deleted'
-                ORDER BY 
-                    CASE BatchStatus
-                        WHEN 'Active' THEN 1
-                        WHEN 'Expired' THEN 2
-                        WHEN 'Depleted' THEN 3
-                        ELSE 4
-                    END,
-                    CASE WHEN ExpirationDate IS NULL THEN 1 ELSE 0 END,
-                    ExpirationDate ASC,
-                    PurchaseDate ASC
+                 AND BatchStatus <> 'Discarded'
+                ORDER BY ExpirationDate ASC;
             "
 
             Dim cmd As New MySqlCommand(sql, conn)
@@ -78,8 +92,6 @@ Public Class BatchManagement
             Dim dt As New DataTable()
             da.Fill(dt)
 
-            dgvBatches.DataSource = Nothing
-            dgvBatches.Columns.Clear()
             dgvBatches.DataSource = dt
 
             FormatBatchGrid()
@@ -87,531 +99,252 @@ Public Class BatchManagement
             LoadBatchStatistics()
 
         Catch ex As Exception
-            MessageBox.Show("Error loading batches: " & ex.Message,
-                          "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error loading batches: " & ex.Message)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Format the batch grid
+    ' Format grid
     Private Sub FormatBatchGrid()
-        Try
-            With dgvBatches
-                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                .RowTemplate.Height = 35
-                .DefaultCellStyle.Font = New Font("Segoe UI", 9)
-                .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
-                .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250)
-                .ReadOnly = False
-                .AllowUserToAddRows = False
-                .AllowUserToDeleteRows = False
-                .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        With dgvBatches
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .RowTemplate.Height = 35
+            .ReadOnly = True
+            .AllowUserToAddRows = False
+            .AllowUserToDeleteRows = False
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        End With
 
-                ' Hide columns
-                If .Columns.Contains("Batch ID") Then .Columns("Batch ID").Visible = False
+        ' Format currency
+        If dgvBatches.Columns.Contains("Cost/Unit") Then
+            dgvBatches.Columns("Cost/Unit").DefaultCellStyle.Format = "₱#,##0.00"
+        End If
+        If dgvBatches.Columns.Contains("Total Cost") Then
+            dgvBatches.Columns("Total Cost").DefaultCellStyle.Format = "₱#,##0.00"
+        End If
 
-                ' Format currency
-                If .Columns.Contains("Cost/Unit") Then
-                    .Columns("Cost/Unit").DefaultCellStyle.Format = "₱#,##0.00"
-                    .Columns("Cost/Unit").ReadOnly = True
-                End If
-
-                If .Columns.Contains("Total Cost") Then
-                    .Columns("Total Cost").DefaultCellStyle.Format = "₱#,##0.00"
-                    .Columns("Total Cost").ReadOnly = True
-                End If
-
-                ' Format dates
-                If .Columns.Contains("Purchase Date") Then
-                    .Columns("Purchase Date").DefaultCellStyle.Format = "MMM dd, yyyy"
-                    .Columns("Purchase Date").ReadOnly = True
-                End If
-
-                If .Columns.Contains("Expiration") Then
-                    .Columns("Expiration").DefaultCellStyle.Format = "MMM dd, yyyy"
-                    .Columns("Expiration").ReadOnly = True
-                End If
-
-                ' Center alignment
-                Dim centerColumns() As String = {"Current Stock", "Unit", "Days Left", "Alert", "Status", "Remaining %", "Storage Location"}
-                For Each colName In centerColumns
-                    If .Columns.Contains(colName) Then
-                        .Columns(colName).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                        .Columns(colName).ReadOnly = True
-                    End If
-                Next
-
-                ' Bold columns
-                If .Columns.Contains("Alert") Then
-                    .Columns("Alert").DefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
-                End If
-
-                If .Columns.Contains("Status") Then
-                    .Columns("Status").DefaultCellStyle.Font = New Font("Segoe UI", 9, FontStyle.Bold)
-                End If
-            End With
-
-            ' Add discard button
-            If Not dgvBatches.Columns.Contains("btnDiscard") Then
-                Dim btnDiscard As New DataGridViewButtonColumn()
-                btnDiscard.Name = "btnDiscard"
-                btnDiscard.HeaderText = "Actions"
-                btnDiscard.Text = "Discard"
-                btnDiscard.UseColumnTextForButtonValue = True
-                btnDiscard.Width = 100
-                btnDiscard.FlatStyle = FlatStyle.Flat
-                btnDiscard.ReadOnly = True
-                dgvBatches.Columns.Add(btnDiscard)
-            End If
-
-            ' Add edit button
-            If Not dgvBatches.Columns.Contains("btnEdit") Then
-                Dim btnEdit As New DataGridViewButtonColumn()
-                btnEdit.Name = "btnEdit"
-                btnEdit.HeaderText = "Edit"
-                btnEdit.Text = "Edit"
-                btnEdit.UseColumnTextForButtonValue = True
-                btnEdit.Width = 90
-                btnEdit.FlatStyle = FlatStyle.Flat
-                btnEdit.ReadOnly = True
-                dgvBatches.Columns.Add(btnEdit)
-            End If
-
-            ' Add delete button
-            If Not dgvBatches.Columns.Contains("btnDelete") Then
-                Dim btnDelete As New DataGridViewButtonColumn()
-                btnDelete.Name = "btnDelete"
-                btnDelete.HeaderText = "Delete"
-                btnDelete.Text = "Delete"
-                btnDelete.UseColumnTextForButtonValue = True
-                btnDelete.Width = 90
-                btnDelete.FlatStyle = FlatStyle.Flat
-                btnDelete.ReadOnly = True
-                dgvBatches.Columns.Add(btnDelete)
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show("Error formatting grid: " & ex.Message)
-        End Try
+        ' Date formatting
+        If dgvBatches.Columns.Contains("Purchase Date") Then
+            dgvBatches.Columns("Purchase Date").DefaultCellStyle.Format = "MMM dd, yyyy"
+        End If
+        If dgvBatches.Columns.Contains("Expiration") Then
+            dgvBatches.Columns("Expiration").DefaultCellStyle.Format = "MMM dd, yyyy"
+        End If
     End Sub
 
-    ' Color code batches
+    ' Apply row color codes
     Private Sub ColorCodeBatches()
-        Try
-            For Each row As DataGridViewRow In dgvBatches.Rows
-                If Not row.IsNewRow Then
-                    ' Color Alert column
-                    If row.Cells("Alert").Value IsNot Nothing Then
-                        Dim alert As String = row.Cells("Alert").Value.ToString()
+        For Each row As DataGridViewRow In dgvBatches.Rows
+            Dim alert As String = row.Cells("Alert").Value?.ToString()
 
-                        Select Case alert
-                            Case "EXPIRED"
-                                row.Cells("Alert").Style.BackColor = Color.FromArgb(139, 0, 0)
-                                row.Cells("Alert").Style.ForeColor = Color.White
-                            Case "CRITICAL"
-                                row.Cells("Alert").Style.BackColor = Color.FromArgb(220, 53, 69)
-                                row.Cells("Alert").Style.ForeColor = Color.White
-                            Case "WARNING"
-                                row.Cells("Alert").Style.BackColor = Color.FromArgb(255, 193, 7)
-                                row.Cells("Alert").Style.ForeColor = Color.Black
-                            Case "Monitor"
-                                row.Cells("Alert").Style.BackColor = Color.FromArgb(255, 235, 59)
-                                row.Cells("Alert").Style.ForeColor = Color.Black
-                            Case "Fresh"
-                                row.Cells("Alert").Style.BackColor = Color.FromArgb(40, 167, 69)
-                                row.Cells("Alert").Style.ForeColor = Color.White
-                        End Select
-                    End If
+            Select Case alert
+                Case "EXPIRED"
+                    row.Cells("Alert").Style.BackColor = Color.DarkRed
+                    row.Cells("Alert").Style.ForeColor = Color.White
 
-                    ' Color Status column
-                    If row.Cells("Status").Value IsNot Nothing Then
-                        Dim status As String = row.Cells("Status").Value.ToString()
+                Case "CRITICAL"
+                    row.Cells("Alert").Style.BackColor = Color.Red
+                    row.Cells("Alert").Style.ForeColor = Color.White
 
-                        Select Case status
-                            Case "Active"
-                                row.Cells("Status").Style.BackColor = Color.FromArgb(40, 167, 69)
-                                row.Cells("Status").Style.ForeColor = Color.White
-                            Case "Depleted"
-                                row.Cells("Status").Style.BackColor = Color.Gray
-                                row.Cells("Status").Style.ForeColor = Color.White
-                            Case "Expired"
-                                row.Cells("Status").Style.BackColor = Color.FromArgb(220, 53, 69)
-                                row.Cells("Status").Style.ForeColor = Color.White
-                            Case "Discarded"
-                                row.Cells("Status").Style.BackColor = Color.DarkGray
-                                row.Cells("Status").Style.ForeColor = Color.White
-                        End Select
-                    End If
+                Case "WARNING"
+                    row.Cells("Alert").Style.BackColor = Color.Gold
 
-                    ' Color Remaining %
-                    If row.Cells("Remaining %").Value IsNot Nothing AndAlso
-                       Not IsDBNull(row.Cells("Remaining %").Value) Then
-                        Dim remaining As Decimal = Convert.ToDecimal(row.Cells("Remaining %").Value)
+                Case "Monitor"
+                    row.Cells("Alert").Style.BackColor = Color.Khaki
 
-                        If remaining <= 20 Then
-                            row.Cells("Remaining %").Style.BackColor = Color.FromArgb(220, 53, 69)
-                            row.Cells("Remaining %").Style.ForeColor = Color.White
-                        ElseIf remaining <= 50 Then
-                            row.Cells("Remaining %").Style.BackColor = Color.FromArgb(255, 193, 7)
-                        End If
-                    End If
-                End If
-            Next
-        Catch ex As Exception
-            MessageBox.Show("Error color coding: " & ex.Message)
-        End Try
+                Case "Fresh"
+                    row.Cells("Alert").Style.BackColor = Color.Green
+                    row.Cells("Alert").Style.ForeColor = Color.White
+            End Select
+        Next
     End Sub
 
-    ' Load statistics
+    ' Load statistics - Now fully dynamic with proper parameters
     Private Sub LoadBatchStatistics()
         Try
             openConn()
 
-            ' Total Stock
-            Dim sqlTotal As String = "
+            ' Total stock
+            Dim cmdTotalStock As New MySqlCommand("
                 SELECT COALESCE(SUM(StockQuantity), 0)
                 FROM inventory_batches
-                WHERE IngredientID = @id AND BatchStatus = 'Active'
-            "
-            Dim cmdTotal As New MySqlCommand(sqlTotal, conn)
-            cmdTotal.Parameters.AddWithValue("@id", _ingredientID)
-            lblTotalStock.Text = Convert.ToDecimal(cmdTotal.ExecuteScalar()).ToString("#,##0.00")
+                WHERE IngredientID = @ingredientID AND BatchStatus='Active'", conn)
+            cmdTotalStock.Parameters.AddWithValue("@ingredientID", _ingredientID)
+            lblTotalStock.Text = cmdTotalStock.ExecuteScalar().ToString()
 
-            ' Active Batches
-            Dim sqlActive As String = "
+            ' Active batches
+            Dim cmdActiveBatches As New MySqlCommand("
                 SELECT COUNT(*)
                 FROM inventory_batches
-                WHERE IngredientID = @id AND BatchStatus = 'Active'
-            "
-            Dim cmdActive As New MySqlCommand(sqlActive, conn)
-            cmdActive.Parameters.AddWithValue("@id", _ingredientID)
-            lblActiveBatches.Text = cmdActive.ExecuteScalar().ToString()
+                WHERE IngredientID = @ingredientID AND BatchStatus='Active'", conn)
+            cmdActiveBatches.Parameters.AddWithValue("@ingredientID", _ingredientID)
+            lblActiveBatches.Text = cmdActiveBatches.ExecuteScalar().ToString()
 
-            ' Total Value
-            Dim sqlValue As String = "
+            ' Total value
+            Dim cmdTotalValue As New MySqlCommand("
                 SELECT COALESCE(SUM(StockQuantity * CostPerUnit), 0)
                 FROM inventory_batches
-                WHERE IngredientID = @id AND BatchStatus = 'Active'
-            "
-            Dim cmdValue As New MySqlCommand(sqlValue, conn)
-            cmdValue.Parameters.AddWithValue("@id", _ingredientID)
-            lblTotalValue.Text = "₱" & Convert.ToDecimal(cmdValue.ExecuteScalar()).ToString("#,##0.00")
-
-            ' Expiring Count
-            Dim sqlExpiring As String = "
-                SELECT COUNT(*)
-                FROM inventory_batches
-                WHERE IngredientID = @id 
-                  AND BatchStatus = 'Active'
-                  AND ExpirationDate IS NOT NULL
-                  AND DATEDIFF(ExpirationDate, CURDATE()) <= 7
-            "
-            Dim cmdExpiring As New MySqlCommand(sqlExpiring, conn)
-            cmdExpiring.Parameters.AddWithValue("@id", _ingredientID)
-            Dim expiringCount As Integer = Convert.ToInt32(cmdExpiring.ExecuteScalar())
-
-            lblExpiringCount.Text = expiringCount.ToString()
-            lblExpiringCount.ForeColor = If(expiringCount > 0, Color.Red, Color.Green)
+                WHERE IngredientID = @ingredientID AND BatchStatus='Active'", conn)
+            cmdTotalValue.Parameters.AddWithValue("@ingredientID", _ingredientID)
+            lblTotalValue.Text = "₱" & Convert.ToDecimal(cmdTotalValue.ExecuteScalar()).ToString("#,##0.00")
 
         Catch ex As Exception
-            MessageBox.Show("Error loading statistics: " & ex.Message)
+            MessageBox.Show("Statistics error: " & ex.Message)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Handle button clicks
+    ' Handle action button clicks (Delete button removed)
     Private Sub dgvBatches_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvBatches.CellContentClick
-        Try
-            If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
-                Return
-            End If
+        If e.RowIndex < 0 Then Exit Sub
 
-            Dim columnName As String = dgvBatches.Columns(e.ColumnIndex).Name
-            Dim row As DataGridViewRow = dgvBatches.Rows(e.RowIndex)
+        Dim batchID As Integer = dgvBatches.Rows(e.RowIndex).Cells("Batch ID").Value
+        Dim batchStock As Decimal = dgvBatches.Rows(e.RowIndex).Cells("Current Stock").Value
 
-            If row Is Nothing OrElse row.IsNewRow Then
-                Return
-            End If
+        Select Case dgvBatches.Columns(e.ColumnIndex).Name
+            Case "btnEdit"
+                Dim f As New EditBatch(batchID, _ingredientName)
+                If f.ShowDialog() = DialogResult.OK Then LoadBatchData()
 
-            Dim batchID As Integer = Convert.ToInt32(row.Cells("Batch ID").Value)
-            Dim batchNumberCell = row.Cells("Batch Number").Value
-            Dim batchNumber As String = If(batchNumberCell IsNot Nothing AndAlso Not IsDBNull(batchNumberCell), batchNumberCell.ToString(), "")
-
-            Dim statusCell = row.Cells("Status").Value
-            Dim batchStatus As String = If(statusCell IsNot Nothing AndAlso Not IsDBNull(statusCell), statusCell.ToString(), "")
-
-            Dim stockCell = row.Cells("Current Stock").Value
-            Dim currentStock As Decimal = 0D
-            If stockCell IsNot Nothing AndAlso Not IsDBNull(stockCell) Then
-                currentStock = Convert.ToDecimal(stockCell)
-            End If
-
-            Select Case columnName
-                Case "btnDiscard"
-                    If batchStatus = "Discarded" OrElse batchStatus = "Depleted" Then
-                        MessageBox.Show("This batch is already " & batchStatus & " and cannot be discarded again.",
-                                        "Cannot Discard", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        Return
-                    End If
-
-                    Dim discardResult As DialogResult = MessageBox.Show(
-                        "Are you sure you want to discard batch " & batchNumber & "?" & vbCrLf &
-                        "Current stock: " & currentStock & vbCrLf & vbCrLf &
-                        "This will mark the batch as discarded and remove it from active inventory.",
-                        "Confirm Discard", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-
-                    If discardResult = DialogResult.Yes Then
-                        DiscardBatch(batchID, batchNumber, currentStock)
-                    End If
-
-                Case "btnEdit"
-                    If batchStatus = "Discarded" OrElse batchStatus = "Deleted" Then
-                        MessageBox.Show("This batch is already " & batchStatus & " and cannot be edited again.",
-                                        "Cannot Edit", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        Return
-                    End If
-
-                    Dim editForm As New EditBatch(batchID, _ingredientName)
-                    editForm.StartPosition = FormStartPosition.CenterParent
-
-                    If editForm.ShowDialog() = DialogResult.OK Then
-                        LoadBatchData()
-                    End If
-
-                Case "btnDelete"
-                    If batchStatus = "Deleted" Then
-                        MessageBox.Show("This batch has already been deleted.", "Cannot Delete",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        Return
-                    End If
-
-                    Dim deleteResult As DialogResult = MessageBox.Show(
-                        "Are you sure you want to delete batch " & batchNumber & "?" & vbCrLf &
-                        "Current stock: " & currentStock & vbCrLf & vbCrLf &
-                        "This will mark the batch as deleted and remove it from active inventory.",
-                        "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-
-                    If deleteResult = DialogResult.Yes Then
-                        DeleteBatch(batchID, batchNumber, currentStock)
-                    End If
-            End Select
-
-        Catch ex As Exception
-            MessageBox.Show("Error processing action: " & ex.Message, "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+            Case "btnDiscard"
+                DiscardBatch(batchID, batchStock)
+        End Select
     End Sub
 
     ' Discard batch
-    Private Sub DiscardBatch(batchID As Integer, batchNumber As String, currentStock As Decimal)
+    Private Sub DiscardBatch(id As Integer, stock As Decimal)
+        If MessageBox.Show("Discard this batch? This will mark it as discarded and set stock to zero.", "Confirm Discard", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then Exit Sub
+
         Try
             openConn()
-            Dim transaction As MySqlTransaction = conn.BeginTransaction()
+            Dim cmd As New MySqlCommand("
+                UPDATE inventory_batches 
+                SET BatchStatus='Discarded', StockQuantity=0 
+                WHERE BatchID=@id", conn)
+            cmd.Parameters.AddWithValue("@id", id)
+            cmd.ExecuteNonQuery()
 
-            Try
-                ' Use stored procedure to update batch
-                Dim cmd As New MySqlCommand("UpdateBatchStock", conn, transaction)
-                cmd.CommandType = CommandType.StoredProcedure
-
-                cmd.Parameters.AddWithValue("@p_batch_id", batchID)
-                cmd.Parameters.AddWithValue("@p_quantity_change", -currentStock)
-                cmd.Parameters.AddWithValue("@p_transaction_type", "Discard")
-                cmd.Parameters.AddWithValue("@p_reference_id", Nothing)
-                cmd.Parameters.AddWithValue("@p_performed_by", "System User")
-                cmd.Parameters.AddWithValue("@p_reason", "Manual Discard")
-                cmd.Parameters.AddWithValue("@p_notes", "Batch " & batchNumber & " discarded on " & DateTime.Now.ToString())
-
-                cmd.ExecuteNonQuery()
-
-                ' Update batch status to Discarded
-                Dim sqlUpdate As String = "UPDATE inventory_batches SET BatchStatus = 'Discarded' WHERE BatchID = @id"
-                Dim cmdUpdate As New MySqlCommand(sqlUpdate, conn, transaction)
-                cmdUpdate.Parameters.AddWithValue("@id", batchID)
-                cmdUpdate.ExecuteNonQuery()
-
-                transaction.Commit()
-
-                MessageBox.Show("Batch discarded successfully!", "Success",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information)
-                LoadBatchData()
-
-            Catch ex As Exception
-                transaction.Rollback()
-                Throw
-            End Try
+            MessageBox.Show("Batch discarded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            LoadBatchData()
 
         Catch ex As Exception
-            MessageBox.Show("Error discarding batch: " & ex.Message, "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error discarding batch: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             closeConn()
         End Try
     End Sub
 
-    ' Delete batch
-    Private Sub DeleteBatch(batchID As Integer, batchNumber As String, currentStock As Decimal)
-        Try
-            openConn()
-            Dim transaction As MySqlTransaction = conn.BeginTransaction()
-
-            Try
-                If currentStock > 0 Then
-                    Dim cmd As New MySqlCommand("UpdateBatchStock", conn, transaction)
-                    cmd.CommandType = CommandType.StoredProcedure
-
-                    cmd.Parameters.AddWithValue("@p_batch_id", batchID)
-                    cmd.Parameters.AddWithValue("@p_quantity_change", -currentStock)
-                    cmd.Parameters.AddWithValue("@p_transaction_type", "Delete")
-                    cmd.Parameters.AddWithValue("@p_reference_id", Nothing)
-                    cmd.Parameters.AddWithValue("@p_performed_by", "System User")
-                    cmd.Parameters.AddWithValue("@p_reason", "Manual Delete")
-                    cmd.Parameters.AddWithValue("@p_notes", "Batch " & batchNumber & " deleted on " & DateTime.Now.ToString())
-
-                    cmd.ExecuteNonQuery()
-                End If
-
-                Dim sqlUpdate As String = "
-                UPDATE inventory_batches
-                SET BatchStatus = 'Deleted',
-                    StockQuantity = 0,
-                    TotalCost = 0
-                WHERE BatchID = @id
-            "
-                Dim cmdUpdate As New MySqlCommand(sqlUpdate, conn, transaction)
-                cmdUpdate.Parameters.AddWithValue("@id", batchID)
-                cmdUpdate.ExecuteNonQuery()
-
-                transaction.Commit()
-
-                MessageBox.Show("Batch deleted successfully!", "Success",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-                ' ❌ RemoveBatchRowFromGrid(batchID) — REMOVE THIS
-                ' ✅ Instead, reload the grid fully
-                LoadBatchData()
-
-            Catch ex As Exception
-                transaction.Rollback()
-                Throw
-            End Try
-
-        Catch ex As Exception
-            MessageBox.Show("Error deleting batch: " & ex.Message, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            closeConn()
-        End Try
-    End Sub
-
-    ' Remove the deleted batch row from the current grid view
-    Private Sub RemoveBatchRowFromGrid(batchID As Integer)
-        Try
-            Dim dataTable As DataTable = TryCast(dgvBatches.DataSource, DataTable)
-            If dataTable Is Nothing Then
-                Return
-            End If
-
-            Dim rows() As DataRow = dataTable.Select("[Batch ID] = " & batchID)
-            For Each row As DataRow In rows
-                dataTable.Rows.Remove(row)
-            Next
-        Catch ex As Exception
-            ' Ignore failures to keep deletion flow silent
-        End Try
-    End Sub
-
-    ' Add new batch for this ingredient
-    Private Sub btnAddBatch_Click(sender As Object, e As EventArgs) Handles btnAddBatch.Click
-        Try
-            ' Determine the unit type from any existing active batch, or fall back to ingredient's unit
-            Dim unitType As String = ""
-
-            If dgvBatches.DataSource IsNot Nothing AndAlso dgvBatches.Rows.Count > 0 AndAlso
-               dgvBatches.Columns.Contains("Unit") Then
-                For Each row As DataGridViewRow In dgvBatches.Rows
-                    If Not row.IsNewRow AndAlso row.Cells("Unit").Value IsNot Nothing Then
-                        unitType = row.Cells("Unit").Value.ToString()
-                        Exit For
-                    End If
-                Next
-            End If
-
-            ' If we still don't have a unit type, default to empty string; the AddNewBatch
-            ' form can handle prompting/validation as needed.
-
-            Dim addForm As New AddNewBatch(_ingredientID, _ingredientName, unitType)
-            addForm.StartPosition = FormStartPosition.CenterScreen
-
-            If addForm.ShowDialog() = DialogResult.OK Then
-                LoadBatchData()
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Error opening add batch form: " & ex.Message)
-        End Try
-    End Sub
-
-    ' View history
+    ' View History
     Private Sub btnViewHistory_Click(sender As Object, e As EventArgs) Handles btnViewHistory.Click
         Try
-            openConn()
+            Dim historyForm As New Form()
+            historyForm.Text = "Batch History - " & _ingredientName
+            historyForm.Size = New Size(1200, 600)
+            historyForm.StartPosition = FormStartPosition.CenterParent
 
+            ' Create DataGridView for history
+            Dim dgvHistory As New DataGridView()
+            dgvHistory.Dock = DockStyle.Fill
+            dgvHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            dgvHistory.ReadOnly = True
+            dgvHistory.AllowUserToAddRows = False
+            dgvHistory.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+
+            ' Create panel for buttons
+            Dim pnlButtons As New Panel()
+            pnlButtons.Dock = DockStyle.Bottom
+            pnlButtons.Height = 50
+
+            ' Clear History Button
+            Dim btnClearHistory As New Button()
+            btnClearHistory.Text = "Clear History"
+            btnClearHistory.Size = New Size(120, 35)
+            btnClearHistory.Location = New Point(10, 8)
+            AddHandler btnClearHistory.Click, Sub()
+                                                  If MessageBox.Show("Are you sure you want to clear all discarded batch history for this ingredient?" & vbCrLf & "This action cannot be undone!", "Confirm Clear History", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
+                                                      Try
+                                                          openConn()
+                                                          Dim cmdClear As New MySqlCommand("DELETE FROM inventory_batches WHERE IngredientID = @ingredientID AND BatchStatus = 'Discarded'", conn)
+                                                          cmdClear.Parameters.AddWithValue("@ingredientID", _ingredientID)
+                                                          Dim rowsDeleted As Integer = cmdClear.ExecuteNonQuery()
+                                                          closeConn()
+
+                                                          MessageBox.Show(rowsDeleted & " discarded batch(es) removed from history.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                                          historyForm.Close()
+                                                      Catch ex As Exception
+                                                          MessageBox.Show("Error clearing history: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                          closeConn()
+                                                      End Try
+                                                  End If
+                                              End Sub
+
+            ' Close Button
+            Dim btnCloseHistory As New Button()
+            btnCloseHistory.Text = "Close"
+            btnCloseHistory.Size = New Size(100, 35)
+            btnCloseHistory.Location = New Point(140, 8)
+            AddHandler btnCloseHistory.Click, Sub() historyForm.Close()
+
+            pnlButtons.Controls.Add(btnClearHistory)
+            pnlButtons.Controls.Add(btnCloseHistory)
+
+            ' Load history data
+            openConn()
             Dim sql As String = "
                 SELECT 
-                    bt.TransactionDate AS 'Date/Time',
-                    bt.TransactionType AS 'Type',
-                    ib.BatchNumber AS 'Batch #',
-                    bt.QuantityChanged AS 'Qty Change',
-                    bt.StockBefore AS 'Before',
-                    bt.StockAfter AS 'After',
-                    bt.ReferenceID AS 'Reference',
-                    bt.PerformedBy AS 'Performed By',
-                    bt.Notes
-                FROM batch_transactions bt
-                JOIN inventory_batches ib ON bt.BatchID = ib.BatchID
-                WHERE ib.IngredientID = @id
-                ORDER BY bt.TransactionDate DESC
-                LIMIT 100
+                    BatchID AS 'Batch ID',
+                    BatchNumber AS 'Batch Number',
+                    OriginalQuantity AS 'Original Qty',
+                    UnitType AS 'Unit',
+                    CostPerUnit AS 'Cost/Unit',
+                    PurchaseDate AS 'Purchase Date',
+                    ExpirationDate AS 'Expiration',
+                    BatchStatus AS 'Status',
+                    StorageLocation AS 'Storage Location',
+                    Notes
+                FROM inventory_batches
+                WHERE IngredientID = @ingredientID
+                  AND BatchStatus = 'Discarded'
+                ORDER BY BatchID DESC
             "
-
             Dim cmd As New MySqlCommand(sql, conn)
-            cmd.Parameters.AddWithValue("@id", _ingredientID)
+            cmd.Parameters.AddWithValue("@ingredientID", _ingredientID)
 
             Dim da As New MySqlDataAdapter(cmd)
             Dim dt As New DataTable()
             da.Fill(dt)
+            closeConn()
 
-            If dt.Rows.Count > 0 Then
-                Dim historyForm As New Form()
-                historyForm.Text = "Transaction History - " & _ingredientName
-                historyForm.Size = New Size(1000, 600)
-                historyForm.StartPosition = FormStartPosition.CenterParent
+            dgvHistory.DataSource = dt
 
-                Dim dgv As New DataGridView()
-                dgv.Dock = DockStyle.Fill
-                dgv.DataSource = dt
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                dgv.ReadOnly = True
-                dgv.AllowUserToAddRows = False
-                dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-
-                historyForm.Controls.Add(dgv)
-                historyForm.ShowDialog()
-            Else
-                MessageBox.Show("No transaction history found.", "History",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ' Format currency columns
+            If dgvHistory.Columns.Contains("Cost/Unit") Then
+                dgvHistory.Columns("Cost/Unit").DefaultCellStyle.Format = "₱#,##0.00"
+            End If
+            If dgvHistory.Columns.Contains("Purchase Date") Then
+                dgvHistory.Columns("Purchase Date").DefaultCellStyle.Format = "MMM dd, yyyy"
+            End If
+            If dgvHistory.Columns.Contains("Expiration") Then
+                dgvHistory.Columns("Expiration").DefaultCellStyle.Format = "MMM dd, yyyy"
             End If
 
+            historyForm.Controls.Add(dgvHistory)
+            historyForm.Controls.Add(pnlButtons)
+            historyForm.ShowDialog()
+
         Catch ex As Exception
-            MessageBox.Show("Error loading history: " & ex.Message, "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
+            MessageBox.Show("Error loading history: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             closeConn()
         End Try
     End Sub
 
-    ' Close
+    Private Sub btnAddBatch_Click(sender As Object, e As EventArgs) Handles btnAddBatch.Click
+        Dim addForm As New AddNewBatch(_ingredientID, _ingredientName, "")
+        If addForm.ShowDialog() = DialogResult.OK Then LoadBatchData()
+    End Sub
+
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Me.Close()
     End Sub
