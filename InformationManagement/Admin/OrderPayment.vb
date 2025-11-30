@@ -9,26 +9,38 @@ Public Class OrderPayment
     End Sub
 
     ' =================================================
-    ' LOAD PAYMENTS INTO DATAGRIDVIEW
+    ' LOAD PAYMENTS WITH CUSTOMER INFO
     ' =================================================
     Private Sub LoadPayments(Optional condition As String = "")
         Try
             Dim query As String =
             "SELECT 
-                PaymentID,
-                OrderID,
-                PaymentDate,
-                PaymentMethod,
-                PaymentStatus,
-                AmountPaid,
-                PaymentSource,
-                TransactionID,
-                Notes
-             FROM payments"
+                p.PaymentID,
+                p.OrderID,
+                o.CustomerID,
+                IFNULL(c.FirstName, '') AS FirstName,
+                IFNULL(c.LastName, '') AS LastName,
+                IFNULL(c.Email, '') AS Email,
+                IFNULL(c.ContactNumber, '') AS CustomerContact,
+                o.ReceiptNumber,
+                o.OrderType,
+                o.TotalAmount AS OrderAmount,
+                p.PaymentDate,
+                p.PaymentMethod,
+                p.PaymentStatus,
+                p.AmountPaid,
+                p.PaymentSource,
+                p.TransactionID,
+                p.Notes
+             FROM payments p
+             INNER JOIN orders o ON p.OrderID = o.OrderID
+             LEFT JOIN customers c ON o.CustomerID = c.CustomerID"
 
             If condition <> "" Then
                 query &= " WHERE " & condition
             End If
+
+            query &= " ORDER BY p.PaymentDate DESC"
 
             LoadToDGV(query, Order, "")
             FormatGrid()
@@ -44,14 +56,16 @@ Public Class OrderPayment
     End Sub
 
     ' =================================================
-    ' FORMAT GRID + HIDE INTERNAL COLUMNS
+    ' FORMAT GRID + HIDE INTERNAL COLUMNS + SET WIDTHS
     ' =================================================
     Private Sub FormatGrid()
         If Order.Columns.Count = 0 Then Exit Sub
 
+        ' Hide ID columns
         Dim hideCols() As String = {
             "PaymentID",
             "OrderID",
+            "CustomerID",
             "TransactionID"
         }
 
@@ -61,35 +75,154 @@ Public Class OrderPayment
             End If
         Next
 
-        ' Formatting
-        Order.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        Order.RowHeadersVisible = False
-        Order.DefaultCellStyle.Font = New Font("Segoe UI", 10)
-        Order.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI Semibold", 10)
+        ' Customer Information Columns
+        If Order.Columns.Contains("FirstName") Then
+            Order.Columns("FirstName").HeaderText = "First Name"
+            Order.Columns("FirstName").Width = 120
+            Order.Columns("FirstName").DisplayIndex = 0
+        End If
 
-        ' Format column headers with spaces
+        If Order.Columns.Contains("LastName") Then
+            Order.Columns("LastName").HeaderText = "Last Name"
+            Order.Columns("LastName").Width = 120
+            Order.Columns("LastName").DisplayIndex = 1
+        End If
+
+        If Order.Columns.Contains("Email") Then
+            Order.Columns("Email").HeaderText = "Email"
+            Order.Columns("Email").Width = 180
+            Order.Columns("Email").DisplayIndex = 2
+        End If
+
+        If Order.Columns.Contains("CustomerContact") Then
+            Order.Columns("CustomerContact").HeaderText = "Contact Number"
+            Order.Columns("CustomerContact").Width = 120
+            Order.Columns("CustomerContact").DisplayIndex = 3
+        End If
+
+        ' Order Information
+        If Order.Columns.Contains("ReceiptNumber") Then
+            Order.Columns("ReceiptNumber").HeaderText = "Receipt Number"
+            Order.Columns("ReceiptNumber").Width = 120
+            Order.Columns("ReceiptNumber").DisplayIndex = 4
+        End If
+
+        If Order.Columns.Contains("OrderType") Then
+            Order.Columns("OrderType").HeaderText = "Order Type"
+            Order.Columns("OrderType").Width = 100
+            Order.Columns("OrderType").DisplayIndex = 5
+        End If
+
+        If Order.Columns.Contains("OrderAmount") Then
+            Order.Columns("OrderAmount").HeaderText = "Order Amount"
+            Order.Columns("OrderAmount").Width = 110
+            Order.Columns("OrderAmount").DefaultCellStyle.Format = "₱ #,##0.00"
+            Order.Columns("OrderAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            Order.Columns("OrderAmount").DisplayIndex = 6
+        End If
+
+        ' Payment Information
         If Order.Columns.Contains("PaymentDate") Then
             Order.Columns("PaymentDate").HeaderText = "Payment Date"
+            Order.Columns("PaymentDate").Width = 110
+            Order.Columns("PaymentDate").DefaultCellStyle.Format = "MM/dd/yyyy"
+            Order.Columns("PaymentDate").DisplayIndex = 7
         End If
 
         If Order.Columns.Contains("PaymentMethod") Then
             Order.Columns("PaymentMethod").HeaderText = "Payment Method"
+            Order.Columns("PaymentMethod").Width = 120
+            Order.Columns("PaymentMethod").DisplayIndex = 8
         End If
 
         If Order.Columns.Contains("PaymentStatus") Then
             Order.Columns("PaymentStatus").HeaderText = "Payment Status"
+            Order.Columns("PaymentStatus").Width = 110
+            Order.Columns("PaymentStatus").DisplayIndex = 9
         End If
 
         If Order.Columns.Contains("AmountPaid") Then
             Order.Columns("AmountPaid").HeaderText = "Amount Paid"
+            Order.Columns("AmountPaid").Width = 120
             Order.Columns("AmountPaid").DefaultCellStyle.Format = "₱ #,##0.00"
-            Order.Columns("AmountPaid").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            Order.Columns("AmountPaid").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            Order.Columns("AmountPaid").DisplayIndex = 10
         End If
 
         If Order.Columns.Contains("PaymentSource") Then
             Order.Columns("PaymentSource").HeaderText = "Payment Source"
+            Order.Columns("PaymentSource").Width = 120
+            Order.Columns("PaymentSource").DisplayIndex = 11
         End If
+
+        If Order.Columns.Contains("Notes") Then
+            Order.Columns("Notes").HeaderText = "Notes"
+            Order.Columns("Notes").Width = 150
+            Order.Columns("Notes").DisplayIndex = 12
+        End If
+
+        ' Disable auto-sizing
+        Order.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+        Order.ScrollBars = ScrollBars.Both
+        Order.RowHeadersVisible = False
+        Order.DefaultCellStyle.Font = New Font("Segoe UI", 10)
+        Order.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI Semibold", 10)
+
+        ' Format customer data for walk-in customers
+        FormatCustomerData()
     End Sub
+
+    ' =================================================
+    ' FORMAT CUSTOMER DATA - Show only when CustomerID matches
+    ' =================================================
+    Private Sub FormatCustomerData()
+        Try
+            For Each row As DataGridViewRow In Order.Rows
+                If row.IsNewRow Then Continue For
+
+                ' Check if customer info is empty (no match)
+                Dim firstName As String = If(row.Cells("FirstName").Value?.ToString(), "")
+                Dim lastName As String = If(row.Cells("LastName").Value?.ToString(), "")
+
+                ' If all customer fields are empty, show "Walk-in" or "N/A"
+                If String.IsNullOrEmpty(firstName) And String.IsNullOrEmpty(lastName) Then
+                    row.Cells("FirstName").Value = "Walk-in"
+                    row.Cells("LastName").Value = "Customer"
+                    row.Cells("Email").Value = "N/A"
+                    row.Cells("CustomerContact").Value = "N/A"
+
+                    ' Optional: Style walk-in customers differently
+                    row.Cells("FirstName").Style.ForeColor = Color.Gray
+                    row.Cells("LastName").Style.ForeColor = Color.Gray
+                    row.Cells("Email").Style.ForeColor = Color.Gray
+                    row.Cells("CustomerContact").Style.ForeColor = Color.Gray
+                End If
+            Next
+        Catch ex As Exception
+            ' Silently handle formatting errors
+        End Try
+    End Sub
+
+    ' =================================================
+    ' GET CUSTOMER NAME - Helper function
+    ' =================================================
+    Private Function GetCustomerName(row As DataGridViewRow) As String
+        Try
+            Dim firstName As String = If(row.Cells("FirstName").Value?.ToString(), "")
+            Dim lastName As String = If(row.Cells("LastName").Value?.ToString(), "")
+
+            ' Check if this is actual customer data or walk-in
+            If firstName = "Walk-in" And lastName = "Customer" Then
+                Return "Walk-in Customer"
+            ElseIf Not String.IsNullOrEmpty(firstName) OrElse Not String.IsNullOrEmpty(lastName) Then
+                Return $"{firstName} {lastName}".Trim()
+            Else
+                Return "Walk-in Customer"
+            End If
+        Catch ex As Exception
+            Return "Unknown"
+        End Try
+    End Function
 
     ' =================================================
     ' ENSURE COLUMNS STAY HIDDEN AFTER RELOAD
@@ -99,7 +232,7 @@ Public Class OrderPayment
     End Sub
 
     ' =================================================
-    ' SEARCH
+    ' SEARCH - Updated to include customer info
     ' =================================================
     Private Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
         Dim keyword As String = txtSearch.Text.Trim()
@@ -108,10 +241,14 @@ Public Class OrderPayment
             LoadPayments()
         Else
             LoadPayments(
-                $"OrderID LIKE '%{keyword}%'
-                  OR PaymentID LIKE '%{keyword}%'
-                  OR PaymentStatus LIKE '%{keyword}%'
-                  OR PaymentMethod LIKE '%{keyword}%'")
+                $"p.PaymentID LIKE '%{keyword}%'
+                  OR p.OrderID LIKE '%{keyword}%'
+                  OR p.PaymentStatus LIKE '%{keyword}%'
+                  OR p.PaymentMethod LIKE '%{keyword}%'
+                  OR o.ReceiptNumber LIKE '%{keyword}%'
+                  OR c.FirstName LIKE '%{keyword}%'
+                  OR c.LastName LIKE '%{keyword}%'
+                  OR c.Email LIKE '%{keyword}%'")
         End If
 
         UpdateTotal()
@@ -149,11 +286,13 @@ Public Class OrderPayment
             Dim paymentID As String = selectedRow.Cells("PaymentID").Value.ToString()
             Dim orderID As String = selectedRow.Cells("OrderID").Value.ToString()
             Dim currentStatus As String = selectedRow.Cells("PaymentStatus").Value.ToString()
+            Dim customerName As String = GetCustomerName(selectedRow)
+            Dim receiptNumber As String = If(selectedRow.Cells("ReceiptNumber").Value?.ToString(), "N/A")
 
             ' ============= STATUS SELECTION DIALOG =============
             Dim statusForm As New Form()
             statusForm.Text = "Update Payment Status"
-            statusForm.Size = New Size(400, 250)
+            statusForm.Size = New Size(400, 280)
             statusForm.StartPosition = FormStartPosition.CenterParent
             statusForm.FormBorderStyle = FormBorderStyle.FixedDialog
             statusForm.MaximizeBox = False
@@ -163,17 +302,19 @@ Public Class OrderPayment
             lblInfo.Text =
             $"Payment ID: {paymentID}" & vbCrLf &
             $"Order ID: {orderID}" & vbCrLf &
+            $"Customer: {customerName}" & vbCrLf &
+            $"Receipt: {receiptNumber}" & vbCrLf &
             $"Current Status: {currentStatus}" & vbCrLf & vbCrLf &
             "Select new status:"
             lblInfo.Location = New Point(20, 20)
-            lblInfo.Size = New Size(350, 80)
+            lblInfo.Size = New Size(350, 110)
             lblInfo.Font = New Font("Segoe UI", 10)
             statusForm.Controls.Add(lblInfo)
 
             ' Radio buttons
             Dim rbCompleted As New RadioButton()
             rbCompleted.Text = "Completed"
-            rbCompleted.Location = New Point(30, 110)
+            rbCompleted.Location = New Point(30, 140)
             rbCompleted.Size = New Size(120, 25)
             rbCompleted.Font = New Font("Segoe UI", 10)
             rbCompleted.Checked = True
@@ -181,28 +322,28 @@ Public Class OrderPayment
 
             Dim rbRefunded As New RadioButton()
             rbRefunded.Text = "Refunded"
-            rbRefunded.Location = New Point(160, 110)
+            rbRefunded.Location = New Point(160, 140)
             rbRefunded.Size = New Size(120, 25)
             rbRefunded.Font = New Font("Segoe UI", 10)
             statusForm.Controls.Add(rbRefunded)
 
             Dim rbFailed As New RadioButton()
             rbFailed.Text = "Failed"
-            rbFailed.Location = New Point(290, 110)
+            rbFailed.Location = New Point(290, 140)
             rbFailed.Size = New Size(100, 25)
             rbFailed.Font = New Font("Segoe UI", 10)
             statusForm.Controls.Add(rbFailed)
 
             Dim btnOK As New Button()
             btnOK.Text = "Update"
-            btnOK.Location = New Point(200, 160)
+            btnOK.Location = New Point(200, 190)
             btnOK.Size = New Size(80, 35)
             btnOK.DialogResult = DialogResult.OK
             statusForm.Controls.Add(btnOK)
 
             Dim btnCancel As New Button()
             btnCancel.Text = "Cancel"
-            btnCancel.Location = New Point(290, 160)
+            btnCancel.Location = New Point(290, 190)
             btnCancel.Size = New Size(80, 35)
             btnCancel.DialogResult = DialogResult.Cancel
             statusForm.Controls.Add(btnCancel)
@@ -262,11 +403,15 @@ Public Class OrderPayment
             Dim paymentID As String = selectedRow.Cells("PaymentID").Value.ToString()
             Dim orderID As String = selectedRow.Cells("OrderID").Value.ToString()
             Dim amountPaid As Decimal = Convert.ToDecimal(selectedRow.Cells("AmountPaid").Value)
+            Dim customerName As String = GetCustomerName(selectedRow)
+            Dim receiptNumber As String = If(selectedRow.Cells("ReceiptNumber").Value?.ToString(), "N/A")
 
             Dim result As DialogResult = MessageBox.Show(
-                $"Are you sure you want to delete this payment?" & vbCrLf &
+                $"Are you sure you want to delete this payment?" & vbCrLf & vbCrLf &
                 $"Payment ID: {paymentID}" & vbCrLf &
                 $"Order ID: {orderID}" & vbCrLf &
+                $"Customer: {customerName}" & vbCrLf &
+                $"Receipt: {receiptNumber}" & vbCrLf &
                 $"Amount: ₱{amountPaid:N2}" & vbCrLf & vbCrLf &
                 "This action cannot be undone!",
                 "Confirm Delete",
@@ -290,6 +435,5 @@ Public Class OrderPayment
             MessageBox.Show("Error deleting payment: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-
 
 End Class

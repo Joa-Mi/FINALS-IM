@@ -160,34 +160,39 @@ Public Class Reservations
     End Sub
 
     ' ==========================================
-    ' LOAD RESERVATIONS
+    ' LOAD RESERVATIONS WITH CUSTOMER INFO
     ' ==========================================
     Private Sub LoadReservations(Optional condition As String = "")
         Try
             Dim query As String =
-                "SELECT 
-                    ReservationID,
-                    CustomerID,
-                    ReservationType,
-                    EventType,
-                    EventDate,
-                    EventTime,
-                    NumberOfGuests,
-                    ProductSelection,
-                    SpecialRequests,
-                    ReservationStatus,
-                    ReservationDate,
-                    DeliveryAddress,
-                    DeliveryOption,
-                    ContactNumber,
-                    UpdatedDate
-                 FROM reservations"
+        "SELECT 
+            r.ReservationID,
+            r.CustomerID,
+            c.FirstName,
+            c.LastName,
+            c.Email,
+            c.ContactNumber AS CustomerContact,
+            r.ContactNumber AS ReservationContact,
+            r.ReservationType,
+            r.EventType,
+            r.EventDate,
+            r.EventTime,
+            r.NumberOfGuests,
+            r.ProductSelection,
+            r.SpecialRequests,
+            r.ReservationStatus,
+            r.ReservationDate,
+            r.DeliveryAddress,
+            r.DeliveryOption,
+            r.UpdatedDate
+         FROM reservations r
+         INNER JOIN customers c ON r.CustomerID = c.CustomerID"
 
             If condition <> "" Then
                 query &= " WHERE " & condition
             End If
 
-            query &= " ORDER BY ReservationDate DESC"
+            query &= " ORDER BY r.ReservationDate DESC"
 
             ' Load results into DGV
             LoadToDGV(query, Reservation)
@@ -195,8 +200,146 @@ Public Class Reservations
             ' Update count label
             lblTotalReservations.Text = "Total: " & Reservation.Rows.Count.ToString()
 
+            ' Optional: Format the DataGridView columns
+            FormatReservationColumns()
+
         Catch ex As Exception
             MessageBox.Show("Error loading reservations: " & ex.Message)
+        End Try
+    End Sub
+
+    ' ==========================================
+    ' FORMAT DATAGRIDVIEW COLUMNS (OPTIONAL)
+    ' ==========================================
+    Private Sub FormatReservationColumns()
+        Try
+            With Reservation
+                ' Hide ID columns
+                If .Columns.Contains("ReservationID") Then
+                    .Columns("ReservationID").Visible = False
+                End If
+
+                If .Columns.Contains("CustomerID") Then
+                    .Columns("CustomerID").Visible = False
+                End If
+
+                ' Set specific column widths - Customer Info
+                If .Columns.Contains("FirstName") Then
+                    .Columns("FirstName").HeaderText = "First Name"
+                    .Columns("FirstName").Width = 120
+                    .Columns("FirstName").DisplayIndex = 0
+                End If
+
+                If .Columns.Contains("LastName") Then
+                    .Columns("LastName").HeaderText = "Last Name"
+                    .Columns("LastName").Width = 120
+                    .Columns("LastName").DisplayIndex = 1
+                End If
+
+                If .Columns.Contains("Email") Then
+                    .Columns("Email").HeaderText = "Email"
+                    .Columns("Email").Width = 180
+                    .Columns("Email").DisplayIndex = 2
+                End If
+
+                If .Columns.Contains("CustomerContact") Then
+                    .Columns("CustomerContact").HeaderText = "Customer Phone"
+                    .Columns("CustomerContact").Width = 120
+                    .Columns("CustomerContact").DisplayIndex = 3
+                End If
+
+                If .Columns.Contains("ReservationContact") Then
+                    .Columns("ReservationContact").HeaderText = "Reservation Phone"
+                    .Columns("ReservationContact").Width = 130
+                    .Columns("ReservationContact").DisplayIndex = 4
+                End If
+
+                ' Reservation Details
+                If .Columns.Contains("ReservationType") Then
+                    .Columns("ReservationType").HeaderText = "Type"
+                    .Columns("ReservationType").Width = 100
+                    .Columns("ReservationType").DisplayIndex = 5
+                End If
+
+                If .Columns.Contains("EventType") Then
+                    .Columns("EventType").HeaderText = "Event"
+                    .Columns("EventType").Width = 120
+                    .Columns("EventType").DisplayIndex = 6
+                End If
+
+                If .Columns.Contains("EventDate") Then
+                    .Columns("EventDate").HeaderText = "Event Date"
+                    .Columns("EventDate").Width = 100
+                    .Columns("EventDate").DefaultCellStyle.Format = "MM/dd/yyyy"
+                    .Columns("EventDate").DisplayIndex = 7
+                End If
+
+                If .Columns.Contains("EventTime") Then
+                    .Columns("EventTime").HeaderText = "Time"
+                    .Columns("EventTime").Width = 80
+                    .Columns("EventTime").DisplayIndex = 8
+                End If
+
+                If .Columns.Contains("NumberOfGuests") Then
+                    .Columns("NumberOfGuests").HeaderText = "Guests"
+                    .Columns("NumberOfGuests").Width = 70
+                    .Columns("NumberOfGuests").DisplayIndex = 9
+                End If
+
+                If .Columns.Contains("ReservationStatus") Then
+                    .Columns("ReservationStatus").HeaderText = "Status"
+                    .Columns("ReservationStatus").Width = 90
+                    .Columns("ReservationStatus").DisplayIndex = 10
+                End If
+
+                If .Columns.Contains("ReservationDate") Then
+                    .Columns("ReservationDate").HeaderText = "Reserved On"
+                    .Columns("ReservationDate").Width = 100
+                    .Columns("ReservationDate").DefaultCellStyle.Format = "MM/dd/yyyy"
+                    .Columns("ReservationDate").DisplayIndex = 11
+                End If
+
+                If .Columns.Contains("ProductSelection") Then
+                    .Columns("ProductSelection").HeaderText = "Products"
+                    .Columns("ProductSelection").Width = 150
+                    .Columns("ProductSelection").DisplayIndex = 12
+                End If
+
+                If .Columns.Contains("DeliveryOption") Then
+                    .Columns("DeliveryOption").HeaderText = "Delivery"
+                    .Columns("DeliveryOption").Width = 90
+                    .Columns("DeliveryOption").DisplayIndex = 13
+                End If
+
+                If .Columns.Contains("DeliveryAddress") Then
+                    .Columns("DeliveryAddress").HeaderText = "Address"
+                    .Columns("DeliveryAddress").Width = 180
+                    .Columns("DeliveryAddress").DisplayIndex = 14
+                End If
+
+                If .Columns.Contains("SpecialRequests") Then
+                    .Columns("SpecialRequests").HeaderText = "Special Requests"
+                    .Columns("SpecialRequests").Width = 150
+                    .Columns("SpecialRequests").DisplayIndex = 15
+                End If
+
+                If .Columns.Contains("UpdatedDate") Then
+                    .Columns("UpdatedDate").HeaderText = "Last Updated"
+                    .Columns("UpdatedDate").Width = 100
+                    .Columns("UpdatedDate").DefaultCellStyle.Format = "MM/dd/yyyy"
+                    .Columns("UpdatedDate").DisplayIndex = 16
+                End If
+
+                ' Disable auto-sizing to keep fixed widths
+                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+
+                ' Optional: Allow horizontal scrolling if needed
+                .ScrollBars = ScrollBars.Both
+
+            End With
+
+        Catch ex As Exception
+            ' Silently handle formatting errors
         End Try
     End Sub
 
