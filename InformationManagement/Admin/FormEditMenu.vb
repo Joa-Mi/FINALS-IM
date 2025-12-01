@@ -1,5 +1,6 @@
 ﻿Imports MySqlConnector
 Imports System.IO
+Imports System.Drawing.Imaging
 
 Public Class FormEditMenu
 
@@ -42,14 +43,13 @@ Public Class FormEditMenu
 
         ProductID.ReadOnly = True
         OrderCount.ReadOnly = True
-        DateTimePicker1.Enabled = False
 
         PictureBox1.Image = Nothing
         SelectedImageBytes = Nothing
     End Sub
 
     ' =======================================================
-    ' LOAD PRODUCT WITH IMAGE
+    ' LOAD PRODUCT + IMAGE SAFELY
     ' =======================================================
     Public Sub LoadProduct(id As Integer)
         SelectedProductID = id
@@ -73,19 +73,37 @@ Public Class FormEditMenu
                 cmbCategory.Text = rd("Category").ToString()
                 cmbMealTime.Text = rd("MealTime").ToString()
 
-                ' Load image if exists
+                ' ========== FIXED IMAGE LOADING ==========
                 If Not IsDBNull(rd("Image")) Then
-                    SelectedImageBytes = DirectCast(rd("Image"), Byte())
+                    Dim imageData = rd("Image")
 
-                    Using ms As New MemoryStream(SelectedImageBytes)
-                        PictureBox1.Image = Image.FromStream(ms)
-                        PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-                    End Using
+                    ' Check if it's actually a byte array
+                    If TypeOf imageData Is Byte() Then
+                        Dim bytes As Byte() = CType(imageData, Byte())
+
+                        If bytes IsNot Nothing AndAlso bytes.Length > 100 Then
+                            Try
+                                Using ms As New MemoryStream(bytes)
+                                    PictureBox1.Image = Image.FromStream(ms)
+                                End Using
+                                SelectedImageBytes = bytes
+                            Catch ex As Exception
+                                PictureBox1.Image = Nothing
+                                SelectedImageBytes = Nothing
+                            End Try
+                        Else
+                            PictureBox1.Image = Nothing
+                            SelectedImageBytes = Nothing
+                        End If
+                    Else
+                        ' If it's not a byte array (e.g., string path), clear the image
+                        PictureBox1.Image = Nothing
+                        SelectedImageBytes = Nothing
+                    End If
                 Else
                     PictureBox1.Image = Nothing
                     SelectedImageBytes = Nothing
                 End If
-
             End If
             rd.Close()
 
@@ -97,30 +115,27 @@ Public Class FormEditMenu
     End Sub
 
     ' =======================================================
-    ' BROWSE IMAGE BUTTON
+    ' BROWSE IMAGE
     ' =======================================================
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
         Dim ofd As New OpenFileDialog()
-        ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp"
+        ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
 
         If ofd.ShowDialog() = DialogResult.OK Then
             PictureBox1.Image = Image.FromFile(ofd.FileName)
-            PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-
             SelectedImageBytes = File.ReadAllBytes(ofd.FileName)
         End If
     End Sub
 
     ' =======================================================
-    ' UPDATE ITEM WITH IMAGE
+    ' UPDATE PRODUCT + IMAGE
     ' =======================================================
     Private Sub btnUpdateItem_Click(sender As Object, e As EventArgs) Handles btnUpdateItem.Click
-
         Try
             openConn()
 
             Dim sql As String =
-                "UPDATE products SET 
+            "UPDATE products SET 
                 ProductName=@ProductName,
                 Category=@Category,
                 Description=@Description,
@@ -132,7 +147,7 @@ Public Class FormEditMenu
                 MealTime=@MealTime,
                 LastUpdated=NOW(),
                 Image=@Image
-                WHERE ProductID=@id"
+             WHERE ProductID=@id"
 
             Dim cmd As New MySqlCommand(sql, conn)
 
@@ -142,23 +157,28 @@ Public Class FormEditMenu
             cmd.Parameters.AddWithValue("@Price", numericPrice.Value)
             cmd.Parameters.AddWithValue("@Availability", Availability.Text)
             cmd.Parameters.AddWithValue("@ServingSize", ServingSize.Text.Trim())
-
-            If String.IsNullOrWhiteSpace(ProductCode.Text.Trim()) Then
-                cmd.Parameters.AddWithValue("@ProductCode", DBNull.Value)
-            Else
-                cmd.Parameters.AddWithValue("@ProductCode", ProductCode.Text.Trim())
-            End If
-
+            cmd.Parameters.AddWithValue("@ProductCode", ProductCode.Text.Trim())
             cmd.Parameters.AddWithValue("@PrepTime", PrepTime.Text.Trim())
             cmd.Parameters.AddWithValue("@MealTime", cmbMealTime.Text)
             cmd.Parameters.AddWithValue("@id", SelectedProductID)
 
-            ' Add Image Bytes
+            ' ===================== IMAGE SAVE LOGIC =====================
+            ' If user did not browse new image → re-save existing BLOB
             If SelectedImageBytes IsNot Nothing Then
-                cmd.Parameters.AddWithValue("@Image", SelectedImageBytes)
+                cmd.Parameters.Add("@Image", MySqlDbType.LongBlob).Value = SelectedImageBytes
             Else
-                cmd.Parameters.AddWithValue("@Image", DBNull.Value)
+                ' Load original image from database instead of NULL
+                Dim getImgCmd As New MySqlCommand("SELECT Image FROM products WHERE ProductID=@id", conn)
+                getImgCmd.Parameters.AddWithValue("@id", SelectedProductID)
+                Dim originalBytes = getImgCmd.ExecuteScalar()
+
+                If Not IsDBNull(originalBytes) Then
+                    cmd.Parameters.Add("@Image", MySqlDbType.LongBlob).Value = originalBytes
+                Else
+                    cmd.Parameters.Add("@Image", MySqlDbType.LongBlob).Value = DBNull.Value
+                End If
             End If
+            ' ============================================================
 
             cmd.ExecuteNonQuery()
 
@@ -172,9 +192,6 @@ Public Class FormEditMenu
         End Try
     End Sub
 
-    ' =======================================================
-    ' CLOSE BUTTON
-    ' =======================================================
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Me.Close()
     End Sub

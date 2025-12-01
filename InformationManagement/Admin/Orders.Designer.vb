@@ -17,10 +17,13 @@ Partial Class Orders
 
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btnConfirm = New System.Windows.Forms.Button()
+        Me.btnDelete = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
@@ -64,6 +67,9 @@ Partial Class Orders
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.btnConfirm)
+        Me.Panel2.Controls.Add(Me.btnDelete)
+        Me.Panel2.Controls.Add(Me.Button1)
         Me.Panel2.Controls.Add(Me.btnRefresh)
         Me.Panel2.Controls.Add(Me.txtSearch)
         Me.Panel2.Controls.Add(Me.lblSearch)
@@ -73,6 +79,52 @@ Partial Class Orders
         Me.Panel2.Padding = New System.Windows.Forms.Padding(10, 10, 10, 10)
         Me.Panel2.Size = New System.Drawing.Size(1028, 61)
         Me.Panel2.TabIndex = 1
+        '
+        'btnConfirm
+        '
+        Me.btnConfirm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConfirm.BackColor = System.Drawing.Color.Green
+        Me.btnConfirm.FlatAppearance.BorderSize = 0
+        Me.btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnConfirm.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnConfirm.ForeColor = System.Drawing.Color.White
+        Me.btnConfirm.Location = New System.Drawing.Point(638, 15)
+        Me.btnConfirm.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.btnConfirm.Name = "btnConfirm"
+        Me.btnConfirm.Size = New System.Drawing.Size(101, 30)
+        Me.btnConfirm.TabIndex = 9
+        Me.btnConfirm.Text = "Update Status"
+        Me.btnConfirm.UseVisualStyleBackColor = False
+        '
+        'btnDelete
+        '
+        Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDelete.BackColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDelete.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnDelete.ForeColor = System.Drawing.Color.White
+        Me.btnDelete.Location = New System.Drawing.Point(1073, 20)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(114, 32)
+        Me.btnDelete.TabIndex = 5
+        Me.btnDelete.Text = "Delete"
+        Me.btnDelete.UseVisualStyleBackColor = False
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.Button1.FlatAppearance.BorderSize = 0
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.Button1.ForeColor = System.Drawing.Color.White
+        Me.Button1.Location = New System.Drawing.Point(748, 16)
+        Me.Button1.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(101, 30)
+        Me.Button1.TabIndex = 8
+        Me.Button1.Text = "Delete"
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'btnRefresh
         '
@@ -131,7 +183,7 @@ Partial Class Orders
         Me.btnViewAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnViewAll.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnViewAll.ForeColor = System.Drawing.Color.White
-        Me.btnViewAll.Location = New System.Drawing.Point(467, 10)
+        Me.btnViewAll.Location = New System.Drawing.Point(511, 13)
         Me.btnViewAll.Name = "btnViewAll"
         Me.btnViewAll.Size = New System.Drawing.Size(100, 30)
         Me.btnViewAll.TabIndex = 4
@@ -145,7 +197,7 @@ Partial Class Orders
         Me.btnViewCancelled.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnViewCancelled.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnViewCancelled.ForeColor = System.Drawing.Color.White
-        Me.btnViewCancelled.Location = New System.Drawing.Point(361, 10)
+        Me.btnViewCancelled.Location = New System.Drawing.Point(400, 13)
         Me.btnViewCancelled.Name = "btnViewCancelled"
         Me.btnViewCancelled.Size = New System.Drawing.Size(100, 30)
         Me.btnViewCancelled.TabIndex = 3
@@ -159,7 +211,7 @@ Partial Class Orders
         Me.btnViewCompleted.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnViewCompleted.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnViewCompleted.ForeColor = System.Drawing.Color.White
-        Me.btnViewCompleted.Location = New System.Drawing.Point(255, 10)
+        Me.btnViewCompleted.Location = New System.Drawing.Point(288, 13)
         Me.btnViewCompleted.Name = "btnViewCompleted"
         Me.btnViewCompleted.Size = New System.Drawing.Size(100, 30)
         Me.btnViewCompleted.TabIndex = 2
@@ -173,7 +225,7 @@ Partial Class Orders
         Me.btnViewPending.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnViewPending.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.btnViewPending.ForeColor = System.Drawing.Color.Transparent
-        Me.btnViewPending.Location = New System.Drawing.Point(149, 10)
+        Me.btnViewPending.Location = New System.Drawing.Point(177, 13)
         Me.btnViewPending.Name = "btnViewPending"
         Me.btnViewPending.Size = New System.Drawing.Size(100, 30)
         Me.btnViewPending.TabIndex = 1
@@ -200,14 +252,14 @@ Partial Class Orders
         Me.DataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView2.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.DataGridView2.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridView2.ColumnHeadersHeight = 40
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridView2.Dock = System.Windows.Forms.DockStyle.Fill
@@ -253,7 +305,7 @@ Partial Class Orders
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
-        Me.MinimumSize = New System.Drawing.Size(804, 591)
+        Me.MinimumSize = New System.Drawing.Size(804, 590)
         Me.Name = "Orders"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Manage Orders - Tabeya"
@@ -286,4 +338,7 @@ Partial Class Orders
     Friend WithEvents DataGridView2 As DataGridView
     Friend WithEvents Panel4 As Panel
     Friend WithEvents lblTotalOrders As Label
+    Friend WithEvents btnDelete As Button
+    Friend WithEvents btnConfirm As Button
+    Friend WithEvents Button1 As Button
 End Class

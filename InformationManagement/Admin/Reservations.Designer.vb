@@ -17,10 +17,11 @@ Partial Class Reservations
 
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btnUpdateStatus = New System.Windows.Forms.Button()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
@@ -67,6 +68,7 @@ Partial Class Reservations
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.btnUpdateStatus)
         Me.Panel2.Controls.Add(Me.btnDelete)
         Me.Panel2.Controls.Add(Me.btnRefresh)
         Me.Panel2.Controls.Add(Me.txtSearch)
@@ -75,9 +77,24 @@ Partial Class Reservations
         Me.Panel2.Location = New System.Drawing.Point(0, 52)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Padding = New System.Windows.Forms.Padding(8, 9, 8, 9)
-        Me.Panel2.Size = New System.Drawing.Size(1028, 59)
+        Me.Panel2.Padding = New System.Windows.Forms.Padding(11, 11, 11, 11)
+        Me.Panel2.Size = New System.Drawing.Size(1028, 64)
         Me.Panel2.TabIndex = 1
+        '
+        'btnUpdateStatus
+        '
+        Me.btnUpdateStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUpdateStatus.BackColor = System.Drawing.Color.Green
+        Me.btnUpdateStatus.FlatAppearance.BorderSize = 0
+        Me.btnUpdateStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnUpdateStatus.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnUpdateStatus.ForeColor = System.Drawing.Color.White
+        Me.btnUpdateStatus.Location = New System.Drawing.Point(368, 13)
+        Me.btnUpdateStatus.Name = "btnUpdateStatus"
+        Me.btnUpdateStatus.Size = New System.Drawing.Size(118, 30)
+        Me.btnUpdateStatus.TabIndex = 9
+        Me.btnUpdateStatus.Text = "Update Status"
+        Me.btnUpdateStatus.UseVisualStyleBackColor = False
         '
         'btnDelete
         '
@@ -87,8 +104,7 @@ Partial Class Reservations
         Me.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDelete.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnDelete.ForeColor = System.Drawing.Color.White
-        Me.btnDelete.Location = New System.Drawing.Point(706, 13)
-        Me.btnDelete.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.btnDelete.Location = New System.Drawing.Point(497, 13)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(100, 30)
         Me.btnDelete.TabIndex = 4
@@ -103,7 +119,7 @@ Partial Class Reservations
         Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnRefresh.ForeColor = System.Drawing.Color.White
-        Me.btnRefresh.Location = New System.Drawing.Point(600, 13)
+        Me.btnRefresh.Location = New System.Drawing.Point(257, 13)
         Me.btnRefresh.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(100, 30)
@@ -119,7 +135,7 @@ Partial Class Reservations
         Me.txtSearch.Location = New System.Drawing.Point(68, 15)
         Me.txtSearch.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.txtSearch.Name = "txtSearch"
-        Me.txtSearch.Size = New System.Drawing.Size(515, 25)
+        Me.txtSearch.Size = New System.Drawing.Size(172, 25)
         Me.txtSearch.TabIndex = 1
         '
         'lblSearch
@@ -142,11 +158,11 @@ Partial Class Reservations
         Me.Panel3.Controls.Add(Me.btnViewPending)
         Me.Panel3.Controls.Add(Me.lblFilter)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(0, 111)
+        Me.Panel3.Location = New System.Drawing.Point(0, 116)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Padding = New System.Windows.Forms.Padding(8, 9, 8, 9)
-        Me.Panel3.Size = New System.Drawing.Size(1028, 51)
+        Me.Panel3.Padding = New System.Windows.Forms.Padding(11, 11, 11, 11)
+        Me.Panel3.Size = New System.Drawing.Size(1028, 53)
         Me.Panel3.TabIndex = 2
         '
         'btnViewAll
@@ -230,19 +246,19 @@ Partial Class Reservations
         Me.Reservation.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.Reservation.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.Reservation.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Reservation.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Reservation.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.Reservation.ColumnHeadersHeight = 40
         Me.Reservation.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.Reservation.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Reservation.EnableHeadersVisualStyles = False
-        Me.Reservation.Location = New System.Drawing.Point(0, 162)
+        Me.Reservation.Location = New System.Drawing.Point(0, 169)
         Me.Reservation.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.Reservation.Name = "Reservation"
         Me.Reservation.ReadOnly = True
@@ -250,7 +266,7 @@ Partial Class Reservations
         Me.Reservation.RowHeadersWidth = 51
         Me.Reservation.RowTemplate.Height = 35
         Me.Reservation.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.Reservation.Size = New System.Drawing.Size(1028, 384)
+        Me.Reservation.Size = New System.Drawing.Size(1028, 377)
         Me.Reservation.TabIndex = 3
         '
         'Panel4
@@ -286,7 +302,7 @@ Partial Class Reservations
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
-        Me.MinimumSize = New System.Drawing.Size(688, 525)
+        Me.MinimumSize = New System.Drawing.Size(687, 523)
         Me.Name = "Reservations"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Reservations Management - Tabeya"
@@ -320,4 +336,5 @@ Partial Class Reservations
     Friend WithEvents Reservation As DataGridView
     Friend WithEvents Panel4 As Panel
     Friend WithEvents lblTotalReservations As Label
+    Friend WithEvents btnUpdateStatus As Button
 End Class
