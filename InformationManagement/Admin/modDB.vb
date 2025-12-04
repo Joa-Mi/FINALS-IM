@@ -1,5 +1,4 @@
-﻿Imports System.Data.SqlClient
-Imports System.IO
+﻿Imports System.IO
 Imports System.Security.Cryptography
 Imports System.Text
 Imports MySqlConnector
@@ -9,32 +8,15 @@ Module modDB
     Public conn As New MySqlConnection()
     Public cmd As MySqlCommand
     Public cmdRead As MySqlDataReader
-    Public db_server As String
-    Public db_name As String
-    Public db_uid As String
-    Public db_pwd As String
-    Public strConnection As String
 
-    ' Load DB config from config.ini
-    Public Sub LoadConfig()
-        db_server = ConfigManager.GetValue("DATABASE", "ServerIP")
-        db_name = ConfigManager.GetValue("DATABASE", "DBName")
-        db_uid = ConfigManager.GetValue("DATABASE", "DBUser")
-        db_pwd = ConfigManager.GetValue("DATABASE", "DBPass") ' decrypt if stored encrypted
+    Public db_server As String = "localhost"
+    Public db_uid As String = "root"
+    Public db_pwd As String = ""
+    Public db_name As String = "tabeya_system"
 
-        strConnection = $"Server={db_server};Port=3306;Database={db_name};Uid={db_uid};Pwd={db_pwd};SslMode=None;AllowUserVariables=True;"
-    End Sub
-    Public Function TestConnection() As Boolean
-        Try
-            LoadConfig()
-            openConn()
-            closeConn()
-            Return True
-        Catch ex As Exception
-            MsgBox("DB Connection failed: " & ex.Message, MsgBoxStyle.Critical)
-            Return False
-        End Try
-    End Function
+    Public strConnection As String =
+        $"Server={db_server};Port=3306;Database={db_name};Uid={db_uid};Pwd={db_pwd};SslMode=None;AllowUserVariables=True;"
+
     Public Structure LoggedUser
         Dim id As Integer
         Dim name As String
@@ -193,6 +175,5 @@ Module modDB
             closeConn()
         End Try
     End Sub
-
 
 End Module
