@@ -179,7 +179,12 @@
     <Compile Include="Admin\BatchManagement.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Admin\ConfigManager.vb" />
+    <Compile Include="Admin\ConfigurationPage.Designer.vb">
+      <DependentUpon>ConfigurationPage.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ConfigurationPage.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Admin\Customer.Designer.vb">
       <DependentUpon>Customer.vb</DependentUpon>
     </Compile>
@@ -192,6 +197,7 @@
     <Compile Include="Admin\Dashboard.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Admin\DatabaseConfigManager.vb" />
     <Compile Include="Admin\EditBatch.Designer.vb">
       <DependentUpon>EditBatch.vb</DependentUpon>
     </Compile>
@@ -296,7 +302,6 @@
     <Compile Include="Admin\Payroll.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Admin\Program.vb" />
     <Compile Include="Admin\Reports.Designer.vb">
       <DependentUpon>Reports.vb</DependentUpon>
     </Compile>
@@ -385,12 +390,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="ConfigurationPage.Designer.vb">
-      <DependentUpon>ConfigurationPage.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ConfigurationPage.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FlatNumericUpDown.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -441,6 +440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\BatchManagement.resx">
       <DependentUpon>BatchManagement.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\ConfigurationPage.resx">
+      <DependentUpon>ConfigurationPage.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\Customer.resx">
       <DependentUpon>Customer.vb</DependentUpon>
@@ -537,9 +539,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormSales.resx">
       <DependentUpon>FormSales.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConfigurationPage.resx">
-      <DependentUpon>ConfigurationPage.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

@@ -48,7 +48,7 @@ Partial Class AddNewBatch
         '
         Me.lblTitle.AutoSize = True
         Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitle.Location = New System.Drawing.Point(24, 20)
+        Me.lblTitle.Location = New System.Drawing.Point(24, 9)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(174, 30)
         Me.lblTitle.TabIndex = 0
@@ -59,7 +59,7 @@ Partial Class AddNewBatch
         Me.lblSubtitle.AutoSize = True
         Me.lblSubtitle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.lblSubtitle.ForeColor = System.Drawing.Color.DimGray
-        Me.lblSubtitle.Location = New System.Drawing.Point(26, 52)
+        Me.lblSubtitle.Location = New System.Drawing.Point(26, 39)
         Me.lblSubtitle.Name = "lblSubtitle"
         Me.lblSubtitle.Size = New System.Drawing.Size(246, 15)
         Me.lblSubtitle.TabIndex = 1

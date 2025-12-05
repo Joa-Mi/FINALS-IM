@@ -55,9 +55,9 @@ Partial Class Adminlogin
         Me.RoundedPanel1.Controls.Add(Me.Label2)
         Me.RoundedPanel1.Controls.Add(Me.Label3)
         Me.RoundedPanel1.CornerRadius = 20
-        Me.RoundedPanel1.Location = New System.Drawing.Point(291, 173)
+        Me.RoundedPanel1.Location = New System.Drawing.Point(291, 150)
         Me.RoundedPanel1.Name = "RoundedPanel1"
-        Me.RoundedPanel1.Size = New System.Drawing.Size(338, 309)
+        Me.RoundedPanel1.Size = New System.Drawing.Size(354, 332)
         Me.RoundedPanel1.TabIndex = 10
         '
         'chkShowPassword
@@ -67,7 +67,7 @@ Partial Class Adminlogin
         Me.chkShowPassword.Cursor = System.Windows.Forms.Cursors.Hand
         Me.chkShowPassword.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkShowPassword.ForeColor = System.Drawing.Color.White
-        Me.chkShowPassword.Location = New System.Drawing.Point(45, 207)
+        Me.chkShowPassword.Location = New System.Drawing.Point(55, 218)
         Me.chkShowPassword.Margin = New System.Windows.Forms.Padding(2)
         Me.chkShowPassword.Name = "chkShowPassword"
         Me.chkShowPassword.Size = New System.Drawing.Size(119, 21)
@@ -79,8 +79,8 @@ Partial Class Adminlogin
         '
         Me.txtPassword.BackColor = System.Drawing.Color.Transparent
         Me.txtPassword.BorderRadius = 10
-        Me.txtPassword.FocusBorderColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(152, Byte), Integer), CType(CType(219, Byte), Integer))
-        Me.txtPassword.Location = New System.Drawing.Point(45, 162)
+        Me.txtPassword.FocusBorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.txtPassword.Location = New System.Drawing.Point(53, 176)
         Me.txtPassword.MaxLength = 32767
         Me.txtPassword.MinimumSize = New System.Drawing.Size(50, 20)
         Me.txtPassword.Multiline = False
@@ -98,8 +98,8 @@ Partial Class Adminlogin
         '
         Me.txtUsername.BackColor = System.Drawing.Color.Transparent
         Me.txtUsername.BorderRadius = 10
-        Me.txtUsername.FocusBorderColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(152, Byte), Integer), CType(CType(219, Byte), Integer))
-        Me.txtUsername.Location = New System.Drawing.Point(45, 93)
+        Me.txtUsername.FocusBorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.txtUsername.Location = New System.Drawing.Point(53, 99)
         Me.txtUsername.MaxLength = 32767
         Me.txtUsername.MinimumSize = New System.Drawing.Size(50, 20)
         Me.txtUsername.Multiline = False
@@ -138,7 +138,7 @@ Partial Class Adminlogin
         Me.adminlog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.adminlog.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.adminlog.ForeColor = System.Drawing.Color.White
-        Me.adminlog.Location = New System.Drawing.Point(45, 244)
+        Me.adminlog.Location = New System.Drawing.Point(53, 271)
         Me.adminlog.Margin = New System.Windows.Forms.Padding(2)
         Me.adminlog.Name = "adminlog"
         Me.adminlog.Size = New System.Drawing.Size(248, 41)
@@ -152,7 +152,7 @@ Partial Class Adminlogin
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.White
-        Me.Label2.Location = New System.Drawing.Point(45, 69)
+        Me.Label2.Location = New System.Drawing.Point(50, 72)
         Me.Label2.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(80, 20)
@@ -164,7 +164,7 @@ Partial Class Adminlogin
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.ForeColor = System.Drawing.Color.White
-        Me.Label3.Location = New System.Drawing.Point(45, 138)
+        Me.Label3.Location = New System.Drawing.Point(51, 153)
         Me.Label3.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(76, 20)
