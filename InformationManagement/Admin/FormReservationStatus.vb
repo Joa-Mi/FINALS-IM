@@ -477,4 +477,7 @@ Public Class FormReservationStatus
         End If
     End Sub
 
+    Private Sub RoundedPane25_Paint(sender As Object, e As PaintEventArgs) Handles RoundedPane25.Paint
+
+    End Sub
 End Class

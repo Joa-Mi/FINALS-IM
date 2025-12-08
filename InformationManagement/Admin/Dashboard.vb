@@ -21,9 +21,8 @@ Public Class Dashboard
     End Sub
 
     Private Sub refreshTimer_Tick(sender As Object, e As EventArgs) Handles refreshTimer.Tick
-        ' Refresh only dynamic data (orders, reservations)
-        LoadPendingOrders()
-        LoadRecentReservations()
+
+
         LoadTotalOrders()
         LoadReservationChart()
     End Sub
@@ -37,12 +36,14 @@ Public Class Dashboard
 
             ' Load charts and lists
             LoadSalesByChannel()
-            LoadTopMenuItems()
-            LoadRecentReservations()
-            LoadPendingOrders()
-            LoadQuickStats()
+
             LoadReservationChart()
+            LoadOrdersTrendChart() ' Add this line
+            LoadSalesChart()
             ConfigureChart2Clickable()
+            ConfigureMonthlyChartClickable()
+            ConfigureSalesChartClickable()
+            LoadProductPerformanceChart()
 
         Catch ex As Exception
             MessageBox.Show("Error loading dashboard: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -240,666 +241,148 @@ Public Class Dashboard
     End Sub
 
     ' ============================================
-    ' FIXED: TOP MENU ITEMS - Uses OrderCount from products table
-    ' No order_items table needed - works with existing schema
-    ' ============================================
 
-    Private Sub LoadTopMenuItems()
-        Try
-            ' Clear existing items except the label
-            Dim controlsToRemove As New List(Of Control)
-            For Each ctrl As Control In PanelMenu.Controls
-                If TypeOf ctrl Is RoundedPane2 AndAlso ctrl.Name.StartsWith("pnlMenus") Then
-                    controlsToRemove.Add(ctrl)
-                End If
-                ' Also remove any "no data" labels from previous loads
-                If TypeOf ctrl Is Label AndAlso ctrl.Name = "lblNoMenuData" Then
-                    controlsToRemove.Add(ctrl)
-                End If
-            Next
-            For Each ctrl In controlsToRemove
-                PanelMenu.Controls.Remove(ctrl)
-                ctrl.Dispose()
-            Next
-
-            openConn()
-
-            ' Get top products by OrderCount (manually maintained)
-            ' Revenue calculated as: OrderCount × Current Price
-            cmd = New MySqlCommand("
-        SELECT 
-            ProductID,
-            ProductName,
-            OrderCount,
-            Price,
-            (OrderCount * Price) as EstimatedRevenue
-        FROM products
-        WHERE OrderCount > 0
-        AND Availability = 'Available'
-        ORDER BY OrderCount DESC
-        LIMIT 10", conn)
-
-            Dim reader As MySqlDataReader = cmd.ExecuteReader()
-            Dim yPosition As Integer = 61
-            Dim itemCount As Integer = 0
-
-            While reader.Read()
-                Dim itemPanel As New RoundedPane2 With {
-            .BorderColor = Color.LightGray,
-            .BorderThickness = 1,
-            .CornerRadius = 15,
-            .FillColor = Color.White,
-            .Size = New Size(456, 67),
-            .Location = New Point(35, yPosition),
-            .Name = "pnlMenus" & itemCount
-        }
-
-                ' Icon
-                Dim icon As New PictureBox With {
-            .BackColor = Color.Transparent,
-            .Image = My.Resources.fork_and_knife,
-            .Location = New Point(21, 25),
-            .Size = New Size(20, 17),
-            .SizeMode = PictureBoxSizeMode.StretchImage
-        }
-
-                ' Product name
-                Dim lblName As New Label With {
-            .AutoSize = True,
-            .BackColor = Color.Transparent,
-            .Font = New Font("Segoe UI Semibold", 11.25!, FontStyle.Bold),
-            .Location = New Point(53, 15),
-            .Text = reader("ProductName").ToString()
-        }
-
-                ' Order count
-                Dim orderCount As Integer = Convert.ToInt32(reader("OrderCount"))
-                Dim lblOrders As New Label With {
-            .AutoSize = True,
-            .BackColor = Color.Transparent,
-            .Font = New Font("Segoe UI", 9.75!),
-            .ForeColor = SystemColors.ControlDarkDark,
-            .Location = New Point(54, 35),
-            .Text = orderCount.ToString("#,##0") & " orders"
-        }
-
-                ' Estimated Revenue (OrderCount × Price)
-                Dim revenue As Decimal = Convert.ToDecimal(reader("EstimatedRevenue"))
-                Dim lblRevenue As New Label With {
-            .AutoSize = True,
-            .BackColor = Color.Transparent,
-            .Font = New Font("Segoe UI", 11.25!, FontStyle.Bold),
-            .Location = New Point(320, 25),
-            .Text = "₱" & revenue.ToString("N2")
-        }
-
-                itemPanel.Controls.AddRange({icon, lblName, lblOrders, lblRevenue})
-                PanelMenu.Controls.Add(itemPanel)
-                itemPanel.BringToFront()
-
-                yPosition += 83
-                itemCount += 1
-            End While
-
-            reader.Close()
-            closeConn()
-
-            ' Adjust panel height to fit all items
-            If itemCount > 0 Then
-                PanelMenu.Height = yPosition + 30
-                ' Adjust Pending Orders position (same as Quick Stats pattern)
-                AdjustPendingOrdersPosition()
-            Else
-                ' FIXED: Show "No data" message in the MENU PANEL, not Chart2
-                Dim noDataLabel As New Label With {
-                .Text = "No menu items data available",
-                .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-                .ForeColor = Color.Gray,
-                .Location = New Point(35, 61),
-                .Size = New Size(456, 100),
-                .TextAlign = ContentAlignment.MiddleCenter,
-                .BackColor = Color.Transparent,
-                .Name = "lblNoMenuData"
-            }
-                PanelMenu.Controls.Add(noDataLabel)
-                noDataLabel.BringToFront()
-                PanelMenu.Height = 150
-                ' Adjust Pending Orders position (same as Quick Stats pattern)
-                AdjustPendingOrdersPosition()
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Error loading top menu items: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            closeConn()
-        End Try
-    End Sub
-    ' ============================================
-    ' HELPER: Update Product OrderCount (Optional - for maintenance)
-    ' Call this after completing orders to keep OrderCount field updated
-    ' ============================================
-
-    Public Sub UpdateProductOrderCounts()
-        Try
-            openConn()
-
-            ' Update OrderCount based on actual completed orders
-            cmd = New MySqlCommand("
-            UPDATE products p
-            LEFT JOIN (
-                SELECT 
-                    oi.ProductID,
-                    COUNT(DISTINCT oi.OrderID) as OrderCount
-                FROM order_items oi
-                INNER JOIN orders o ON oi.OrderID = o.OrderID
-                WHERE o.OrderStatus = 'Completed'
-                GROUP BY oi.ProductID
-            ) counts ON p.ProductID = counts.ProductID
-            SET p.OrderCount = COALESCE(counts.OrderCount, 0)", conn)
-
-            cmd.ExecuteNonQuery()
-            closeConn()
-
-        Catch ex As Exception
-            closeConn()
-        End Try
-    End Sub
 
     ' ============================================
-    ' RECENT RESERVATIONS - FIXED TO SHOW ALL DATA
-    ' ============================================
-
-
-    Private Sub LoadRecentReservations()
-        Try
-            ' Clear existing reservation panels except the label
-            Dim controlsToRemove As New List(Of Control)
-            For Each ctrl As Control In PanelReservations.Controls
-                If TypeOf ctrl Is RoundedPane2 AndAlso ctrl.Name.StartsWith("pnlReservation") Then
-                    controlsToRemove.Add(ctrl)
-                End If
-            Next
-            For Each ctrl In controlsToRemove
-                PanelReservations.Controls.Remove(ctrl)
-                ctrl.Dispose()
-            Next
-
-            openConn()
-            ' FIXED: Show all reservations, ordered by most recent first
-            cmd = New MySqlCommand("
-                SELECT 
-                    r.ReservationID,
-                    r.EventType,
-                    r.EventDate,
-                    r.NumberOfGuests,
-                    r.ReservationStatus,
-                    r.ReservationType,
-                    r.DeliveryOption,
-                    c.FirstName,
-                    c.LastName
-                FROM reservations r
-                LEFT JOIN customers c ON r.CustomerID = c.CustomerID
-                ORDER BY r.EventDate DESC, r.ReservationID DESC
-                LIMIT 20", conn)
-
-            Dim reader As MySqlDataReader = cmd.ExecuteReader()
-            Dim yPosition As Integer = 61
-            Dim itemCount As Integer = 0
-
-            While reader.Read()
-                Dim reservationPanel As New RoundedPane2 With {
-                    .BorderColor = Color.LightGray,
-                    .BorderThickness = 1,
-                    .CornerRadius = 15,
-                    .FillColor = Color.White,
-                    .Size = New Size(456, 67),
-                    .Location = New Point(29, yPosition),
-                    .Name = "pnlReservation" & itemCount
-                }
-
-                ' Icon
-                Dim icon As New PictureBox With {
-                    .BackColor = Color.Transparent,
-                    .Image = My.Resources.calendar_icon,
-                    .Location = New Point(21, 25),
-                    .Size = New Size(20, 17),
-                    .SizeMode = PictureBoxSizeMode.StretchImage
-                }
-
-                ' Event Type (Title)
-                Dim eventType As String = reader("EventType").ToString()
-                Dim lblEvent As New Label With {
-                    .AutoSize = True,
-                    .BackColor = Color.Transparent,
-                    .Font = New Font("Segoe UI Semibold", 11.25!, FontStyle.Bold),
-                    .Location = New Point(53, 15),
-                    .Text = eventType
-                }
-
-                ' Event Date
-                Dim eventDate As DateTime = Convert.ToDateTime(reader("EventDate"))
-                Dim lblDate As New Label With {
-                    .AutoSize = True,
-                    .BackColor = Color.Transparent,
-                    .Font = New Font("Segoe UI", 9.75!),
-                    .ForeColor = SystemColors.ControlDarkDark,
-                    .Location = New Point(54, 35),
-                    .Text = eventDate.ToString("yyyy-MM-dd")
-                }
-
-                ' Number of Guests
-                Dim guests As Integer = Convert.ToInt32(reader("NumberOfGuests"))
-                Dim lblGuests As New Label With {
-                    .AutoSize = True,
-                    .BackColor = Color.Transparent,
-                    .Font = New Font("Segoe UI", 9.75!),
-                    .ForeColor = SystemColors.ControlDarkDark,
-                    .Location = New Point(154, 35),
-                    .Text = " • " & guests.ToString() & " Guests"
-                }
-
-                ' Reservation Status Badge with dynamic colors
-                Dim status As String = reader("ReservationStatus").ToString()
-                Dim statusColor As Color
-
-                Select Case status.ToLower()
-                    Case "confirmed"
-                        statusColor = Color.FromArgb(34, 197, 94) ' Green
-                    Case "pending"
-                        statusColor = Color.FromArgb(251, 146, 60) ' Orange
-                    Case "completed"
-                        statusColor = Color.FromArgb(59, 130, 246) ' Blue
-                    Case "cancelled"
-                        statusColor = Color.FromArgb(239, 68, 68) ' Red
-                    Case Else
-                        statusColor = Color.Gray
-                End Select
-
-                Dim lblStatus As New Label With {
-                    .AutoSize = True,
-                    .BackColor = statusColor,
-                    .FlatStyle = FlatStyle.Flat,
-                    .Font = New Font("Segoe UI Semibold", 9.0!, FontStyle.Bold),
-                    .ForeColor = Color.White,
-                    .Location = New Point(379, 25),
-                    .Text = status,
-                    .Padding = New Padding(8, 4, 8, 4)
-                }
-
-                reservationPanel.Controls.AddRange({icon, lblEvent, lblDate, lblGuests, lblStatus})
-                PanelReservations.Controls.Add(reservationPanel)
-                reservationPanel.BringToFront()
-
-                yPosition += 83
-                itemCount += 1
-            End While
-
-            reader.Close()
-            closeConn()
-
-            ' Adjust panel height to fit all items
-            If itemCount > 0 Then
-                PanelReservations.Height = yPosition + 30
-                ' FIXED: Adjust Quick Stats position based on reservation panel height
-                AdjustQuickStatsPosition()
-            Else
-                ' If no reservations found
-                Dim noDataLabel As New Label With {
-                    .Text = "No reservations found",
-                    .Font = New Font("Segoe UI", 10),
-                    .ForeColor = Color.Gray,
-                    .Location = New Point(29, 61),
-                    .AutoSize = True,
-                    .BackColor = Color.Transparent
-                }
-                PanelReservations.Controls.Add(noDataLabel)
-                PanelReservations.Height = 150
-                AdjustQuickStatsPosition()
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show("Error loading recent reservations: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            closeConn()
-        End Try
-    End Sub
-
-    ' ============================================
-    ' ADJUST QUICK STATS POSITION
-    ' ============================================
-
-    Private Sub AdjustQuickStatsPosition()
-        Try
-            ' Find the Quick Stats panel - searching more thoroughly
-            Dim quickStatsPanel As Control = Nothing
-
-            ' Method 1: Search in form controls
-            quickStatsPanel = FindControlRecursive(Me, "quickstats")
-
-            ' Method 2: If not found, try common variations
-            If quickStatsPanel Is Nothing Then
-                quickStatsPanel = FindControlRecursive(Me, "pnlquick")
-            End If
-
-            ' Method 3: Search for controls with Label39, Label38, Label37, Label36 (Quick Stats labels)
-            If quickStatsPanel Is Nothing Then
-                For Each ctrl As Control In Me.Controls
-                    If ctrl.Controls.Contains(Label39) OrElse
-                       ctrl.Controls.Contains(Label38) OrElse
-                       ctrl.Controls.Contains(Label36) Then
-                        quickStatsPanel = ctrl
-                        Exit For
-                    End If
-                Next
-            End If
-
-            ' If Quick Stats panel is found, adjust its position
-            If quickStatsPanel IsNot Nothing Then
-                Dim newY As Integer = PanelReservations.Location.Y + PanelReservations.Height + 20
-                quickStatsPanel.Location = New Point(quickStatsPanel.Location.X, newY)
-            End If
-
-        Catch ex As Exception
-            ' Silently fail - this is just a positioning adjustment
-        End Try
-    End Sub
-
-    ' Helper function to search for controls recursively
-    Private Function FindControlRecursive(parent As Control, searchText As String) As Control
-        For Each ctrl As Control In parent.Controls
-            If ctrl.Name.ToLower().Contains(searchText.ToLower()) Then
-                Return ctrl
-            End If
-
-            ' Search in child controls
-            Dim found As Control = FindControlRecursive(ctrl, searchText)
-            If found IsNot Nothing Then
-                Return found
-            End If
-        Next
-        Return Nothing
-    End Function
-    ' ============================================
-    ' PENDING ORDERS - FIXED
-    ' ============================================
-
-    Private Sub LoadPendingOrders()
-        Try
-            ' Clear existing order panels except the template and labels
-            Dim controlsToRemove As New List(Of Control)
-            For Each ctrl As Control In flpOrders.Controls
-                If TypeOf ctrl Is Panel AndAlso ctrl.Name.StartsWith("pnlOrders") Then
-                    controlsToRemove.Add(ctrl)
-                End If
-
-            Next
-            For Each ctrl In controlsToRemove
-                flpOrders.Controls.Remove(ctrl)
-                ctrl.Dispose()
-            Next
-
-            openConn()
-            cmd = New MySqlCommand("
-            SELECT 
-                o.OrderID,
-                o.ReceiptNumber,
-                o.OrderType,
-                o.TotalAmount,
-                o.OrderDate,
-                o.OrderTime,
-                TIMESTAMPDIFF(MINUTE, CONCAT(o.OrderDate, ' ', o.OrderTime), NOW()) as MinutesAgo,
-                o.OrderSource
-            FROM orders o
-            WHERE o.OrderStatus = 'Preparing'
-            ORDER BY o.OrderDate DESC, o.OrderTime DESC
-            LIMIT 20", conn)
-
-            Dim reader As MySqlDataReader = cmd.ExecuteReader()
-            Dim yPosition As Integer = 62
-            Dim itemCount As Integer = 0
-
-            While reader.Read()
-                Dim orderPanel As New Panel With {
-                .BackColor = Color.FromArgb(255, 218, 185),
-                .Size = New Size(456, 71),
-                .Location = New Point(41, yPosition),
-                .Name = "pnlOrders" & itemCount
-            }
-
-                ' Order ID / Receipt Number
-                Dim lblOrderId As New Label With {
-                .AutoSize = True,
-                .BackColor = Color.Transparent,
-                .Font = New Font("Segoe UI Semibold", 11.25!, FontStyle.Bold),
-                .Location = New Point(17, 9),
-                .Text = reader("ReceiptNumber").ToString()
-            }
-
-                ' Order Type
-                Dim orderType As String = reader("OrderType").ToString()
-                Dim lblOrderType As New Label With {
-                .AutoSize = True,
-                .BackColor = Color.Transparent,
-                .Font = New Font("Segoe UI", 9.75!),
-                .ForeColor = SystemColors.ControlDarkDark,
-                .Location = New Point(20, 35),
-                .Text = orderType & " •"
-            }
-
-                ' Time ago
-                Dim minutesAgo As Integer = If(IsDBNull(reader("MinutesAgo")), 0, Convert.ToInt32(reader("MinutesAgo")))
-                Dim timeText As String
-                If minutesAgo < 60 Then
-                    timeText = minutesAgo.ToString() & " mins ago"
-                Else
-                    Dim hours As Integer = minutesAgo \ 60
-                    timeText = hours.ToString() & " hour" & If(hours > 1, "s", "") & " ago"
-                End If
-
-                Dim lblOrderTime As New Label With {
-                .AutoSize = True,
-                .BackColor = Color.Transparent,
-                .Font = New Font("Segoe UI", 9.75!),
-                .ForeColor = SystemColors.ControlDarkDark,
-                .Location = New Point(95, 35),
-                .Text = timeText
-            }
-
-                ' Price
-                Dim lblPrice As New Label With {
-                .AutoSize = True,
-                .BackColor = Color.Transparent,
-                .Font = New Font("Segoe UI", 11.25!, FontStyle.Bold),
-                .Location = New Point(350, 23),
-                .Text = "₱" & Convert.ToDecimal(reader("TotalAmount")).ToString("N2")
-            }
-
-                orderPanel.Controls.AddRange({lblOrderId, lblOrderType, lblOrderTime, lblPrice})
-                flpOrders.Controls.Add(orderPanel)
-                orderPanel.BringToFront()
-
-                yPosition += 85
-                itemCount += 1
-            End While
-
-            reader.Close()
-            closeConn()
-
-            ' Adjust panel height to fit all items (same pattern as Recent Reservations)
-            If itemCount > 0 Then
-                flpOrders.Height = yPosition + 30
-            Else
-                ' If no pending orders
-                Dim noDataLabel As New Label With {
-                .Text = "No pending orders",
-                .Font = New Font("Segoe UI", 10),
-                .ForeColor = Color.Gray,
-                .Location = New Point(18, 62),
-                .AutoSize = True,
-                .BackColor = Color.Transparent
-            }
-                flpOrders.Controls.Add(noDataLabel)
-                flpOrders.Height = 150
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show("Error loading pending orders: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            closeConn()
-        End Try
-    End Sub
-
-    ' ============================================
-    ' QUICK STATS
-    ' ============================================
-
-    Private Sub LoadQuickStats()
-        Try
-            openConn()
-
-            ' Active Staff
-            cmd = New MySqlCommand("SELECT COUNT(*) FROM employee WHERE EmploymentStatus = 'Active'", conn)
-            Label39.Text = cmd.ExecuteScalar().ToString()
-
-            ' Menu Items
-            cmd = New MySqlCommand("SELECT COUNT(*) FROM products WHERE Availability = 'Available'", conn)
-            Label38.Text = cmd.ExecuteScalar().ToString()
-
-            ' Tables Available (hardcoded for now - you can create a tables table later)
-
-
-            ' Average Order Value
-            cmd = New MySqlCommand("
-                SELECT COALESCE(AVG(TotalAmount), 0) 
-                FROM orders 
-                WHERE OrderStatus = 'Completed'", conn)
-
-            Dim avgValue As Decimal = Convert.ToDecimal(cmd.ExecuteScalar())
-            Label36.Text = "₱" & avgValue.ToString("N2")
-
-            closeConn()
-
-        Catch ex As Exception
-            MessageBox.Show("Error loading quick stats: " & ex.Message)
-            closeConn()
-        End Try
-    End Sub
-
-    ' ============================================
-    ' REFRESH DATA METHOD
-    ' ============================================
-
-    Public Sub RefreshDashboard()
-        LoadDashboardData()
-    End Sub
-
-    Private Sub AdjustPendingOrdersPosition()
-        ' Find the Pending Orders panel (the parent of flpOrders)
-        Dim pendingOrdersPanel As Control = flpOrders.Parent
-
-        If pendingOrdersPanel IsNot Nothing AndAlso PanelMenu IsNot Nothing Then
-            ' Position it 20 pixels below Top Menu Items (same as Quick Stats spacing)
-            Dim newY As Integer = PanelMenu.Location.Y + PanelMenu.Height + 20
-            pendingOrdersPanel.Location = New Point(pendingOrdersPanel.Location.X, newY)
-        End If
-    End Sub
-    ' ============================================
-    ' RESERVATION STATUS CHART
+    ' SIMPLIFIED: Call FormReservationStatus chart rendering directly
+    ' Add this to Dashboard.vb, replacing LoadReservationChart method
     ' ============================================
 
     Private Sub LoadReservationChart()
         Try
+            ' Simple approach: Reuse FormReservationStatus chart rendering logic
+            Dim reservationStatusData = GetReservationStatusData("Monthly")
+            RenderReservationChart(ChartReservations, reservationStatusData)
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading reservation chart: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            closeConn()
+        End Try
+    End Sub
+
+    ' ============================================
+    ' SHARED: Get Reservation Status Data
+    ' This returns the same data structure used by FormReservationStatus
+    ' ============================================
+    Private Function GetReservationStatusData(period As String) As Dictionary(Of String, Integer)
+        Dim data As New Dictionary(Of String, Integer) From {
+        {"Pending", 0},
+        {"Confirmed", 0},
+        {"Cancelled", 0},
+        {"Completed", 0}
+    }
+
+        Try
             openConn()
 
-            ' Get reservation counts by status for current month
-            cmd = New MySqlCommand("
+            ' Use same query logic as FormReservationStatus
+            Dim dateFilter As String = "MONTH(ReservationDate) = MONTH(CURDATE()) AND YEAR(ReservationDate) = YEAR(CURDATE())"
+
+            cmd = New MySqlCommand($"
             SELECT 
                 ReservationStatus,
                 COUNT(*) AS StatusCount
             FROM reservations
-            WHERE MONTH(EventDate) = MONTH(CURDATE()) 
-            AND YEAR(EventDate) = YEAR(CURDATE())
+            WHERE {dateFilter}
             GROUP BY ReservationStatus", conn)
 
             Dim reader As MySqlDataReader = cmd.ExecuteReader()
 
-            Dim pending As Integer = 0
-            Dim confirmed As Integer = 0
-            Dim cancelled As Integer = 0
-            Dim completed As Integer = 0
-
             While reader.Read()
                 Dim status As String = reader("ReservationStatus").ToString()
                 Dim count As Integer = Convert.ToInt32(reader("StatusCount"))
-
-                Select Case status.ToLower()
-                    Case "pending"
-                        pending = count
-                    Case "confirmed"
-                        confirmed = count
-                    Case "cancelled"
-                        cancelled = count
-                    Case "completed"
-                        completed = count
-                End Select
+                If data.ContainsKey(status) Then
+                    data(status) = count
+                End If
             End While
+
             reader.Close()
             closeConn()
 
-            ' Clear and update chart
-            ChartReservations.Series("ReservationStatus").Points.Clear()
+        Catch ex As Exception
+            closeConn()
+            Throw
+        End Try
 
-            If pending > 0 OrElse confirmed > 0 OrElse cancelled > 0 OrElse completed > 0 Then
-                ' Add Pending
-                If pending > 0 Then
-                    Dim point1 As New DataVisualization.Charting.DataPoint()
-                    point1.SetValueXY("Pending", pending)
-                    point1.Color = Color.FromArgb(251, 146, 60) ' Orange
-                    point1.BorderColor = Color.White
-                    point1.BorderWidth = 2
-                    point1.Label = pending.ToString()
-                    point1.Font = New Font("Segoe UI", 10, FontStyle.Bold)
-                    point1.LabelForeColor = Color.White
-                    ChartReservations.Series("ReservationStatus").Points.Add(point1)
+        Return data
+    End Function
+
+    ' ============================================
+    ' SHARED: Render Reservation Chart
+    ' This uses the EXACT same rendering logic as FormReservationStatus
+    ' ============================================
+    Private Sub RenderReservationChart(chart As DataVisualization.Charting.Chart, data As Dictionary(Of String, Integer))
+        Try
+            ' Clear chart
+            chart.Series("ReservationStatus").Points.Clear()
+            chart.Annotations.Clear()
+
+            Dim totalCount As Integer = data.Values.Sum()
+
+            If totalCount > 0 Then
+                ' Add Pending (Orange) - Same as FormReservationStatus
+                If data("Pending") > 0 Then
+                    Dim point As New DataVisualization.Charting.DataPoint()
+                    point.SetValueXY("Pending", data("Pending"))
+                    point.Color = Color.FromArgb(255, 165, 0)
+                    point.BorderColor = Color.White
+                    point.BorderWidth = 2
+                    point.Label = data("Pending").ToString()
+                    point.LegendText = $"Pending ({data("Pending")})"
+                    point.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+                    point.LabelForeColor = Color.White
+                    chart.Series("ReservationStatus").Points.Add(point)
                 End If
 
-                ' Add Confirmed
-                If confirmed > 0 Then
-                    Dim point2 As New DataVisualization.Charting.DataPoint()
-                    point2.SetValueXY("Confirmed", confirmed)
-                    point2.Color = Color.FromArgb(34, 197, 94) ' Green
-                    point2.BorderColor = Color.White
-                    point2.BorderWidth = 2
-                    point2.Label = confirmed.ToString()
-                    point2.Font = New Font("Segoe UI", 10, FontStyle.Bold)
-                    point2.LabelForeColor = Color.White
-                    ChartReservations.Series("ReservationStatus").Points.Add(point2)
+                ' Add Confirmed (Green)
+                If data("Confirmed") > 0 Then
+                    Dim point As New DataVisualization.Charting.DataPoint()
+                    point.SetValueXY("Confirmed", data("Confirmed"))
+                    point.Color = Color.FromArgb(34, 197, 94)
+                    point.BorderColor = Color.White
+                    point.BorderWidth = 2
+                    point.Label = data("Confirmed").ToString()
+                    point.LegendText = $"Confirmed ({data("Confirmed")})"
+                    point.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+                    point.LabelForeColor = Color.White
+                    chart.Series("ReservationStatus").Points.Add(point)
                 End If
 
-                ' Add Cancelled
-                If cancelled > 0 Then
-                    Dim point3 As New DataVisualization.Charting.DataPoint()
-                    point3.SetValueXY("Cancelled", cancelled)
-                    point3.Color = Color.FromArgb(239, 68, 68) ' Red
-                    point3.BorderColor = Color.White
-                    point3.BorderWidth = 2
-                    point3.Label = cancelled.ToString()
-                    point3.Font = New Font("Segoe UI", 10, FontStyle.Bold)
-                    point3.LabelForeColor = Color.White
-                    ChartReservations.Series("ReservationStatus").Points.Add(point3)
+                ' Add Cancelled (Red)
+                If data("Cancelled") > 0 Then
+                    Dim point As New DataVisualization.Charting.DataPoint()
+                    point.SetValueXY("Cancelled", data("Cancelled"))
+                    point.Color = Color.FromArgb(239, 68, 68)
+                    point.BorderColor = Color.White
+                    point.BorderWidth = 2
+                    point.Label = data("Cancelled").ToString()
+                    point.LegendText = $"Cancelled ({data("Cancelled")})"
+                    point.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+                    point.LabelForeColor = Color.White
+                    chart.Series("ReservationStatus").Points.Add(point)
                 End If
 
-                ' Add Completed
-                If completed > 0 Then
-                    Dim point4 As New DataVisualization.Charting.DataPoint()
-                    point4.SetValueXY("Completed", completed)
-                    point4.Color = Color.FromArgb(59, 130, 246) ' Blue
-                    point4.BorderColor = Color.White
-                    point4.BorderWidth = 2
-                    point4.Label = completed.ToString()
-                    point4.Font = New Font("Segoe UI", 10, FontStyle.Bold)
-                    point4.LabelForeColor = Color.White
-                    ChartReservations.Series("ReservationStatus").Points.Add(point4)
+                ' Add Completed (Blue)
+                If data("Completed") > 0 Then
+                    Dim point As New DataVisualization.Charting.DataPoint()
+                    point.SetValueXY("Completed", data("Completed"))
+                    point.Color = Color.FromArgb(59, 130, 246)
+                    point.BorderColor = Color.White
+                    point.BorderWidth = 2
+                    point.Label = data("Completed").ToString()
+                    point.LegendText = $"Completed ({data("Completed")})"
+                    point.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+                    point.LabelForeColor = Color.White
+                    chart.Series("ReservationStatus").Points.Add(point)
                 End If
+
+                ' Configure legend
+                chart.Legends(0).Enabled = True
+                chart.Legends(0).Docking = Docking.Right
+                chart.Legends(0).Font = New Font("Segoe UI", 9)
+                chart.Legends(0).BackColor = Color.Transparent
             Else
-                ' No data - show placeholder
-                ChartReservations.Annotations.Clear()
+                ' No data message
                 Dim noDataAnnotation As New TextAnnotation()
                 noDataAnnotation.Text = "No Reservation Data"
                 noDataAnnotation.Font = New Font("Segoe UI", 12, FontStyle.Bold)
@@ -907,17 +390,19 @@ Public Class Dashboard
                 noDataAnnotation.X = 50
                 noDataAnnotation.Y = 50
                 noDataAnnotation.Alignment = ContentAlignment.MiddleCenter
-                ChartReservations.Annotations.Add(noDataAnnotation)
+                chart.Annotations.Add(noDataAnnotation)
+                chart.Legends(0).Enabled = False
             End If
 
-            ' Enable 3D effect (optional)
-            ChartReservations.ChartAreas(0).Area3DStyle.Enable3D = True
-            ChartReservations.ChartAreas(0).Area3DStyle.Inclination = 15
-            ChartReservations.ChartAreas(0).Area3DStyle.Rotation = 10
+            ' Configure 3D effect
+            chart.ChartAreas(0).Area3DStyle.Enable3D = True
+            chart.ChartAreas(0).Area3DStyle.Inclination = 15
+            chart.ChartAreas(0).Area3DStyle.Rotation = 10
+            chart.Series("ReservationStatus")("PieLabelStyle") = "Inside"
+            chart.Series("ReservationStatus").IsValueShownAsLabel = True
 
         Catch ex As Exception
-            MessageBox.Show("Error loading reservation chart: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            closeConn()
+            Throw
         End Try
     End Sub
 
@@ -927,12 +412,18 @@ Public Class Dashboard
     Private Sub ConfigureChart2Clickable()
         ' Make the chart cursor indicate it's clickable
         ChartReservations.Cursor = Cursors.Hand
-
         ' Add tooltip to indicate it's clickable
         Dim tooltip As New ToolTip()
         tooltip.SetToolTip(Chart2, "Click to view detailed Catering Reservations report")
     End Sub
+    Private Sub ConfigureMonthlyChartClickable()
+        ' Make the Monthly Orders chart clickable
+        MonthlyChartOrder.Cursor = Cursors.Hand
 
+        ' Add tooltip
+        Dim tooltip As New ToolTip()
+        tooltip.SetToolTip(MonthlyChartOrder, "Click to view detailed Orders report")
+    End Sub
     Private Sub ChartReservations_Click(sender As Object, e As EventArgs) Handles ChartReservations.Click
         Try
             ' Get reference to AdminDashboard (parent form)
@@ -957,8 +448,74 @@ Public Class Dashboard
             MessageBox.Show("Error navigating to catering reservations: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+    Private Sub LoadOrdersTrendChart()
+        Try
+            If MonthlyChartOrder Is Nothing Then Return
+
+            openConn()
+
+            ' Get last 6 months of order data
+            cmd = New MySqlCommand("
+                SELECT 
+                    DATE_FORMAT(OrderDate,'%Y-%m') AS Period,
+                    DATE_FORMAT(OrderDate,'%b') AS MonthLabel,
+                    COUNT(*) AS OrderCount
+                FROM orders
+                WHERE OrderDate >= DATE_SUB(CURDATE(), INTERVAL 5 MONTH)
+                GROUP BY DATE_FORMAT(OrderDate,'%Y-%m'), DATE_FORMAT(OrderDate,'%b')
+                ORDER BY DATE_FORMAT(OrderDate,'%Y-%m')", conn)
+
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            ' Clear existing data
+            MonthlyChartOrder.Series(0).Points.Clear()
+
+            Dim hasData As Boolean = False
+            While reader.Read()
+                hasData = True
+                Dim monthLabel As String = reader("MonthLabel").ToString()
+                Dim orderCount As Integer = Convert.ToInt32(reader("OrderCount"))
+
+                Dim point As New DataVisualization.Charting.DataPoint()
+                point.SetValueXY(monthLabel, orderCount)
+                point.Color = Color.FromArgb(99, 102, 241)
+                point.MarkerStyle = MarkerStyle.Circle
+                point.MarkerSize = 8
+                MonthlyChartOrder.Series(0).Points.Add(point)
+            End While
+
+            reader.Close()
+            closeConn()
 
 
+        Catch ex As Exception
+            closeConn()
+        End Try
+    End Sub
+    Private Sub MonthlyChartOrder_Click(sender As Object, e As EventArgs) Handles MonthlyChartOrder.Click
+        Try
+            ' Get reference to AdminDashboard (parent form)
+            Dim adminDashboard As AdminDashboard = TryCast(Me.ParentForm, AdminDashboard)
+
+            If adminDashboard IsNot Nothing Then
+                ' First, load the Reports form in AdminDashboard
+                adminDashboard.btnReports.PerformClick()
+
+                ' Give UI time to load
+                Application.DoEvents()
+
+                ' Then load the Catering Reservations report
+                If Reports IsNot Nothing Then
+                    Reports.LoadOrderTrends()
+                End If
+            Else
+                MessageBox.Show("Unable to navigate to Reports section.", "Navigation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show("Error navigating to orders: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
     ' Add visual feedback when hovering over the chart
     Private Sub Chart2_MouseEnter(sender As Object, e As EventArgs) Handles Chart2.MouseEnter
         Chart2.Cursor = Cursors.Hand
@@ -986,8 +543,401 @@ Public Class Dashboard
     Private Sub RoundedPane21_Paint(sender As Object, e As PaintEventArgs) Handles RoundedPane21.Paint
 
     End Sub
+    Private Sub MonthlyChartOrder_MouseEnter(sender As Object, e As EventArgs) Handles MonthlyChartOrder.MouseEnter
+        MonthlyChartOrder.Cursor = Cursors.Hand
+        RoundedPane26.BackColor = Color.FromArgb(248, 248, 250)
+    End Sub
 
-    Private Sub Chart2_Click(sender As Object, e As EventArgs)
+    Private Sub MonthlyChartOrder_MouseLeave(sender As Object, e As EventArgs) Handles MonthlyChartOrder.MouseLeave
+        MonthlyChartOrder.Cursor = Cursors.Default
+        RoundedPane26.BackColor = Color.White
+    End Sub
+    Private Sub LoadSalesChart()
+        Try
+            ' Get sales data for current year
+            Dim salesData = GetSalesData()
 
+            ' Render the chart with the data
+            RenderSalesChart(SalesChart, salesData)  ' Replace Chart1 with your actual sales chart name
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading sales chart: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            closeConn()
+        End Try
+    End Sub
+
+    ' ============================================
+    ' GET SALES DATA - Same logic as FormSales
+    ' ============================================
+    Private Function GetSalesData() As Dictionary(Of String, (Revenue As Decimal, Expenses As Decimal, Profit As Decimal))
+        Dim salesData As New Dictionary(Of String, (Revenue As Decimal, Expenses As Decimal, Profit As Decimal))
+        Dim currentYear As Integer = DateTime.Now.Year
+
+        ' Initialize all 12 months with zero values
+        For month As Integer = 1 To 12
+            Dim monthName As String = New DateTime(currentYear, month, 1).ToString("MMM")
+            salesData(monthName) = (0D, 0D, 0D)
+        Next
+
+        Try
+            openConn()
+
+            ' Build the sales query using the same logic as FormSales
+            Dim sql As String = BuildSalesQueryForDashboard(currentYear)
+
+            cmd = New MySqlCommand(sql, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            While reader.Read()
+                Dim monthNum As Integer = Convert.ToInt32(reader("MonthNum"))
+                Dim monthName As String = New DateTime(currentYear, monthNum, 1).ToString("MMM")
+
+                Dim revenue As Decimal = If(IsDBNull(reader("TotalRevenue")), 0D, Convert.ToDecimal(reader("TotalRevenue")))
+                Dim expenses As Decimal = If(IsDBNull(reader("TotalExpenses")), 0D, Convert.ToDecimal(reader("TotalExpenses")))
+                Dim profit As Decimal = revenue - expenses
+
+                salesData(monthName) = (revenue, expenses, profit)
+            End While
+
+            reader.Close()
+            closeConn()
+
+        Catch ex As Exception
+            closeConn()
+            Throw New Exception($"Error fetching sales data: {ex.Message}", ex)
+        End Try
+
+        Return salesData
+    End Function
+
+
+    ' ============================================
+    ' BUILD SALES QUERY - Exact same as FormSales
+    ' ============================================
+    Private Function BuildSalesQueryForDashboard(currentYear As Integer) As String
+        Dim queries As New List(Of String)
+
+        ' Check and add payments table
+        If TableExists("payments") Then
+            queries.Add($"
+            SELECT MONTH(PaymentDate) AS MonthNum, AmountPaid AS Amount, 'Revenue' AS Type
+            FROM payments
+            WHERE PaymentStatus IN ('Paid','Completed')
+            AND YEAR(PaymentDate) = {currentYear}
+        ")
+        End If
+
+        ' Check and add reservation_payments table
+        If TableExists("reservation_payments") Then
+            queries.Add($"
+            SELECT MONTH(PaymentDate) AS MonthNum, AmountPaid AS Amount, 'Revenue' AS Type
+            FROM reservation_payments
+            WHERE PaymentStatus IN ('Paid','Completed')
+            AND YEAR(PaymentDate) = {currentYear}
+        ")
+        End If
+
+        ' Check and add sales table
+        If TableExists("sales") Then
+            queries.Add($"
+            SELECT MONTH(sales_date) AS MonthNum, revenue AS Amount, 'Revenue' AS Type
+            FROM sales
+            WHERE YEAR(sales_date) = {currentYear}
+        ")
+
+            queries.Add($"
+            SELECT MONTH(sales_date) AS MonthNum, expenses AS Amount, 'Expenses' AS Type
+            FROM sales
+            WHERE YEAR(sales_date) = {currentYear}
+        ")
+        End If
+
+        ' Add inventory batches as expenses
+        If TableExists("inventory_batches") Then
+            queries.Add($"
+            SELECT MONTH(PurchaseDate) AS MonthNum, TotalCost AS Amount, 'Expenses' AS Type
+            FROM inventory_batches
+            WHERE BatchStatus = 'Active'
+            AND YEAR(PurchaseDate) = {currentYear}
+        ")
+        End If
+
+        If queries.Count = 0 Then
+            Throw New Exception("No valid sales tables found.")
+        End If
+
+        Return $"
+        SELECT 
+            MonthNum,
+            SUM(CASE WHEN Type='Revenue' THEN Amount ELSE 0 END) AS TotalRevenue,
+            SUM(CASE WHEN Type='Expenses' THEN Amount ELSE 0 END) AS TotalExpenses
+        FROM ({String.Join(" UNION ALL ", queries)}) AS combined
+        GROUP BY MonthNum 
+        ORDER BY MonthNum
+    "
+    End Function
+
+    ' ============================================
+    ' RENDER SALES CHART - Same styling as FormSales
+    ' ============================================
+    Private Sub RenderSalesChart(chart As DataVisualization.Charting.Chart, salesData As Dictionary(Of String, (Revenue As Decimal, Expenses As Decimal, Profit As Decimal)))
+        Try
+            ' Clear existing series if they exist
+            chart.Series.Clear()
+
+            ' Create the three series
+            Dim revenueSeries As New DataVisualization.Charting.Series("Revenue")
+            Dim expensesSeries As New DataVisualization.Charting.Series("Expenses")
+            Dim profitSeries As New DataVisualization.Charting.Series("NetProfit")
+
+            ' Configure series appearance - Same as FormSales
+            revenueSeries.ChartType = SeriesChartType.Column
+            revenueSeries.Color = Color.FromArgb(99, 102, 241)  ' Indigo
+            revenueSeries.BorderWidth = 0
+            revenueSeries("PointWidth") = "0.6"
+
+            expensesSeries.ChartType = SeriesChartType.Column
+            expensesSeries.Color = Color.FromArgb(239, 68, 68)  ' Red
+            expensesSeries.BorderWidth = 0
+            expensesSeries("PointWidth") = "0.6"
+
+            profitSeries.ChartType = SeriesChartType.Column
+            profitSeries.Color = Color.FromArgb(34, 197, 94)  ' Green
+            profitSeries.BorderWidth = 0
+            profitSeries("PointWidth") = "0.6"
+
+            ' Add data points for all 12 months
+            Dim currentYear As Integer = DateTime.Now.Year
+            For month As Integer = 1 To 12
+                Dim monthName As String = New DateTime(currentYear, month, 1).ToString("MMM")
+
+                If salesData.ContainsKey(monthName) Then
+                    Dim data = salesData(monthName)
+
+                    revenueSeries.Points.AddXY(monthName, data.Revenue)
+                    expensesSeries.Points.AddXY(monthName, data.Expenses)
+                    profitSeries.Points.AddXY(monthName, data.Profit)
+                Else
+                    revenueSeries.Points.AddXY(monthName, 0)
+                    expensesSeries.Points.AddXY(monthName, 0)
+                    profitSeries.Points.AddXY(monthName, 0)
+                End If
+            Next
+
+            ' Add series to chart
+            chart.Series.Add(revenueSeries)
+            chart.Series.Add(expensesSeries)
+            chart.Series.Add(profitSeries)
+
+            ' Configure chart area styling - Same as FormSales
+            If chart.ChartAreas.Count > 0 Then
+                With chart.ChartAreas(0)
+                    ' X-axis styling
+                    .AxisX.MajorGrid.LineColor = Color.FromArgb(230, 230, 230)
+                    .AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+                    .AxisX.LabelStyle.Font = New Font("Segoe UI", 9)
+
+                    ' Y-axis styling
+                    .AxisY.MajorGrid.LineColor = Color.FromArgb(230, 230, 230)
+                    .AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+                    .AxisY.LabelStyle.Format = "₱{0:N0}"
+                    .AxisY.LabelStyle.Font = New Font("Segoe UI", 9)
+                End With
+            End If
+
+            ' Configure tooltips
+            For Each series As DataVisualization.Charting.Series In chart.Series
+                series.ToolTip = "#VALX: ₱#VALY{N2}"
+            Next
+
+            ' Configure legend
+            If chart.Legends.Count > 0 Then
+                chart.Legends(0).Font = New Font("Segoe UI", 9)
+                chart.Legends(0).Docking = Docking.Bottom
+                chart.Legends(0).BackColor = Color.Transparent
+            End If
+
+            ' Check if there's any data
+            Dim hasData As Boolean = salesData.Values.Any(Function(d) d.Revenue > 0 OrElse d.Expenses > 0)
+
+            If Not hasData Then
+                ' Show "No Data" message
+                chart.Annotations.Clear()
+                Dim noDataAnnotation As New TextAnnotation()
+                noDataAnnotation.Text = "No Sales Data Available"
+                noDataAnnotation.Font = New Font("Segoe UI", 12, FontStyle.Bold)
+                noDataAnnotation.ForeColor = Color.Gray
+                noDataAnnotation.X = 50
+                noDataAnnotation.Y = 50
+                noDataAnnotation.Alignment = ContentAlignment.MiddleCenter
+                chart.Annotations.Add(noDataAnnotation)
+            End If
+
+        Catch ex As Exception
+            Throw New Exception($"Error rendering sales chart: {ex.Message}", ex)
+        End Try
+    End Sub
+
+    ' ============================================
+    ' TABLE EXISTS HELPER (if not already in Dashboard)
+    ' ============================================
+    Private Function TableExists(tableName As String) As Boolean
+        Try
+            If conn Is Nothing Then Return False
+
+            If conn.State <> ConnectionState.Open Then
+                openConn()
+            End If
+
+            Dim sql As String = "
+            SELECT COUNT(*) 
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            AND LOWER(table_name) = LOWER(@TableName)
+        "
+
+            Dim checkCmd As New MySqlCommand(sql, conn)
+            checkCmd.Parameters.AddWithValue("@TableName", tableName)
+            Dim count As Integer = Convert.ToInt32(checkCmd.ExecuteScalar())
+
+            Return count > 0
+
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    ' ============================================
+    ' MAKE SALES CHART CLICKABLE (Optional)
+    ' ============================================
+    Private Sub ConfigureSalesChartClickable()
+        ' Make the chart cursor indicate it's clickable
+        SalesChart.Cursor = Cursors.Hand  ' Replace Chart1 with your actual chart name
+
+        ' Add tooltip
+        Dim tooltip As New ToolTip()
+        tooltip.SetToolTip(SalesChart, "Click to view detailed Sales report")
+    End Sub
+
+    Private Sub SalesChart_Click(sender As Object, e As EventArgs) Handles SalesChart.Click
+        Try
+            ' Get reference to AdminDashboard (parent form)
+            Dim adminDashboard As AdminDashboard = TryCast(Me.ParentForm, AdminDashboard)
+
+            If adminDashboard IsNot Nothing Then
+                ' First, load the Reports form in AdminDashboard
+                adminDashboard.btnReports.PerformClick()
+
+                ' Give UI time to load
+                Application.DoEvents()
+
+                ' Then load the Sales report (btnSales should be clicked)
+                If Reports IsNot Nothing Then
+                    ' Assuming Reports has access to btnSales
+                    ' You may need to add a public method in Reports.vb to handle this
+                    Reports.LoadSalesReport()  ' Add this method to Reports.vb
+                End If
+            Else
+                MessageBox.Show("Unable to navigate to Reports section.", "Navigation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show("Error navigating to sales report: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' ============================================
+    ' VISUAL FEEDBACK FOR SALES CHART HOVER
+    ' ============================================
+    Private Sub SalesChart_MouseEnter(sender As Object, e As EventArgs) Handles SalesChart.MouseEnter
+        SalesChart.Cursor = Cursors.Hand
+        ' If your chart is inside a RoundedPane, change its background:
+        ' RoundedPaneXX.BackColor = Color.FromArgb(248, 248, 250)
+    End Sub
+
+    Private Sub SalesChart_MouseLeave(sender As Object, e As EventArgs) Handles SalesChart.MouseLeave
+        SalesChart.Cursor = Cursors.Default
+        ' RoundedPaneXX.BackColor = Color.White
+    End Sub
+    ' Add this method to your Reports.vb file
+    Private Sub ProductPerformance_Click(sender As Object, e As EventArgs) Handles ProductPerformance.Click
+        Try
+            ' Get reference to AdminDashboard (parent form)
+            Dim adminDashboard As AdminDashboard = TryCast(Me.ParentForm, AdminDashboard)
+
+            If adminDashboard IsNot Nothing Then
+                ' First, load the Reports form in AdminDashboard
+                adminDashboard.btnReports.PerformClick()
+
+                ' Give UI time to load
+                Application.DoEvents()
+
+                ' Then load the Catering Reservations report
+                If Reports IsNot Nothing Then
+                    Reports.LoadProductPerformanceReport()
+                End If
+            Else
+                MessageBox.Show("Unable to navigate to Reports section.", "Navigation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show("Error navigating to catering reservations: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Public Sub LoadProductPerformanceChart()
+        Try
+            Dim query As String =
+"SELECT ProductName,
+        SUM(Quantity) AS TotalOrders,
+        SUM(TotalPrice) AS Revenue
+ FROM (
+        SELECT ri.ProductName,
+               ri.Quantity,
+               ri.TotalPrice
+        FROM reservation_items ri
+        INNER JOIN reservations r ON ri.ReservationID = r.ReservationID
+        WHERE r.ReservationStatus IN ('Confirmed', 'Served')
+
+        UNION ALL
+        
+        SELECT oi.ProductName,
+               oi.Quantity,
+               (oi.Quantity * oi.UnitPrice) AS TotalPrice
+        FROM order_items oi
+        INNER JOIN orders o ON oi.OrderID = o.OrderID
+        WHERE o.OrderStatus IN ('Served', 'Completed')
+      ) AS combined
+ GROUP BY ProductName
+ ORDER BY Revenue DESC;"
+
+            ProductPerformance.Series("Revenue").Points.Clear()
+
+            Using conn As New MySqlConnection(strConnection)
+                conn.Open()
+                Using cmd As New MySqlCommand(query, conn)
+                    Using reader = cmd.ExecuteReader()
+                        While reader.Read()
+                            ProductPerformance.Series("Revenue").Points.AddXY(
+                            reader("ProductName").ToString(),
+                            Convert.ToDecimal(reader("Revenue"))
+                        )
+                        End While
+                    End Using
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+    Private Sub ProductPerformance_MouseEnter(sender As Object, e As EventArgs) Handles ProductPerformance.MouseEnter
+        ProductPerformance.Cursor = Cursors.Hand
+        ' If your chart is inside a RoundedPane, change its background:
+        ' RoundedPaneXX.BackColor = Color.FromArgb(248, 248, 250)
+    End Sub
+
+    Private Sub ProductPerformance_MouseLeave(sender As Object, e As EventArgs) Handles ProductPerformance.MouseLeave
+        ProductPerformance.Cursor = Cursors.Default
+        ' RoundedPaneXX.BackCo
     End Sub
 End Class

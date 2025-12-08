@@ -64,7 +64,7 @@ Partial Class ConfigurationPage
         Me.RoundedPane21.Controls.Add(Me.btnTestConnection)
         Me.RoundedPane21.Controls.Add(Me.txtUsername)
         Me.RoundedPane21.Controls.Add(Me.btnSaveAndContinue)
-        Me.RoundedPane21.CornerRadius = 15
+        Me.RoundedPane21.CornerRadius = 12
         Me.RoundedPane21.FillColor = System.Drawing.SystemColors.ActiveCaption
         Me.RoundedPane21.Location = New System.Drawing.Point(183, 29)
         Me.RoundedPane21.Name = "RoundedPane21"
