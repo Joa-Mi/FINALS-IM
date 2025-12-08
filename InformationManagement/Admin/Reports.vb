@@ -82,7 +82,11 @@ Public Class Reports
 
 
 
-
+    Public Sub ResetToDefault()
+        LoadFormIntoPanel(New FormSales())
+        HighlightActiveButton(btnSales)
+        reportPeriod.SelectedIndex = 0 ' Reset to Daily
+    End Sub
     ' === APPLY ROUNDED CORNERS TO CONTROL ===
     Private Sub ApplyRoundedCorners(ctrl As Control, radius As Integer)
         Dim gp As New GraphicsPath()

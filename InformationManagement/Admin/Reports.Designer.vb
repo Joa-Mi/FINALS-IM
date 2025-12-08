@@ -59,7 +59,7 @@ Partial Class Reports
         Me.Panel1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel1.Location = New System.Drawing.Point(-4, 166)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1268, 787)
+        Me.Panel1.Size = New System.Drawing.Size(1355, 787)
         Me.Panel1.TabIndex = 3
         '
         'FlowLayoutPanel1
@@ -272,7 +272,7 @@ Partial Class Reports
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(254, Byte))
         Me.Label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.Label2.Location = New System.Drawing.Point(1147, 21)
+        Me.Label2.Location = New System.Drawing.Point(978, 23)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(57, 17)
         Me.Label2.TabIndex = 5
@@ -287,7 +287,7 @@ Partial Class Reports
         Me.reportPeriod.FormattingEnabled = True
         Me.reportPeriod.ItemHeight = 14
         Me.reportPeriod.Items.AddRange(New Object() {"Daily", "Weekly", "Montly", "Yearly"})
-        Me.reportPeriod.Location = New System.Drawing.Point(1220, 20)
+        Me.reportPeriod.Location = New System.Drawing.Point(1068, 23)
         Me.reportPeriod.Name = "reportPeriod"
         Me.reportPeriod.Size = New System.Drawing.Size(121, 20)
         Me.reportPeriod.TabIndex = 6

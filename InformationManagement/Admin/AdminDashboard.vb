@@ -117,11 +117,7 @@ Public Class AdminDashboard
     Private Sub btnReports_Click(sender As Object, e As EventArgs) Handles btnReports.Click
         HighlightButton(btnReports)
         ' Dispose old Reports instance if exists
-        If ReportsInstance IsNot Nothing Then
-            ReportsInstance.Dispose()
-            ReportsInstance = Nothing
-        End If
-        ReportsInstance = New Reports()
+
         With Reports
             .TopLevel = False
             .FormBorderStyle = FormBorderStyle.None

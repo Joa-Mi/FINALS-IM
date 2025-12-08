@@ -25,63 +25,69 @@ Partial Class Dashboard
         Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Dim Series1 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint1 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 310.0R)
-        Dim DataPoint2 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 300.0R)
-        Dim DataPoint3 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 350.0R)
-        Dim DataPoint4 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 380.0R)
-        Dim DataPoint5 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 470.0R)
-        Dim DataPoint6 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 450.0R)
+        Dim DataPoint1 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 300000.0R)
+        Dim DataPoint2 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 150000.0R)
+        Dim DataPoint3 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 160000.0R)
+        Dim DataPoint4 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 80000.0R)
+        Dim DataPoint5 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 40000.0R)
+        Dim DataPoint6 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 100000.0R)
+        Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Dashboard))
         Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Dim Series2 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint7 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 12.0R)
-        Dim DataPoint8 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 28.0R)
-        Dim DataPoint9 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 5.0R)
+        Dim DataPoint7 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2250000.0R)
+        Dim DataPoint8 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2600000.0R)
+        Dim DataPoint9 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2400000.0R)
+        Dim DataPoint10 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 3050000.0R)
+        Dim DataPoint11 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2750000.0R)
+        Dim DataPoint12 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 3350000.0R)
+        Dim Series3 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim DataPoint13 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1600000.0R)
+        Dim DataPoint14 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1750000.0R)
+        Dim DataPoint15 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1650000.0R)
+        Dim DataPoint16 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1900000.0R)
+        Dim DataPoint17 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1800000.0R)
+        Dim DataPoint18 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2050000.0R)
+        Dim Series4 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim DataPoint19 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 650000.0R)
+        Dim DataPoint20 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 850000.0R)
+        Dim DataPoint21 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 750000.0R)
+        Dim DataPoint22 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1150000.0R)
+        Dim DataPoint23 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 950000.0R)
+        Dim DataPoint24 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1300000.0R)
         Dim ChartArea3 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend3 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim LegendCellColumn1 As System.Windows.Forms.DataVisualization.Charting.LegendCellColumn = New System.Windows.Forms.DataVisualization.Charting.LegendCellColumn()
-        Dim Series3 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint10 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 65.0R)
-        Dim DataPoint11 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 25.0R)
-        Dim DataPoint12 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 10.0R)
-        Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Dashboard))
+        Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim DataPoint25 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 310.0R)
+        Dim DataPoint26 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 300.0R)
+        Dim DataPoint27 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 350.0R)
+        Dim DataPoint28 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 380.0R)
+        Dim DataPoint29 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 470.0R)
+        Dim DataPoint30 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 450.0R)
         Dim ChartArea4 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend4 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series4 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint13 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2250000.0R)
-        Dim DataPoint14 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2600000.0R)
-        Dim DataPoint15 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2400000.0R)
-        Dim DataPoint16 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 3050000.0R)
-        Dim DataPoint17 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2750000.0R)
-        Dim DataPoint18 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 3350000.0R)
-        Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint19 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1600000.0R)
-        Dim DataPoint20 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1750000.0R)
-        Dim DataPoint21 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1650000.0R)
-        Dim DataPoint22 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1900000.0R)
-        Dim DataPoint23 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1800000.0R)
-        Dim DataPoint24 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 2050000.0R)
         Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint25 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 650000.0R)
-        Dim DataPoint26 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 850000.0R)
-        Dim DataPoint27 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 750000.0R)
-        Dim DataPoint28 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1150000.0R)
-        Dim DataPoint29 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 950000.0R)
-        Dim DataPoint30 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 1300000.0R)
+        Dim DataPoint31 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 12.0R)
+        Dim DataPoint32 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 28.0R)
+        Dim DataPoint33 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 5.0R)
         Dim ChartArea5 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend5 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim LegendCellColumn1 As System.Windows.Forms.DataVisualization.Charting.LegendCellColumn = New System.Windows.Forms.DataVisualization.Charting.LegendCellColumn()
         Dim Series7 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim DataPoint31 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 300000.0R)
-        Dim DataPoint32 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 150000.0R)
-        Dim DataPoint33 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 160000.0R)
-        Dim DataPoint34 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 80000.0R)
-        Dim DataPoint35 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 40000.0R)
-        Dim DataPoint36 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 100000.0R)
+        Dim DataPoint34 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 65.0R)
+        Dim DataPoint35 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 25.0R)
+        Dim DataPoint36 As System.Windows.Forms.DataVisualization.Charting.DataPoint = New System.Windows.Forms.DataVisualization.Charting.DataPoint(0R, 10.0R)
         Dim Title2 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.reportPeriod = New System.Windows.Forms.ComboBox()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.RoundedPane24 = New InformationManagement.RoundedPane2()
+        Me.ProductPerformance = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.RoundedPane27 = New InformationManagement.RoundedPane2()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.SalesChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.RoundedPane26 = New InformationManagement.RoundedPane2()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.MonthlyChartOrder = New System.Windows.Forms.DataVisualization.Charting.Chart()
@@ -118,12 +124,10 @@ Partial Class Dashboard
         Me.PictureBox4 = New System.Windows.Forms.PictureBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblTotalRevenue = New System.Windows.Forms.Label()
-        Me.RoundedPane27 = New InformationManagement.RoundedPane2()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.SalesChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
-        Me.RoundedPane24 = New InformationManagement.RoundedPane2()
-        Me.ProductPerformance = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.RoundedPane24.SuspendLayout()
+        CType(Me.ProductPerformance, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.RoundedPane27.SuspendLayout()
+        CType(Me.SalesChart, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.RoundedPane26.SuspendLayout()
         CType(Me.MonthlyChartOrder, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.RoundedPane25.SuspendLayout()
@@ -140,10 +144,6 @@ Partial Class Dashboard
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.RoundedPane21.SuspendLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.RoundedPane27.SuspendLayout()
-        CType(Me.SalesChart, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.RoundedPane24.SuspendLayout()
-        CType(Me.ProductPerformance, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -182,6 +182,176 @@ Partial Class Dashboard
         Me.Label18.TabIndex = 28
         Me.Label18.Text = "Period :"
         '
+        'RoundedPane24
+        '
+        Me.RoundedPane24.BackColor = System.Drawing.Color.Transparent
+        Me.RoundedPane24.BorderColor = System.Drawing.Color.LightGray
+        Me.RoundedPane24.BorderThickness = 1
+        Me.RoundedPane24.Controls.Add(Me.ProductPerformance)
+        Me.RoundedPane24.CornerRadius = 15
+        Me.RoundedPane24.FillColor = System.Drawing.Color.White
+        Me.RoundedPane24.Location = New System.Drawing.Point(57, 917)
+        Me.RoundedPane24.Name = "RoundedPane24"
+        Me.RoundedPane24.Size = New System.Drawing.Size(733, 350)
+        Me.RoundedPane24.TabIndex = 31
+        '
+        'ProductPerformance
+        '
+        Me.ProductPerformance.BorderlineColor = System.Drawing.Color.LightGray
+        Me.ProductPerformance.BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid
+        ChartArea1.AxisX.Interval = 1.0R
+        ChartArea1.AxisX.IsLabelAutoFit = False
+        ChartArea1.AxisX.LabelStyle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        ChartArea1.AxisX.MajorGrid.Enabled = False
+        ChartArea1.AxisX.MajorGrid.Interval = 1.0R
+        ChartArea1.AxisY.IsLabelAutoFit = False
+        ChartArea1.AxisY.LabelStyle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        ChartArea1.AxisY.LabelStyle.Format = "₱#,##0"
+        ChartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray
+        ChartArea1.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot
+        ChartArea1.BackColor = System.Drawing.Color.White
+        ChartArea1.Name = "ChartArea1"
+        Me.ProductPerformance.ChartAreas.Add(ChartArea1)
+        Legend1.Enabled = False
+        Legend1.Name = "Legend1"
+        Me.ProductPerformance.Legends.Add(Legend1)
+        Me.ProductPerformance.Location = New System.Drawing.Point(20, 18)
+        Me.ProductPerformance.Name = "ProductPerformance"
+        Me.ProductPerformance.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None
+        Series1.BorderWidth = 0
+        Series1.ChartArea = "ChartArea1"
+        Series1.Color = System.Drawing.Color.MediumSlateBlue
+        Series1.LabelForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Series1.Legend = "Legend1"
+        Series1.Name = "Revenue"
+        DataPoint1.AxisLabel = "Beef Steak"
+        DataPoint1.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataPoint1.IsValueShownAsLabel = True
+        DataPoint1.LabelForeColor = System.Drawing.Color.DarkGray
+        DataPoint2.AxisLabel = "Chicken Curry"
+        DataPoint2.MarkerColor = System.Drawing.Color.MediumSlateBlue
+        DataPoint3.AxisLabel = "Fish Grilled"
+        DataPoint4.AxisLabel = "Pork Adobo"
+        DataPoint5.AxisLabel = "Vegetable Stir Fry"
+        DataPoint6.AxisLabel = "Chicken BBQ"
+        Series1.Points.Add(DataPoint1)
+        Series1.Points.Add(DataPoint2)
+        Series1.Points.Add(DataPoint3)
+        Series1.Points.Add(DataPoint4)
+        Series1.Points.Add(DataPoint5)
+        Series1.Points.Add(DataPoint6)
+        Series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.[String]
+        Series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int64
+        Me.ProductPerformance.Series.Add(Series1)
+        Me.ProductPerformance.Size = New System.Drawing.Size(696, 264)
+        Me.ProductPerformance.TabIndex = 0
+        Me.ProductPerformance.Text = "Chart1"
+        Title1.Alignment = System.Drawing.ContentAlignment.TopLeft
+        Title1.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Title1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Title1.Name = "Title1"
+        Title1.Text = "Revenue by Product"
+        Me.ProductPerformance.Titles.Add(Title1)
+        '
+        'RoundedPane27
+        '
+        Me.RoundedPane27.BackColor = System.Drawing.Color.Transparent
+        Me.RoundedPane27.BorderColor = System.Drawing.Color.LightGray
+        Me.RoundedPane27.BorderThickness = 1
+        Me.RoundedPane27.Controls.Add(Me.Button1)
+        Me.RoundedPane27.Controls.Add(Me.Label5)
+        Me.RoundedPane27.Controls.Add(Me.SalesChart)
+        Me.RoundedPane27.CornerRadius = 15
+        Me.RoundedPane27.FillColor = System.Drawing.Color.White
+        Me.RoundedPane27.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.RoundedPane27.Location = New System.Drawing.Point(57, 578)
+        Me.RoundedPane27.Name = "RoundedPane27"
+        Me.RoundedPane27.Size = New System.Drawing.Size(624, 315)
+        Me.RoundedPane27.TabIndex = 30
+        '
+        'Button1
+        '
+        Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Image = CType(resources.GetObject("Button1.Image"), System.Drawing.Image)
+        Me.Button1.Location = New System.Drawing.Point(914, 16)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(104, 30)
+        Me.Button1.TabIndex = 11
+        Me.Button1.Text = "   Export"
+        Me.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(18, 16)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(200, 20)
+        Me.Label5.TabIndex = 10
+        Me.Label5.Text = "Financial Overview - Monthly"
+        '
+        'SalesChart
+        '
+        ChartArea2.Name = "ChartArea1"
+        Me.SalesChart.ChartAreas.Add(ChartArea2)
+        Legend2.Name = "Legend1"
+        Me.SalesChart.Legends.Add(Legend2)
+        Me.SalesChart.Location = New System.Drawing.Point(17, 39)
+        Me.SalesChart.Name = "SalesChart"
+        Series2.ChartArea = "ChartArea1"
+        Series2.Legend = "Legend1"
+        Series2.Name = "Revenue"
+        DataPoint7.AxisLabel = "Jan"
+        DataPoint8.AxisLabel = "Feb"
+        DataPoint9.AxisLabel = "Mar"
+        DataPoint10.AxisLabel = "Apr"
+        DataPoint11.AxisLabel = "May"
+        DataPoint12.AxisLabel = "Jun"
+        Series2.Points.Add(DataPoint7)
+        Series2.Points.Add(DataPoint8)
+        Series2.Points.Add(DataPoint9)
+        Series2.Points.Add(DataPoint10)
+        Series2.Points.Add(DataPoint11)
+        Series2.Points.Add(DataPoint12)
+        Series3.ChartArea = "ChartArea1"
+        Series3.Legend = "Legend1"
+        Series3.Name = "Expenses"
+        DataPoint13.AxisLabel = "Jan"
+        DataPoint14.AxisLabel = "Feb"
+        DataPoint15.AxisLabel = "Mar"
+        DataPoint16.AxisLabel = "Apr"
+        DataPoint17.AxisLabel = "May"
+        DataPoint18.AxisLabel = "Jun"
+        Series3.Points.Add(DataPoint13)
+        Series3.Points.Add(DataPoint14)
+        Series3.Points.Add(DataPoint15)
+        Series3.Points.Add(DataPoint16)
+        Series3.Points.Add(DataPoint17)
+        Series3.Points.Add(DataPoint18)
+        Series4.ChartArea = "ChartArea1"
+        Series4.Legend = "Legend1"
+        Series4.Name = "NetProfit"
+        DataPoint19.AxisLabel = "Jan"
+        DataPoint20.AxisLabel = "Feb"
+        DataPoint21.AxisLabel = "Mar"
+        DataPoint22.AxisLabel = "Apr"
+        DataPoint23.AxisLabel = "May"
+        DataPoint24.AxisLabel = "Jun"
+        Series4.Points.Add(DataPoint19)
+        Series4.Points.Add(DataPoint20)
+        Series4.Points.Add(DataPoint21)
+        Series4.Points.Add(DataPoint22)
+        Series4.Points.Add(DataPoint23)
+        Series4.Points.Add(DataPoint24)
+        Me.SalesChart.Series.Add(Series2)
+        Me.SalesChart.Series.Add(Series3)
+        Me.SalesChart.Series.Add(Series4)
+        Me.SalesChart.Size = New System.Drawing.Size(589, 262)
+        Me.SalesChart.TabIndex = 9
+        Me.SalesChart.Text = "Chart1"
+        '
         'RoundedPane26
         '
         Me.RoundedPane26.BorderColor = System.Drawing.Color.LightGray
@@ -193,7 +363,7 @@ Partial Class Dashboard
         Me.RoundedPane26.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.RoundedPane26.Location = New System.Drawing.Point(811, 914)
         Me.RoundedPane26.Name = "RoundedPane26"
-        Me.RoundedPane26.Size = New System.Drawing.Size(303, 316)
+        Me.RoundedPane26.Size = New System.Drawing.Size(365, 316)
         Me.RoundedPane26.TabIndex = 26
         '
         'Label17
@@ -210,33 +380,33 @@ Partial Class Dashboard
         '
         'MonthlyChartOrder
         '
-        ChartArea1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        ChartArea1.Name = "ChartArea1"
-        Me.MonthlyChartOrder.ChartAreas.Add(ChartArea1)
-        Legend1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Legend1.Name = "Legend1"
-        Me.MonthlyChartOrder.Legends.Add(Legend1)
+        ChartArea3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        ChartArea3.Name = "ChartArea1"
+        Me.MonthlyChartOrder.ChartAreas.Add(ChartArea3)
+        Legend3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Legend3.Name = "Legend1"
+        Me.MonthlyChartOrder.Legends.Add(Legend3)
         Me.MonthlyChartOrder.Location = New System.Drawing.Point(17, 41)
         Me.MonthlyChartOrder.Name = "MonthlyChartOrder"
-        Series1.ChartArea = "ChartArea1"
-        Series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
-        Series1.LabelForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Series1.Legend = "Legend1"
-        Series1.Name = "Orders"
-        DataPoint1.AxisLabel = "Jan"
-        DataPoint2.AxisLabel = "Feb"
-        DataPoint3.AxisLabel = "Mar"
-        DataPoint4.AxisLabel = "Apr"
-        DataPoint5.AxisLabel = "May"
-        DataPoint6.AxisLabel = "Jun"
-        Series1.Points.Add(DataPoint1)
-        Series1.Points.Add(DataPoint2)
-        Series1.Points.Add(DataPoint3)
-        Series1.Points.Add(DataPoint4)
-        Series1.Points.Add(DataPoint5)
-        Series1.Points.Add(DataPoint6)
-        Me.MonthlyChartOrder.Series.Add(Series1)
-        Me.MonthlyChartOrder.Size = New System.Drawing.Size(527, 265)
+        Series5.ChartArea = "ChartArea1"
+        Series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline
+        Series5.LabelForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Series5.Legend = "Legend1"
+        Series5.Name = "Orders"
+        DataPoint25.AxisLabel = "Jan"
+        DataPoint26.AxisLabel = "Feb"
+        DataPoint27.AxisLabel = "Mar"
+        DataPoint28.AxisLabel = "Apr"
+        DataPoint29.AxisLabel = "May"
+        DataPoint30.AxisLabel = "Jun"
+        Series5.Points.Add(DataPoint25)
+        Series5.Points.Add(DataPoint26)
+        Series5.Points.Add(DataPoint27)
+        Series5.Points.Add(DataPoint28)
+        Series5.Points.Add(DataPoint29)
+        Series5.Points.Add(DataPoint30)
+        Me.MonthlyChartOrder.Series.Add(Series5)
+        Me.MonthlyChartOrder.Size = New System.Drawing.Size(346, 265)
         Me.MonthlyChartOrder.TabIndex = 1
         Me.MonthlyChartOrder.Text = "Chart2"
         '
@@ -267,33 +437,33 @@ Partial Class Dashboard
         '
         'ChartReservations
         '
-        ChartArea2.Name = "ChartArea1"
-        Me.ChartReservations.ChartAreas.Add(ChartArea2)
-        Legend2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Legend2.Name = "Legend1"
-        Me.ChartReservations.Legends.Add(Legend2)
+        ChartArea4.Name = "ChartArea1"
+        Me.ChartReservations.ChartAreas.Add(ChartArea4)
+        Legend4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Legend4.Name = "Legend1"
+        Me.ChartReservations.Legends.Add(Legend4)
         Me.ChartReservations.Location = New System.Drawing.Point(16, 33)
         Me.ChartReservations.Name = "ChartReservations"
         Me.ChartReservations.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel
-        Series2.ChartArea = "ChartArea1"
-        Series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
-        Series2.IsValueShownAsLabel = True
-        Series2.IsXValueIndexed = True
-        Series2.Legend = "Legend1"
-        Series2.Name = "ReservationStatus"
-        DataPoint7.AxisLabel = "Pending"
-        DataPoint7.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
-        DataPoint7.LabelForeColor = System.Drawing.Color.Transparent
-        DataPoint8.AxisLabel = "Confirmed"
-        DataPoint8.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        DataPoint8.LabelForeColor = System.Drawing.Color.Transparent
-        DataPoint9.AxisLabel = "Cancelled"
-        DataPoint9.Color = System.Drawing.Color.Red
-        DataPoint9.LabelForeColor = System.Drawing.Color.Transparent
-        Series2.Points.Add(DataPoint7)
-        Series2.Points.Add(DataPoint8)
-        Series2.Points.Add(DataPoint9)
-        Me.ChartReservations.Series.Add(Series2)
+        Series6.ChartArea = "ChartArea1"
+        Series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+        Series6.IsValueShownAsLabel = True
+        Series6.IsXValueIndexed = True
+        Series6.Legend = "Legend1"
+        Series6.Name = "ReservationStatus"
+        DataPoint31.AxisLabel = "Pending"
+        DataPoint31.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        DataPoint31.LabelForeColor = System.Drawing.Color.Transparent
+        DataPoint32.AxisLabel = "Confirmed"
+        DataPoint32.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        DataPoint32.LabelForeColor = System.Drawing.Color.Transparent
+        DataPoint33.AxisLabel = "Cancelled"
+        DataPoint33.Color = System.Drawing.Color.Red
+        DataPoint33.LabelForeColor = System.Drawing.Color.Transparent
+        Series6.Points.Add(DataPoint31)
+        Series6.Points.Add(DataPoint32)
+        Series6.Points.Add(DataPoint33)
+        Me.ChartReservations.Series.Add(Series6)
         Me.ChartReservations.Size = New System.Drawing.Size(468, 272)
         Me.ChartReservations.TabIndex = 23
         Me.ChartReservations.Text = "Chart1"
@@ -499,60 +669,60 @@ Partial Class Dashboard
         '
         'Chart2
         '
-        ChartArea3.Name = "ChartArea1"
-        Me.Chart2.ChartAreas.Add(ChartArea3)
-        Legend3.Alignment = System.Drawing.StringAlignment.Center
-        Legend3.BackColor = System.Drawing.Color.Transparent
+        ChartArea5.Name = "ChartArea1"
+        Me.Chart2.ChartAreas.Add(ChartArea5)
+        Legend5.Alignment = System.Drawing.StringAlignment.Center
+        Legend5.BackColor = System.Drawing.Color.Transparent
         LegendCellColumn1.Name = "Column1"
-        Legend3.CellColumns.Add(LegendCellColumn1)
-        Legend3.Enabled = False
-        Legend3.Font = New System.Drawing.Font("Segoe UI Semibold", 8.0!, System.Drawing.FontStyle.Bold)
-        Legend3.IsTextAutoFit = False
-        Legend3.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column
-        Legend3.Name = "Legend1"
-        Legend3.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Tall
-        Legend3.TitleSeparatorColor = System.Drawing.Color.DimGray
-        Me.Chart2.Legends.Add(Legend3)
+        Legend5.CellColumns.Add(LegendCellColumn1)
+        Legend5.Enabled = False
+        Legend5.Font = New System.Drawing.Font("Segoe UI Semibold", 8.0!, System.Drawing.FontStyle.Bold)
+        Legend5.IsTextAutoFit = False
+        Legend5.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column
+        Legend5.Name = "Legend1"
+        Legend5.TableStyle = System.Windows.Forms.DataVisualization.Charting.LegendTableStyle.Tall
+        Legend5.TitleSeparatorColor = System.Drawing.Color.DimGray
+        Me.Chart2.Legends.Add(Legend5)
         Me.Chart2.Location = New System.Drawing.Point(59, 19)
         Me.Chart2.Name = "Chart2"
-        Series3.BackImageAlignment = System.Windows.Forms.DataVisualization.Charting.ChartImageAlignmentStyle.Left
-        Series3.ChartArea = "ChartArea1"
-        Series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
-        Series3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Series3.IsValueShownAsLabel = True
-        Series3.IsVisibleInLegend = False
-        Series3.Label = "#PERCENT{P0}"
-        Series3.Legend = "Legend1"
-        Series3.Name = "Series1"
-        DataPoint10.AxisLabel = "Dine In"
-        DataPoint10.BorderColor = System.Drawing.Color.White
-        DataPoint10.BorderWidth = 2
-        DataPoint10.Color = System.Drawing.Color.FromArgb(CType(CType(165, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(233, Byte), Integer))
-        DataPoint10.LabelBorderWidth = 1
-        DataPoint10.LabelForeColor = System.Drawing.Color.Transparent
-        DataPoint11.AxisLabel = "Takeout"
-        DataPoint11.BorderColor = System.Drawing.Color.White
-        DataPoint11.BorderWidth = 2
-        DataPoint11.Color = System.Drawing.Color.FromArgb(CType(CType(144, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(169, Byte), Integer))
-        DataPoint11.LabelForeColor = System.Drawing.Color.Transparent
-        DataPoint12.AxisLabel = "Catering"
-        DataPoint12.BorderColor = System.Drawing.Color.White
-        DataPoint12.BorderWidth = 2
-        DataPoint12.Color = System.Drawing.Color.FromArgb(CType(CType(251, Byte), Integer), CType(CType(203, Byte), Integer), CType(CType(119, Byte), Integer))
-        DataPoint12.LabelBackColor = System.Drawing.Color.Transparent
-        DataPoint12.LabelForeColor = System.Drawing.Color.Transparent
-        Series3.Points.Add(DataPoint10)
-        Series3.Points.Add(DataPoint11)
-        Series3.Points.Add(DataPoint12)
-        Me.Chart2.Series.Add(Series3)
+        Series7.BackImageAlignment = System.Windows.Forms.DataVisualization.Charting.ChartImageAlignmentStyle.Left
+        Series7.ChartArea = "ChartArea1"
+        Series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+        Series7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Series7.IsValueShownAsLabel = True
+        Series7.IsVisibleInLegend = False
+        Series7.Label = "#PERCENT{P0}"
+        Series7.Legend = "Legend1"
+        Series7.Name = "Series1"
+        DataPoint34.AxisLabel = "Dine In"
+        DataPoint34.BorderColor = System.Drawing.Color.White
+        DataPoint34.BorderWidth = 2
+        DataPoint34.Color = System.Drawing.Color.FromArgb(CType(CType(165, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(233, Byte), Integer))
+        DataPoint34.LabelBorderWidth = 1
+        DataPoint34.LabelForeColor = System.Drawing.Color.Transparent
+        DataPoint35.AxisLabel = "Takeout"
+        DataPoint35.BorderColor = System.Drawing.Color.White
+        DataPoint35.BorderWidth = 2
+        DataPoint35.Color = System.Drawing.Color.FromArgb(CType(CType(144, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(169, Byte), Integer))
+        DataPoint35.LabelForeColor = System.Drawing.Color.Transparent
+        DataPoint36.AxisLabel = "Catering"
+        DataPoint36.BorderColor = System.Drawing.Color.White
+        DataPoint36.BorderWidth = 2
+        DataPoint36.Color = System.Drawing.Color.FromArgb(CType(CType(251, Byte), Integer), CType(CType(203, Byte), Integer), CType(CType(119, Byte), Integer))
+        DataPoint36.LabelBackColor = System.Drawing.Color.Transparent
+        DataPoint36.LabelForeColor = System.Drawing.Color.Transparent
+        Series7.Points.Add(DataPoint34)
+        Series7.Points.Add(DataPoint35)
+        Series7.Points.Add(DataPoint36)
+        Me.Chart2.Series.Add(Series7)
         Me.Chart2.Size = New System.Drawing.Size(432, 271)
         Me.Chart2.TabIndex = 1
         Me.Chart2.Text = "Chart2"
-        Title1.Alignment = System.Drawing.ContentAlignment.TopLeft
-        Title1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Title1.Name = "Sales by Channel"
-        Title1.Text = "Sales by Channel"
-        Me.Chart2.Titles.Add(Title1)
+        Title2.Alignment = System.Drawing.ContentAlignment.TopLeft
+        Title2.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Title2.Name = "Sales by Channel"
+        Title2.Text = "Sales by Channel"
+        Me.Chart2.Titles.Add(Title2)
         '
         'RoundedPane22
         '
@@ -698,174 +868,6 @@ Partial Class Dashboard
         Me.lblTotalRevenue.TabIndex = 3
         Me.lblTotalRevenue.Text = "16, 400, 00.00"
         '
-        'RoundedPane27
-        '
-        Me.RoundedPane27.BackColor = System.Drawing.Color.Transparent
-        Me.RoundedPane27.BorderColor = System.Drawing.Color.LightGray
-        Me.RoundedPane27.BorderThickness = 1
-        Me.RoundedPane27.Controls.Add(Me.Button1)
-        Me.RoundedPane27.Controls.Add(Me.Label5)
-        Me.RoundedPane27.Controls.Add(Me.SalesChart)
-        Me.RoundedPane27.CornerRadius = 15
-        Me.RoundedPane27.FillColor = System.Drawing.Color.White
-        Me.RoundedPane27.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.RoundedPane27.Location = New System.Drawing.Point(57, 578)
-        Me.RoundedPane27.Name = "RoundedPane27"
-        Me.RoundedPane27.Size = New System.Drawing.Size(624, 315)
-        Me.RoundedPane27.TabIndex = 30
-        '
-        'Button1
-        '
-        Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Image = CType(resources.GetObject("Button1.Image"), System.Drawing.Image)
-        Me.Button1.Location = New System.Drawing.Point(914, 16)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(104, 30)
-        Me.Button1.TabIndex = 11
-        Me.Button1.Text = "   Export"
-        Me.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(18, 16)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(200, 20)
-        Me.Label5.TabIndex = 10
-        Me.Label5.Text = "Financial Overview - Monthly"
-        '
-        'SalesChart
-        '
-        ChartArea4.Name = "ChartArea1"
-        Me.SalesChart.ChartAreas.Add(ChartArea4)
-        Legend4.Name = "Legend1"
-        Me.SalesChart.Legends.Add(Legend4)
-        Me.SalesChart.Location = New System.Drawing.Point(17, 39)
-        Me.SalesChart.Name = "SalesChart"
-        Series4.ChartArea = "ChartArea1"
-        Series4.Legend = "Legend1"
-        Series4.Name = "Revenue"
-        DataPoint13.AxisLabel = "Jan"
-        DataPoint14.AxisLabel = "Feb"
-        DataPoint15.AxisLabel = "Mar"
-        DataPoint16.AxisLabel = "Apr"
-        DataPoint17.AxisLabel = "May"
-        DataPoint18.AxisLabel = "Jun"
-        Series4.Points.Add(DataPoint13)
-        Series4.Points.Add(DataPoint14)
-        Series4.Points.Add(DataPoint15)
-        Series4.Points.Add(DataPoint16)
-        Series4.Points.Add(DataPoint17)
-        Series4.Points.Add(DataPoint18)
-        Series5.ChartArea = "ChartArea1"
-        Series5.Legend = "Legend1"
-        Series5.Name = "Expenses"
-        DataPoint19.AxisLabel = "Jan"
-        DataPoint20.AxisLabel = "Feb"
-        DataPoint21.AxisLabel = "Mar"
-        DataPoint22.AxisLabel = "Apr"
-        DataPoint23.AxisLabel = "May"
-        DataPoint24.AxisLabel = "Jun"
-        Series5.Points.Add(DataPoint19)
-        Series5.Points.Add(DataPoint20)
-        Series5.Points.Add(DataPoint21)
-        Series5.Points.Add(DataPoint22)
-        Series5.Points.Add(DataPoint23)
-        Series5.Points.Add(DataPoint24)
-        Series6.ChartArea = "ChartArea1"
-        Series6.Legend = "Legend1"
-        Series6.Name = "NetProfit"
-        DataPoint25.AxisLabel = "Jan"
-        DataPoint26.AxisLabel = "Feb"
-        DataPoint27.AxisLabel = "Mar"
-        DataPoint28.AxisLabel = "Apr"
-        DataPoint29.AxisLabel = "May"
-        DataPoint30.AxisLabel = "Jun"
-        Series6.Points.Add(DataPoint25)
-        Series6.Points.Add(DataPoint26)
-        Series6.Points.Add(DataPoint27)
-        Series6.Points.Add(DataPoint28)
-        Series6.Points.Add(DataPoint29)
-        Series6.Points.Add(DataPoint30)
-        Me.SalesChart.Series.Add(Series4)
-        Me.SalesChart.Series.Add(Series5)
-        Me.SalesChart.Series.Add(Series6)
-        Me.SalesChart.Size = New System.Drawing.Size(589, 262)
-        Me.SalesChart.TabIndex = 9
-        Me.SalesChart.Text = "Chart1"
-        '
-        'RoundedPane24
-        '
-        Me.RoundedPane24.BackColor = System.Drawing.Color.Transparent
-        Me.RoundedPane24.BorderColor = System.Drawing.Color.LightGray
-        Me.RoundedPane24.BorderThickness = 1
-        Me.RoundedPane24.Controls.Add(Me.ProductPerformance)
-        Me.RoundedPane24.CornerRadius = 15
-        Me.RoundedPane24.FillColor = System.Drawing.Color.White
-        Me.RoundedPane24.Location = New System.Drawing.Point(57, 917)
-        Me.RoundedPane24.Name = "RoundedPane24"
-        Me.RoundedPane24.Size = New System.Drawing.Size(733, 350)
-        Me.RoundedPane24.TabIndex = 31
-        '
-        'ProductPerformance
-        '
-        Me.ProductPerformance.BorderlineColor = System.Drawing.Color.LightGray
-        Me.ProductPerformance.BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid
-        ChartArea5.AxisX.Interval = 1.0R
-        ChartArea5.AxisX.IsLabelAutoFit = False
-        ChartArea5.AxisX.LabelStyle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        ChartArea5.AxisX.MajorGrid.Enabled = False
-        ChartArea5.AxisX.MajorGrid.Interval = 1.0R
-        ChartArea5.AxisY.IsLabelAutoFit = False
-        ChartArea5.AxisY.LabelStyle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        ChartArea5.AxisY.LabelStyle.Format = "₱#,##0"
-        ChartArea5.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray
-        ChartArea5.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot
-        ChartArea5.BackColor = System.Drawing.Color.White
-        ChartArea5.Name = "ChartArea1"
-        Me.ProductPerformance.ChartAreas.Add(ChartArea5)
-        Legend5.Enabled = False
-        Legend5.Name = "Legend1"
-        Me.ProductPerformance.Legends.Add(Legend5)
-        Me.ProductPerformance.Location = New System.Drawing.Point(20, 18)
-        Me.ProductPerformance.Name = "ProductPerformance"
-        Me.ProductPerformance.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None
-        Series7.BorderWidth = 0
-        Series7.ChartArea = "ChartArea1"
-        Series7.Color = System.Drawing.Color.MediumSlateBlue
-        Series7.LabelForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Series7.Legend = "Legend1"
-        Series7.Name = "Revenue"
-        DataPoint31.AxisLabel = "Beef Steak"
-        DataPoint31.LabelForeColor = System.Drawing.Color.DarkGray
-        DataPoint32.AxisLabel = "Chicken Curry"
-        DataPoint32.MarkerColor = System.Drawing.Color.MediumSlateBlue
-        DataPoint33.AxisLabel = "Fish Grilled"
-        DataPoint34.AxisLabel = "Pork Adobo"
-        DataPoint35.AxisLabel = "Vegetable Stir Fry"
-        DataPoint36.AxisLabel = "Chicken BBQ"
-        Series7.Points.Add(DataPoint31)
-        Series7.Points.Add(DataPoint32)
-        Series7.Points.Add(DataPoint33)
-        Series7.Points.Add(DataPoint34)
-        Series7.Points.Add(DataPoint35)
-        Series7.Points.Add(DataPoint36)
-        Series7.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.[String]
-        Series7.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int64
-        Me.ProductPerformance.Series.Add(Series7)
-        Me.ProductPerformance.Size = New System.Drawing.Size(696, 264)
-        Me.ProductPerformance.TabIndex = 0
-        Me.ProductPerformance.Text = "Chart1"
-        Title2.Alignment = System.Drawing.ContentAlignment.TopLeft
-        Title2.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Title2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Title2.Name = "Title1"
-        Title2.Text = "Revenue by Product"
-        Me.ProductPerformance.Titles.Add(Title2)
-        '
         'Dashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -873,7 +875,7 @@ Partial Class Dashboard
         Me.AutoScroll = True
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.GhostWhite
-        Me.ClientSize = New System.Drawing.Size(1210, 749)
+        Me.ClientSize = New System.Drawing.Size(1370, 749)
         Me.Controls.Add(Me.RoundedPane24)
         Me.Controls.Add(Me.RoundedPane27)
         Me.Controls.Add(Me.RoundedPane26)
@@ -890,6 +892,11 @@ Partial Class Dashboard
         Me.Name = "Dashboard"
         Me.Text = "Dashboard"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
+        Me.RoundedPane24.ResumeLayout(False)
+        CType(Me.ProductPerformance, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.RoundedPane27.ResumeLayout(False)
+        Me.RoundedPane27.PerformLayout()
+        CType(Me.SalesChart, System.ComponentModel.ISupportInitialize).EndInit()
         Me.RoundedPane26.ResumeLayout(False)
         Me.RoundedPane26.PerformLayout()
         CType(Me.MonthlyChartOrder, System.ComponentModel.ISupportInitialize).EndInit()
@@ -915,11 +922,6 @@ Partial Class Dashboard
         Me.RoundedPane21.ResumeLayout(False)
         Me.RoundedPane21.PerformLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.RoundedPane27.ResumeLayout(False)
-        Me.RoundedPane27.PerformLayout()
-        CType(Me.SalesChart, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.RoundedPane24.ResumeLayout(False)
-        CType(Me.ProductPerformance, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

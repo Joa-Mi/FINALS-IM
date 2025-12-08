@@ -585,6 +585,9 @@
     <EmbeddedResource Include="Admin\Payroll.resx">
       <DependentUpon>Payroll.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Admin\ProductIngredientUsageHistory.resx">
+      <DependentUpon>ProductIngredientUsageHistory.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Admin\Reports.resx">
       <DependentUpon>Reports.vb</DependentUpon>
     </EmbeddedResource>

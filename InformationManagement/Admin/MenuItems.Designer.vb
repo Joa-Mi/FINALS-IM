@@ -22,7 +22,7 @@ Partial Class MenuItems
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
@@ -47,12 +47,12 @@ Partial Class MenuItems
         '
         'Panel1
         '
-        Me.Panel1.BackColor = System.Drawing.Color.White
+        Me.Panel1.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1028, 72)
+        Me.Panel1.Size = New System.Drawing.Size(1028, 79)
         Me.Panel1.TabIndex = 0
         '
         'Label1
@@ -60,7 +60,7 @@ Partial Class MenuItems
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold)
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(17, 15)
+        Me.Label1.Location = New System.Drawing.Point(22, 21)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(373, 40)
         Me.Label1.TabIndex = 0
@@ -68,7 +68,7 @@ Partial Class MenuItems
         '
         'Panel2
         '
-        Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel2.Controls.Add(Me.btnExport)
         Me.Panel2.Controls.Add(Me.btnToggleAvailability)
         Me.Panel2.Controls.Add(Me.btnRefresh)
@@ -76,7 +76,7 @@ Partial Class MenuItems
         Me.Panel2.Controls.Add(Me.txtSearch)
         Me.Panel2.Controls.Add(Me.lblSearch)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(0, 72)
+        Me.Panel2.Location = New System.Drawing.Point(0, 79)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Padding = New System.Windows.Forms.Padding(9)
         Me.Panel2.Size = New System.Drawing.Size(1028, 61)
@@ -163,7 +163,7 @@ Partial Class MenuItems
         Me.Panel3.Controls.Add(Me.Category)
         Me.Panel3.Controls.Add(Me.lblFilter)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(0, 133)
+        Me.Panel3.Location = New System.Drawing.Point(0, 140)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Padding = New System.Windows.Forms.Padding(9)
         Me.Panel3.Size = New System.Drawing.Size(1028, 48)
@@ -197,19 +197,19 @@ Partial Class MenuItems
         Me.DataGridMenu.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridMenu.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.DataGridMenu.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridMenu.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(80, Byte), Integer))
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridMenu.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridMenu.ColumnHeadersHeight = 50
         Me.DataGridMenu.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridMenu.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMenu.EnableHeadersVisualStyles = False
-        Me.DataGridMenu.Location = New System.Drawing.Point(0, 181)
+        Me.DataGridMenu.Location = New System.Drawing.Point(0, 188)
         Me.DataGridMenu.MultiSelect = False
         Me.DataGridMenu.Name = "DataGridMenu"
         Me.DataGridMenu.ReadOnly = True
@@ -217,7 +217,7 @@ Partial Class MenuItems
         Me.DataGridMenu.RowHeadersWidth = 51
         Me.DataGridMenu.RowTemplate.Height = 40
         Me.DataGridMenu.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DataGridMenu.Size = New System.Drawing.Size(1028, 393)
+        Me.DataGridMenu.Size = New System.Drawing.Size(1028, 386)
         Me.DataGridMenu.TabIndex = 3
         '
         'Panel4
