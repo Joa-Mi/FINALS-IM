@@ -1,7 +1,13 @@
 ﻿Imports MySqlConnector
 Imports System.IO
+Imports System.Net
 
 Public Class MenuItems
+
+    ' =============================================================
+    ' CONFIGURATION: Set your XAMPP htdocs path and localhost URL
+    ' =============================================================
+    Private Const WEB_BASE_URL As String = "http://localhost/TrialWeb/TrialWorkIM/Tabeya/"
 
     ' Track if buttons already added
     Dim ButtonsAdded As Boolean = False
@@ -40,10 +46,7 @@ Public Class MenuItems
     End Sub
 
     ' =======================================================
-    ' LOAD DATA
-    ' =======================================================
-    ' =======================================================
-    ' LOAD DATA - FIXED VERSION
+    ' LOAD DATA - WITH IMAGE PATH PRESERVED
     ' =======================================================
     Private Sub LoadMenuItems(Optional searchTerm As String = "", Optional categoryFilter As String = "All Categories")
 
@@ -96,36 +99,46 @@ Public Class MenuItems
             da.Fill(dt)
 
             ' ---------------------------------------------------
-            ' FIX IMAGE COLUMN
+            ' LOAD IMAGES FROM URL PATHS
             ' ---------------------------------------------------
             If dt.Columns.Contains("Image") Then
-                dt.Columns("Image").ColumnName = "ImageBlob"
-                dt.Columns.Add("Image", GetType(Image))
+                ' Rename Image column to ImagePath temporarily
+                dt.Columns("Image").ColumnName = "ImagePath"
+
+                ' Add new Image column for actual Image objects
+                dt.Columns.Add("ImageDisplay", GetType(Image))
 
                 For Each row As DataRow In dt.Rows
-                    If IsDBNull(row("ImageBlob")) OrElse Not TypeOf row("ImageBlob") Is Byte() Then
-                        row("Image") = Nothing
+                    ' Get the image path from database
+                    If IsDBNull(row("ImagePath")) OrElse String.IsNullOrEmpty(row("ImagePath").ToString()) Then
+                        row("ImageDisplay") = Nothing
                         Continue For
                     End If
 
                     Try
-                        Dim imgBytes As Byte() = CType(row("ImageBlob"), Byte())
-                        Using ms As New MemoryStream(imgBytes)
-                            row("Image") = Image.FromStream(ms)
+                        Dim imagePath As String = row("ImagePath").ToString()
+                        Dim imageUrl As String = ConvertToWebUrl(imagePath)
+
+                        ' Load image from URL
+                        Dim webClient As New WebClient()
+                        Dim imageBytes() As Byte = webClient.DownloadData(imageUrl)
+                        Using ms As New MemoryStream(imageBytes)
+                            row("ImageDisplay") = Image.FromStream(ms)
                         End Using
-                    Catch
-                        row("Image") = Nothing
+                    Catch ex As Exception
+                        ' If image fails to load, set to Nothing
+                        row("ImageDisplay") = Nothing
+                        Console.WriteLine($"Failed to load image: {ex.Message}")
                     End Try
                 Next
             End If
 
-            ' Remove ImageBlob column before binding
-            If dt.Columns.Contains("ImageBlob") Then
-                dt.Columns.Remove("ImageBlob")
-            End If
-
-            DataGridMenu.AutoGenerateColumns = True
+            DataGridMenu.AutoGenerateColumns = False
+            DataGridMenu.Columns.Clear()
             DataGridMenu.DataSource = dt
+
+            ' Add columns manually
+            AddDataGridColumns()
 
             ' BUTTONS ADDED ONLY ONCE
             If Not ButtonsAdded Then
@@ -133,16 +146,18 @@ Public Class MenuItems
                 ButtonsAdded = True
             End If
 
-            ' REORDER COLUMNS - MOVE ACTION BUTTONS TO THE END
-            ReorderColumns()
-
             ' FORMAT IMAGE COLUMN
-            If DataGridMenu.Columns.Contains("Image") Then
+            If DataGridMenu.Columns.Contains("ImageDisplay") Then
                 Dim imgCol As DataGridViewImageColumn =
-                CType(DataGridMenu.Columns("Image"), DataGridViewImageColumn)
+                CType(DataGridMenu.Columns("ImageDisplay"), DataGridViewImageColumn)
                 imgCol.ImageLayout = DataGridViewImageCellLayout.Zoom
                 imgCol.Width = 120
                 imgCol.DisplayIndex = 0
+            End If
+
+            ' Hide ImagePath column (used internally for fullscreen view)
+            If DataGridMenu.Columns.Contains("ImagePath") Then
+                DataGridMenu.Columns("ImagePath").Visible = False
             End If
 
             ' Format other columns
@@ -159,6 +174,144 @@ Public Class MenuItems
         End Try
 
     End Sub
+
+    ' =======================================================
+    ' ADD DATAGRID COLUMNS
+    ' =======================================================
+    Private Sub AddDataGridColumns()
+        With DataGridMenu
+            ' Image Column
+            Dim imgCol As New DataGridViewImageColumn()
+            imgCol.Name = "ImageDisplay"
+            imgCol.HeaderText = "Image"
+            imgCol.DataPropertyName = "ImageDisplay"
+            imgCol.Width = 120
+            imgCol.ImageLayout = DataGridViewImageCellLayout.Zoom
+            .Columns.Add(imgCol)
+
+            ' Hidden ImagePath Column (IMPORTANT: Keep this for fullscreen view)
+            Dim pathCol As New DataGridViewTextBoxColumn()
+            pathCol.Name = "ImagePath"
+            pathCol.HeaderText = "ImagePath"
+            pathCol.DataPropertyName = "ImagePath"
+            pathCol.Visible = False
+            .Columns.Add(pathCol)
+
+            ' ProductID
+            Dim idCol As New DataGridViewTextBoxColumn()
+            idCol.Name = "ProductID"
+            idCol.HeaderText = "ID"
+            idCol.DataPropertyName = "ProductID"
+            idCol.Width = 80
+            .Columns.Add(idCol)
+
+            ' ProductName
+            Dim nameCol As New DataGridViewTextBoxColumn()
+            nameCol.Name = "ProductName"
+            nameCol.HeaderText = "Product Name"
+            nameCol.DataPropertyName = "ProductName"
+            nameCol.Width = 200
+            .Columns.Add(nameCol)
+
+            ' Category
+            Dim catCol As New DataGridViewTextBoxColumn()
+            catCol.Name = "Category"
+            catCol.HeaderText = "Category"
+            catCol.DataPropertyName = "Category"
+            catCol.Width = 120
+            .Columns.Add(catCol)
+
+            ' Description
+            Dim descCol As New DataGridViewTextBoxColumn()
+            descCol.Name = "Description"
+            descCol.HeaderText = "Description"
+            descCol.DataPropertyName = "Description"
+            descCol.Width = 250
+            .Columns.Add(descCol)
+
+            ' Price
+            Dim priceCol As New DataGridViewTextBoxColumn()
+            priceCol.Name = "Price"
+            priceCol.HeaderText = "Price"
+            priceCol.DataPropertyName = "Price"
+            priceCol.Width = 100
+            priceCol.DefaultCellStyle.Format = "₱#,##0.00"
+            .Columns.Add(priceCol)
+
+            ' Availability
+            Dim availCol As New DataGridViewTextBoxColumn()
+            availCol.Name = "Availability"
+            availCol.HeaderText = "Availability"
+            availCol.DataPropertyName = "Availability"
+            availCol.Width = 100
+            .Columns.Add(availCol)
+
+            ' ServingSize
+            Dim sizeCol As New DataGridViewTextBoxColumn()
+            sizeCol.Name = "ServingSize"
+            sizeCol.HeaderText = "Serving Size"
+            sizeCol.DataPropertyName = "ServingSize"
+            sizeCol.Width = 100
+            .Columns.Add(sizeCol)
+
+            ' PrepTime
+            Dim prepCol As New DataGridViewTextBoxColumn()
+            prepCol.Name = "PrepTime"
+            prepCol.HeaderText = "Prep Time"
+            prepCol.DataPropertyName = "PrepTime"
+            prepCol.Width = 100
+            .Columns.Add(prepCol)
+
+            ' PopularityTag
+            Dim popCol As New DataGridViewTextBoxColumn()
+            popCol.Name = "PopularityTag"
+            popCol.HeaderText = "Popularity"
+            popCol.DataPropertyName = "PopularityTag"
+            popCol.Width = 120
+            .Columns.Add(popCol)
+
+            ' MealTime
+            Dim mealCol As New DataGridViewTextBoxColumn()
+            mealCol.Name = "MealTime"
+            mealCol.HeaderText = "Meal Time"
+            mealCol.DataPropertyName = "MealTime"
+            mealCol.Width = 100
+            .Columns.Add(mealCol)
+
+            ' OrderCount
+            Dim orderCol As New DataGridViewTextBoxColumn()
+            orderCol.Name = "OrderCount"
+            orderCol.HeaderText = "Orders"
+            orderCol.DataPropertyName = "OrderCount"
+            orderCol.Width = 90
+            .Columns.Add(orderCol)
+
+            ' ProductCode
+            Dim codeCol As New DataGridViewTextBoxColumn()
+            codeCol.Name = "ProductCode"
+            codeCol.HeaderText = "Product Code"
+            codeCol.DataPropertyName = "ProductCode"
+            codeCol.Width = 120
+            .Columns.Add(codeCol)
+
+            ' DateAdded
+            Dim dateCol As New DataGridViewTextBoxColumn()
+            dateCol.Name = "DateAdded"
+            dateCol.HeaderText = "Date Added"
+            dateCol.DataPropertyName = "DateAdded"
+            dateCol.Width = 150
+            .Columns.Add(dateCol)
+
+            ' LastUpdated
+            Dim updateCol As New DataGridViewTextBoxColumn()
+            updateCol.Name = "LastUpdated"
+            updateCol.HeaderText = "Last Updated"
+            updateCol.DataPropertyName = "LastUpdated"
+            updateCol.Width = 150
+            .Columns.Add(updateCol)
+        End With
+    End Sub
+
     ' =======================================================
     ' FORMAT COLUMNS
     ' =======================================================
@@ -183,47 +336,29 @@ Public Class MenuItems
     End Sub
 
     ' =======================================================
-    ' REORDER COLUMNS - MOVE ACTION BUTTONS TO END
-    ' =======================================================
-    Private Sub ReorderColumns()
-        With DataGridMenu
-            ' Ensure action buttons are always at the end
-            If .Columns.Contains("ViewButton") Then
-                .Columns("ViewButton").DisplayIndex = .Columns.Count - 3
-            End If
-            If .Columns.Contains("UpdateButton") Then
-                .Columns("UpdateButton").DisplayIndex = .Columns.Count - 2
-            End If
-            If .Columns.Contains("DeleteButton") Then
-                .Columns("DeleteButton").DisplayIndex = .Columns.Count - 1
-            End If
-        End With
-    End Sub
-
-    ' =======================================================
-    ' ADD UPDATE + DELETE BUTTONS
+    ' ADD ACTION BUTTONS (VIEW IMAGE, EDIT, DELETE)
     ' =======================================================
     Private Sub AddActionButtons()
 
-        ' VIEW BUTTON
-        Dim viewBtn As New DataGridViewButtonColumn()
-        viewBtn.HeaderText = "View"
-        viewBtn.Text = "👁️ View"
-        viewBtn.Name = "ViewButton"
-        viewBtn.UseColumnTextForButtonValue = True
-        viewBtn.Width = 80
-        DataGridMenu.Columns.Add(viewBtn)
+        ' VIEW IMAGE BUTTON 🖼️
+        Dim viewImageBtn As New DataGridViewButtonColumn()
+        viewImageBtn.HeaderText = "Image"
+        viewImageBtn.Text = "🖼️ View"
+        viewImageBtn.Name = "ViewImageButton"
+        viewImageBtn.UseColumnTextForButtonValue = True
+        viewImageBtn.Width = 100
+        DataGridMenu.Columns.Add(viewImageBtn)
 
-        ' EDIT BUTTON
-        Dim updateBtn As New DataGridViewButtonColumn()
-        updateBtn.HeaderText = "Edit"
-        updateBtn.Text = "✏️ Edit"
-        updateBtn.Name = "UpdateButton"
-        updateBtn.UseColumnTextForButtonValue = True
-        updateBtn.Width = 80
-        DataGridMenu.Columns.Add(updateBtn)
+        ' EDIT BUTTON ✏️
+        Dim editBtn As New DataGridViewButtonColumn()
+        editBtn.HeaderText = "Edit"
+        editBtn.Text = "✏️ Edit"
+        editBtn.Name = "EditButton"
+        editBtn.UseColumnTextForButtonValue = True
+        editBtn.Width = 80
+        DataGridMenu.Columns.Add(editBtn)
 
-        ' DELETE BUTTON
+        ' DELETE BUTTON 🗑️
         Dim deleteBtn As New DataGridViewButtonColumn()
         deleteBtn.HeaderText = "Delete"
         deleteBtn.Text = "🗑️ Delete"
@@ -242,95 +377,245 @@ Public Class MenuItems
         If e.RowIndex < 0 Then Exit Sub
 
         Dim id As Integer = DataGridMenu.Rows(e.RowIndex).Cells("ProductID").Value
+        Dim productName As String = DataGridMenu.Rows(e.RowIndex).Cells("ProductName").Value.ToString()
 
-        ' VIEW
-        If DataGridMenu.Columns(e.ColumnIndex).Name = "ViewButton" Then
-            ViewProduct(id)
-            Exit Sub
-        End If
+        ' ========================================
+        ' 🖼️ VIEW IMAGE BUTTON - FULLSCREEN VIEWER
+        ' ========================================
+        If DataGridMenu.Columns(e.ColumnIndex).Name = "ViewImageButton" Then
+            Dim imagePath As String = ""
+            If DataGridMenu.Columns.Contains("ImagePath") AndAlso
+               DataGridMenu.Rows(e.RowIndex).Cells("ImagePath").Value IsNot Nothing Then
+                imagePath = DataGridMenu.Rows(e.RowIndex).Cells("ImagePath").Value.ToString()
+            End If
 
-        ' EDIT
-        If DataGridMenu.Columns(e.ColumnIndex).Name = "UpdateButton" Then
-            Dim form As New FormEditMenu()
-            form.LoadProduct(id)
-            If form.ShowDialog() = DialogResult.OK Then
-                LoadMenuItems(txtSearch.Text, Category.Text)
+            If String.IsNullOrEmpty(imagePath) Then
+                MessageBox.Show("No image available for this product.", "No Image", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Else
+                ShowProductImageFullscreen(imagePath, productName)
             End If
             Exit Sub
         End If
 
-        ' DELETE
+        ' ========================================
+        ' ✏️ EDIT BUTTON - LINK TO FormEditMenu.vb
+        ' ========================================
+        If DataGridMenu.Columns(e.ColumnIndex).Name = "EditButton" Then
+            Try
+                ' Create instance of FormEditMenu
+                Dim editForm As New FormEditMenu()
+
+                ' Load the product data into the edit form
+                editForm.LoadProductData(id)
+
+                ' Show the form as dialog
+                editForm.StartPosition = FormStartPosition.CenterScreen
+
+                If editForm.ShowDialog() = DialogResult.OK Then
+                    ' Refresh the data after successful edit
+                    LoadMenuItems(txtSearch.Text, Category.Text)
+                    MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+
+            Catch ex As Exception
+                MessageBox.Show("Error opening edit form: " & ex.Message & vbCrLf & vbCrLf &
+                              "Please ensure FormEditMenu.vb exists in your project.",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+            Exit Sub
+        End If
+
+        ' ========================================
+        ' 🗑️ DELETE BUTTON - WITH CONFIRMATION
+        ' ========================================
         If DataGridMenu.Columns(e.ColumnIndex).Name = "DeleteButton" Then
-            DeleteProduct(id)
-            LoadMenuItems(txtSearch.Text, Category.Text)
+            DeleteProductWithConfirmation(id, productName)
             Exit Sub
         End If
 
     End Sub
 
-    ' =======================================================
-    ' VIEW PRODUCT DETAILS
-    ' =======================================================
-    Private Sub ViewProduct(productId As Integer)
+    ' =============================================================
+    ' 🖼️ SHOW PRODUCT IMAGE IN FULLSCREEN MODE
+    ' =============================================================
+    Private Sub ShowProductImageFullscreen(imagePath As String, productName As String)
         Try
-            openConn()
-            Dim query As String = "SELECT * FROM products WHERE ProductID = @id"
-            Dim cmd As New MySqlCommand(query, conn)
-            cmd.Parameters.AddWithValue("@id", productId)
+            ' Create fullscreen form
+            Dim imageForm As New Form()
+            imageForm.Text = "Product Image - " & productName
+            imageForm.WindowState = FormWindowState.Maximized
+            imageForm.BackColor = Color.Black
+            imageForm.FormBorderStyle = FormBorderStyle.None
+            imageForm.StartPosition = FormStartPosition.CenterScreen
+            imageForm.KeyPreview = True
 
-            Dim reader As MySqlDataReader = cmd.ExecuteReader()
-            If reader.Read() Then
-                Dim details As String = $"Product ID: {reader("ProductID")}" & vbCrLf &
-                                       $"Product Name: {reader("ProductName")}" & vbCrLf &
-                                       $"Category: {reader("Category")}" & vbCrLf &
-                                       $"Description: {reader("Description")}" & vbCrLf &
-                                       $"Price: ₱{Convert.ToDecimal(reader("Price")):N2}" & vbCrLf &
-                                       $"Availability: {reader("Availability")}" & vbCrLf &
-                                       $"Serving Size: {reader("ServingSize")}" & vbCrLf &
-                                       $"Prep Time: {reader("PrepTime")}" & vbCrLf &
-                                       $"Product Code: {reader("ProductCode")}" & vbCrLf &
-                                       $"Order Count: {reader("OrderCount")}" & vbCrLf &
-                                       $"Date Added: {reader("DateAdded")}"
+            ' Create PictureBox to display image
+            Dim pictureBox As New PictureBox()
+            pictureBox.Dock = DockStyle.Fill
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom
+            pictureBox.BackColor = Color.Black
 
-                MessageBox.Show(details, "Product Details", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ' Create panel for controls at the top
+            Dim controlPanel As New Panel()
+            controlPanel.Dock = DockStyle.Top
+            controlPanel.Height = 60
+            controlPanel.BackColor = Color.FromArgb(220, 30, 30, 30)
+
+            ' Create close button (✕ Close)
+            Dim btnClose As New Button()
+            btnClose.Text = "✕ Close (ESC)"
+            btnClose.Location = New Point(15, 15)
+            btnClose.Size = New Size(140, 30)
+            btnClose.BackColor = Color.FromArgb(220, 53, 69)
+            btnClose.ForeColor = Color.White
+            btnClose.FlatStyle = FlatStyle.Flat
+            btnClose.FlatAppearance.BorderSize = 0
+            btnClose.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+            btnClose.Cursor = Cursors.Hand
+            AddHandler btnClose.Click, Sub() imageForm.Close()
+
+            ' Create label for product name
+            Dim lblProductName As New Label()
+            lblProductName.Text = "📸 " & productName
+            lblProductName.Location = New Point(170, 20)
+            lblProductName.AutoSize = True
+            lblProductName.ForeColor = Color.White
+            lblProductName.Font = New Font("Segoe UI", 12, FontStyle.Bold)
+
+            ' Create instruction label
+            Dim lblInstruction As New Label()
+            lblInstruction.Text = "Press ESC or click Close to exit"
+            lblInstruction.Location = New Point(imageForm.Width - 300, 22)
+            lblInstruction.AutoSize = True
+            lblInstruction.ForeColor = Color.LightGray
+            lblInstruction.Font = New Font("Segoe UI", 9, FontStyle.Italic)
+            lblInstruction.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+
+            controlPanel.Controls.Add(btnClose)
+            controlPanel.Controls.Add(lblProductName)
+            controlPanel.Controls.Add(lblInstruction)
+
+            ' Add controls to form
+            imageForm.Controls.Add(pictureBox)
+            imageForm.Controls.Add(controlPanel)
+
+            ' Handle ESC key to close
+            AddHandler imageForm.KeyDown, Sub(s, e)
+                                              If e.KeyCode = Keys.Escape Then
+                                                  imageForm.Close()
+                                              End If
+                                          End Sub
+
+            ' Handle click on picturebox to close
+            AddHandler pictureBox.Click, Sub() imageForm.Close()
+
+            ' Convert path to URL
+            Dim finalUrl As String = ConvertToWebUrl(imagePath)
+
+            ' Load image from URL
+            Try
+                Dim webClient As New WebClient()
+                Dim imageBytes() As Byte = webClient.DownloadData(finalUrl)
+                Using ms As New MemoryStream(imageBytes)
+                    pictureBox.Image = Image.FromStream(ms)
+                End Using
+            Catch ex As Exception
+                MessageBox.Show("❌ Error loading image from server" & vbCrLf & vbCrLf &
+                              "URL: " & finalUrl & vbCrLf & vbCrLf &
+                              "Error: " & ex.Message & vbCrLf & vbCrLf &
+                              "Please ensure:" & vbCrLf &
+                              "✓ XAMPP Apache is running" & vbCrLf &
+                              "✓ The image file exists in your htdocs folder" & vbCrLf &
+                              "✓ Path: " & imagePath,
+                              "Image Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                imageForm.Close()
+                Return
+            End Try
+
+            ' Show the form
+            imageForm.ShowDialog()
+
+            ' Dispose image after closing
+            If pictureBox.Image IsNot Nothing Then
+                pictureBox.Image.Dispose()
             End If
-            reader.Close()
+
         Catch ex As Exception
-            MessageBox.Show("Error viewing product: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            conn.Close()
+            MessageBox.Show("Error displaying product image: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
+    ' =============================================================
+    ' CONVERT FILE PATH TO WEB URL
+    ' =============================================================
+    Private Function ConvertToWebUrl(imagePath As String) As String
+        ' If already a URL, return as-is
+        If imagePath.StartsWith("http://") OrElse imagePath.StartsWith("https://") Then
+            Return imagePath
+        End If
+
+        ' If path contains full system path with htdocs
+        If imagePath.Contains(":\") AndAlso imagePath.ToLower().Contains("htdocs") Then
+            Dim htdocsIndex As Integer = imagePath.ToLower().IndexOf("htdocs")
+            If htdocsIndex > 0 Then
+                Dim webPath As String = imagePath.Substring(htdocsIndex + 7) ' Skip "htdocs\"
+                webPath = webPath.Replace("\", "/")
+                Return "http://localhost/" & webPath
+            End If
+        End If
+
+        ' If relative path (like "uploads/products/...")
+        ' Combine with base URL
+        Dim cleanPath As String = imagePath.Replace("\", "/")
+        If cleanPath.StartsWith("/") Then
+            cleanPath = cleanPath.Substring(1)
+        End If
+
+        Return WEB_BASE_URL & cleanPath
+    End Function
+
     ' =======================================================
-    ' DELETE FUNCTION
+    ' 🗑️ DELETE FUNCTION WITH ENHANCED CONFIRMATION
     ' =======================================================
-    Private Sub DeleteProduct(productId As Integer)
+    Private Sub DeleteProductWithConfirmation(productId As Integer, productName As String)
 
         Dim query As String = "DELETE FROM products WHERE ProductID = @id"
 
         Try
-            openConn()
-
-            Dim cmd As New MySqlCommand(query, conn)
-            cmd.Parameters.AddWithValue("@id", productId)
-
-            If MessageBox.Show(
-                "Are you sure you want to delete this product?",
+            ' Show confirmation dialog with product details
+            Dim result As DialogResult = MessageBox.Show(
+                "Are you sure you want to delete this product?" & vbCrLf & vbCrLf &
+                "Product ID: " & productId & vbCrLf &
+                "Product Name: " & productName & vbCrLf & vbCrLf &
+                "⚠️ This action cannot be undone!",
                 "Confirm Delete",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning
-            ) = DialogResult.Yes Then
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2
+            )
 
+            If result = DialogResult.Yes Then
+                openConn()
+
+                Dim cmd As New MySqlCommand(query, conn)
+                cmd.Parameters.AddWithValue("@id", productId)
                 cmd.ExecuteNonQuery()
-                MessageBox.Show("Product deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                MessageBox.Show("✓ Product deleted successfully!" & vbCrLf & vbCrLf &
+                              "Product: " & productName,
+                              "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                ' Refresh the data grid
+                LoadMenuItems(txtSearch.Text, Category.Text)
             End If
 
         Catch ex As Exception
-            MessageBox.Show("Error deleting: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("❌ Error deleting product: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
         Finally
-            conn.Close()
+            If conn.State = ConnectionState.Open Then
+                conn.Close()
+            End If
         End Try
 
     End Sub
@@ -382,7 +667,7 @@ Public Class MenuItems
         txtSearch.ForeColor = Color.Gray
         Category.SelectedIndex = 0
         LoadMenuItems()
-        MessageBox.Show("Data refreshed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show("✓ Data refreshed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     Private Sub btnToggleAvailability_Click(sender As Object, e As EventArgs) Handles btnToggleAvailability.Click
@@ -410,7 +695,7 @@ Public Class MenuItems
             cmdUpdate.Parameters.AddWithValue("@id", productId)
             cmdUpdate.ExecuteNonQuery()
 
-            MessageBox.Show($"Availability changed to: {newStatus}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show($"✓ Availability changed to: {newStatus}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ' Force full refresh
             DataGridMenu.DataSource = Nothing
@@ -435,7 +720,7 @@ Public Class MenuItems
                 ' Add headers
                 Dim headers As New List(Of String)
                 For Each col As DataGridViewColumn In DataGridMenu.Columns
-                    If col.Name <> "ViewButton" And col.Name <> "UpdateButton" And col.Name <> "DeleteButton" And col.Name <> "Image" Then
+                    If col.Name <> "ViewImageButton" And col.Name <> "EditButton" And col.Name <> "DeleteButton" And col.Name <> "ImageDisplay" And col.Name <> "ImagePath" Then
                         headers.Add(col.HeaderText)
                     End If
                 Next
@@ -445,7 +730,7 @@ Public Class MenuItems
                 For Each row As DataGridViewRow In DataGridMenu.Rows
                     Dim values As New List(Of String)
                     For Each col As DataGridViewColumn In DataGridMenu.Columns
-                        If col.Name <> "ViewButton" And col.Name <> "UpdateButton" And col.Name <> "DeleteButton" And col.Name <> "Image" Then
+                        If col.Name <> "ViewImageButton" And col.Name <> "EditButton" And col.Name <> "DeleteButton" And col.Name <> "ImageDisplay" And col.Name <> "ImagePath" Then
                             Dim value As String = If(row.Cells(col.Name).Value?.ToString(), "")
                             values.Add($"""{value}""")
                         End If
@@ -454,7 +739,7 @@ Public Class MenuItems
                 Next
 
                 System.IO.File.WriteAllText(saveDialog.FileName, csv.ToString())
-                MessageBox.Show("Data exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("✓ Data exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
         Catch ex As Exception
@@ -465,7 +750,9 @@ Public Class MenuItems
     Private Sub DataGridMenu_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DataGridMenu.DataBindingComplete
         If DataGridMenu.Columns.Contains("ProductID") Then
             DataGridMenu.Columns("ProductID").Visible = False
-            DataGridMenu.Columns("ProductID").Width = 0
+        End If
+        If DataGridMenu.Columns.Contains("ImagePath") Then
+            DataGridMenu.Columns("ImagePath").Visible = False
         End If
     End Sub
 
