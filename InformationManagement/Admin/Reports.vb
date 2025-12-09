@@ -14,7 +14,7 @@ Public Class Reports
         childForm.AutoScroll = False
         childForm.AutoSize = True
         childForm.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        childForm.Dock = DockStyle.None
+        childForm.Dock = DockStyle.Fill
 
         ' Add to panel and show
         Panel1.Controls.Add(childForm)
@@ -53,7 +53,8 @@ Public Class Reports
         FlowLayoutPanel1.Height = 50
         FlowLayoutPanel1.Top = 80   'Adjust below your label
         FlowLayoutPanel1.Left = 20
-        FlowLayoutPanel1.Width = Me.ClientSize.Width - 30
+        FlowLayoutPanel1.Width = Me.ClientSize.Width - 320
+
         FlowLayoutPanel1.Height = 70
 
         FlowLayoutPanel1.AutoSize = False
@@ -151,8 +152,8 @@ Public Class Reports
         activeBtn.Region = New Region(gp)
     End Sub
 
-    Private Sub ComboBox_DrawItem(sender As Object, e As DrawItemEventArgs) _
-       Handles reportPeriod.DrawItem
+    Private Sub ComboBox_DrawItem(sender As Object, e As DrawItemEventArgs)
+
 
         If e.Index < 0 Then Return
         Dim cmb As ComboBox = DirectCast(sender, ComboBox)
@@ -163,7 +164,7 @@ Public Class Reports
 
 
     ' === PERIOD SELECTION CHANGED ===
-    Private Sub reportPeriod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles reportPeriod.SelectedIndexChanged
+    Private Sub reportPeriod_SelectedIndexChanged(sender As Object, e As EventArgs)
         ' Update the shared property
         SelectedPeriod = reportPeriod.SelectedItem.ToString()
 
@@ -288,9 +289,7 @@ Public Class Reports
             MessageBox.Show("Error loading catering reservation report: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-    ' ============================================
-    ' ADD THIS TO Reports.vb to handle navigation
-    ' ============================================
+
     Public Sub LoadSalesReport()
         Try
             ' Load FormCateringReservations into Panel1
@@ -329,6 +328,5 @@ Public Class Reports
             MessageBox.Show("Error loading catering reservation report: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-
 
 End Class
