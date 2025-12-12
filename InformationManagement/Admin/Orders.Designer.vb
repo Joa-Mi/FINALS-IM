@@ -17,6 +17,7 @@ Partial Class Orders
 
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Orders))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -32,9 +33,9 @@ Partial Class Orders
         Me.lblFilter = New System.Windows.Forms.Label()
         Me.btnViewPending = New ReaLTaiizor.Controls.Button()
         Me.DataGridView2 = New System.Windows.Forms.DataGridView()
-        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblTotalOrders = New System.Windows.Forms.Label()
-        Me.Panel1.SuspendLayout()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.btnConfirm = New Guna.UI2.WinForms.Guna2Button()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -68,9 +69,8 @@ Partial Class Orders
         Me.Panel2.Controls.Add(Me.btnRefresh)
         Me.Panel2.Controls.Add(Me.txtSearch)
         Me.Panel2.Controls.Add(Me.lblSearch)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Panel2.Location = New System.Drawing.Point(0, 79)
+        Me.Panel2.Location = New System.Drawing.Point(2, 59)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Padding = New System.Windows.Forms.Padding(10)
         Me.Panel2.Size = New System.Drawing.Size(1113, 61)
@@ -204,7 +204,8 @@ Partial Class Orders
         '
         Me.lblFilter.AutoSize = True
         Me.lblFilter.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lblFilter.Location = New System.Drawing.Point(13, 15)
+        Me.lblFilter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblFilter.Location = New System.Drawing.Point(858, 14)
         Me.lblFilter.Name = "lblFilter"
         Me.lblFilter.Size = New System.Drawing.Size(91, 19)
         Me.lblFilter.TabIndex = 0
@@ -268,6 +269,17 @@ Partial Class Orders
         Me.DataGridView2.Size = New System.Drawing.Size(1018, 477)
         Me.DataGridView2.TabIndex = 3
         '
+        'lblTotalOrders
+        '
+        Me.lblTotalOrders.AutoSize = True
+        Me.lblTotalOrders.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTotalOrders.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblTotalOrders.Location = New System.Drawing.Point(43, 8)
+        Me.lblTotalOrders.Name = "lblTotalOrders"
+        Me.lblTotalOrders.Size = New System.Drawing.Size(88, 15)
+        Me.lblTotalOrders.TabIndex = 0
+        Me.lblTotalOrders.Text = "Total Orders: 0"
+        '
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.WhiteSmoke
@@ -278,7 +290,7 @@ Partial Class Orders
         Me.Panel4.Size = New System.Drawing.Size(1113, 30)
         Me.Panel4.TabIndex = 4
         '
-        'lblTotalOrders
+        'btnConfirm
         '
         Me.lblTotalOrders.AutoSize = True
         Me.lblTotalOrders.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
@@ -299,15 +311,12 @@ Partial Class Orders
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel1)
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.MinimumSize = New System.Drawing.Size(804, 590)
         Me.Name = "Orders"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Manage Orders - Tabeya"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.Panel3.ResumeLayout(False)
@@ -316,10 +325,9 @@ Partial Class Orders
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents lblTitle As Label
     Friend WithEvents Panel2 As Panel
     Friend WithEvents txtSearch As ReaLTaiizor.Controls.BigTextBox
@@ -332,6 +340,12 @@ Partial Class Orders
     Friend WithEvents btnViewCancelled As ReaLTaiizor.Controls.Button
     Friend WithEvents btnViewAll As ReaLTaiizor.Controls.Button
     Friend WithEvents DataGridView2 As DataGridView
-    Friend WithEvents Panel4 As Panel
+    Friend WithEvents btnDelete As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents btnViewCancelled As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnViewConfirmed As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnViewPending As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnViewAll As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnRefresh As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblTotalOrders As Label
 End Class

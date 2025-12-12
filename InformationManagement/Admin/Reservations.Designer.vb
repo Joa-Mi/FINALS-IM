@@ -17,6 +17,7 @@ Partial Class Reservations
 
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reservations))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -29,6 +30,7 @@ Partial Class Reservations
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.btnRefresh = New ReaLTaiizor.Controls.Button()
         Me.lblFilter = New System.Windows.Forms.Label()
+        Me.btnViewAll = New Guna.UI2.WinForms.Guna2Button()
         Me.Reservation = New System.Windows.Forms.DataGridView()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblTotalReservations = New System.Windows.Forms.Label()
@@ -59,7 +61,7 @@ Partial Class Reservations
         Me.lblTitle.AutoSize = True
         Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold)
         Me.lblTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblTitle.Location = New System.Drawing.Point(22, 21)
+        Me.lblTitle.Location = New System.Drawing.Point(24, 20)
         Me.lblTitle.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(385, 40)
@@ -70,13 +72,14 @@ Partial Class Reservations
         '
         Me.Panel2.BackColor = System.Drawing.Color.GhostWhite
         Me.Panel2.Controls.Add(Me.btnDelete)
+        Me.Panel2.Controls.Add(Me.btnUpdateStatus)
         Me.Panel2.Controls.Add(Me.btnRefresh)
         Me.Panel2.Controls.Add(Me.txtSearch)
         Me.Panel2.Controls.Add(Me.lblSearch)
         Me.Panel2.Controls.Add(Me.btnUpdateStatus)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Panel2.Location = New System.Drawing.Point(0, 79)
+        Me.Panel2.Location = New System.Drawing.Point(11, 72)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(2)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Padding = New System.Windows.Forms.Padding(11)
@@ -153,6 +156,8 @@ Partial Class Reservations
         Me.Panel3.Controls.Add(Me.btnViewCancelled)
         Me.Panel3.Controls.Add(Me.btnViewConfirmed)
         Me.Panel3.Controls.Add(Me.btnViewPending)
+        Me.Panel3.Controls.Add(Me.btnViewConfirmed)
+        Me.Panel3.Controls.Add(Me.btnViewCancelled)
         Me.Panel3.Controls.Add(Me.lblFilter)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel3.Location = New System.Drawing.Point(0, 154)
@@ -193,6 +198,22 @@ Partial Class Reservations
         Me.lblFilter.Size = New System.Drawing.Size(72, 15)
         Me.lblFilter.TabIndex = 0
         Me.lblFilter.Text = "Filter Status:"
+        '
+        'btnViewAll
+        '
+        Me.btnViewAll.BorderRadius = 7
+        Me.btnViewAll.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnViewAll.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnViewAll.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnViewAll.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnViewAll.FillColor = System.Drawing.Color.FromArgb(CType(CType(36, Byte), Integer), CType(CType(48, Byte), Integer), CType(CType(62, Byte), Integer))
+        Me.btnViewAll.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.btnViewAll.ForeColor = System.Drawing.Color.White
+        Me.btnViewAll.Location = New System.Drawing.Point(335, 10)
+        Me.btnViewAll.Name = "btnViewAll"
+        Me.btnViewAll.Size = New System.Drawing.Size(52, 36)
+        Me.btnViewAll.TabIndex = 9
+        Me.btnViewAll.Text = "All"
         '
         'Reservation
         '
@@ -347,15 +368,13 @@ Partial Class Reservations
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel1)
+        Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.MinimumSize = New System.Drawing.Size(687, 523)
         Me.Name = "Reservations"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Reservations Management - Tabeya"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.Panel3.ResumeLayout(False)
@@ -364,10 +383,9 @@ Partial Class Reservations
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents lblTitle As Label
     Friend WithEvents Panel2 As Panel
     Friend WithEvents txtSearch As ReaLTaiizor.Controls.BigTextBox

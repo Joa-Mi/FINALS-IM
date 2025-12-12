@@ -79,8 +79,6 @@ Partial Class Payroll
         '
         'DataGridView1
         '
-        Me.DataGridView1.AllowUserToResizeColumns = False
-        Me.DataGridView1.AllowUserToResizeRows = False
         Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
         Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
@@ -203,13 +201,34 @@ Partial Class Payroll
         '
         'ComboBox1
         '
+        Me.ComboBox1.BackColor = System.Drawing.Color.Transparent
+        Me.ComboBox1.BorderRadius = 7
+        Me.ComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.ComboBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.ComboBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.ComboBox1.ItemHeight = 30
         Me.ComboBox1.Items.AddRange(New Object() {"Dec 1-15, 2024", "Nov 16-30, 2025", "Nov 1-15, 2024"})
         Me.ComboBox1.Location = New System.Drawing.Point(113, 205)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
-        Me.ComboBox1.TabIndex = 7
+        Me.ComboBox1.Size = New System.Drawing.Size(274, 36)
+        Me.ComboBox1.TabIndex = 17
+        '
+        'RoundedPane24
+        '
+        Me.RoundedPane24.BorderColor = System.Drawing.Color.LightGray
+        Me.RoundedPane24.BorderThickness = 1
+        Me.RoundedPane24.Controls.Add(Me.PictureBox4)
+        Me.RoundedPane24.Controls.Add(Me.E)
+        Me.RoundedPane24.Controls.Add(Me.Label5)
+        Me.RoundedPane24.CornerRadius = 15
+        Me.RoundedPane24.FillColor = System.Drawing.Color.White
+        Me.RoundedPane24.Location = New System.Drawing.Point(824, 86)
+        Me.RoundedPane24.Name = "RoundedPane24"
+        Me.RoundedPane24.Size = New System.Drawing.Size(249, 123)
+        Me.RoundedPane24.TabIndex = 13
         '
         'RoundedPane24
         '
@@ -417,6 +436,7 @@ Partial Class Payroll
         '
         'Payroll
         '
+        Me.AccessibleName = "AddNewPayrollRecordbtn"
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
@@ -426,10 +446,8 @@ Partial Class Payroll
         Me.Controls.Add(Me.RoundedPane23)
         Me.Controls.Add(Me.RoundedPane22)
         Me.Controls.Add(Me.RoundedPane21)
-        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.DataGridView1)
-        Me.Controls.Add(Me.AddNewPayrollRecordbtn)
         Me.Controls.Add(Me.Label1)
         Me.DoubleBuffered = True
         Me.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
@@ -456,12 +474,10 @@ Partial Class Payroll
     End Sub
 
     Friend WithEvents Label1 As Label
-    Friend WithEvents AddNewPayrollRecordbtn As RoundedButton
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Label2 As Label
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents PictureBox4 As PictureBox
     Friend WithEvents RoundedPane21 As RoundedPane2
@@ -485,4 +501,6 @@ Partial Class Payroll
     Friend WithEvents NetPay As DataGridViewTextBoxColumn
     Friend WithEvents Status As DataGridViewTextBoxColumn
     Friend WithEvents Actions As DataGridViewButtonColumn
+    Friend WithEvents ComboBox1 As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents AddNewPayrollRecordbtn As Guna.UI2.WinForms.Guna2Button
 End Class

@@ -52,6 +52,7 @@ Partial Class Reports
         '
         'Panel1
         '
+        Me.Panel1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Panel1.AutoScroll = True
         Me.Panel1.AutoSize = True
         Me.Panel1.Cursor = System.Windows.Forms.Cursors.Default
@@ -64,8 +65,7 @@ Partial Class Reports
         'FlowLayoutPanel1
         '
         Me.FlowLayoutPanel1.AccessibleRole = System.Windows.Forms.AccessibleRole.PageTabList
-        Me.FlowLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.FlowLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.FlowLayoutPanel1.AutoScroll = True
         Me.FlowLayoutPanel1.BackColor = System.Drawing.Color.LightGray
         Me.FlowLayoutPanel1.Controls.Add(Me.btnSales)
